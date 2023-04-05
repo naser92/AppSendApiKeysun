@@ -15,5 +15,4 @@ for i,ItemList in enumerate(listInvoice):
     invoice = invoiceData.generateInvoice(ItemList)
     listInvoice.append(invoice)
 
-    
 

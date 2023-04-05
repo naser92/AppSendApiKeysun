@@ -1,7 +1,8 @@
 from tkinter import*  
+from tkinter import filedialog as fd
 from tkinter.messagebox import showinfo , showwarning
 from tkinter import ttk
-from ..core.api import ApiKeysun
+from core.api import ApiKeysun
 base = Tk() 
 api = ApiKeysun() 
 
@@ -21,6 +22,16 @@ class MainForm:
         self.txt_password.place(x=250,y=130)
 
         Button(self.base,text="تست لاگین",command=self.login).place(x=310,y=170)
+        
+        
+        Frame(self.base)
+        Button(self.base,text="انتخاب فایل",command=self.select_file).place(x=20,y=210)
+
+        self.lbl_path = Label(self.base,bg="#ffffff",width="50",height="1")
+        self.lbl_path.place(x=100,y=213)
+
+
+        
 
     def generateForm(self) -> None:
         self.base.mainloop()  
@@ -30,9 +41,21 @@ class MainForm:
         str_password = self.txt_password.get("1.0", "end-1c")
         token = api.getToken(str_usename,str_password)
         if token != "":
-            showinfo("ورود با موفقیت انجام شد")
+            showinfo("موفقیت","ورود با موفقیت انجام شد")
         else:
-            showwarning("خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید")
+            showwarning("خطا","خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید")
+
+
+    def select_file(self):
+        filetypes = (
+            ('Excel files', '*.xlsx'),
+            ('All files', '*.*')
+        )
+
+        self.path_file = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
+        self.lbl_path.config(text=self.path_file)
+
+
 
 if __name__ == "__main__":
     form = MainForm()
