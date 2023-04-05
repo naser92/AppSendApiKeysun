@@ -96,6 +96,6 @@ class ExcellData ():
     
 
 if __name__ == "__main__":
-    ed = ExcellData("./data/sampel11.xlsx")
+    ed = ExcellData("./data/sampel11.xl")
     a = ed.checkExcel(2)
     print (a)

@@ -3,6 +3,7 @@ from tkinter import filedialog as fd
 from tkinter.messagebox import showinfo , showwarning
 from tkinter import ttk
 from core.api import ApiKeysun
+from core.ExcellData import ExcellData
 base = Tk() 
 api = ApiKeysun() 
 
@@ -59,6 +60,7 @@ class MainForm:
         if patern != 0:
             self.path_file = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
             self.lbl_path.config(text=self.path_file)
+            self.Excell = ExcellData(self.path_file)
         else:
             showwarning('انتخاب الگو',"نوع الگوی فاکتور را انتخاب کنید")
 
