@@ -39,37 +39,40 @@ class ExcellData ():
     
         
     def checkExcel(self, paternType:int):
-        data = openpyxl.load_workbook(self.path)
-        result = []
-        if len(data.sheetnames) > 3 or len(data.sheetnames) < 1:
-            return result
-        
-        index = 0
-        for sheet in data.sheetnames:
-            columns = data.get_sheet_by_name(sheet)
-            if index == 0 and paternType == 1:
-                if columns.max_column == 21 : 
-                    result.append(1) 
-                    self.name_column_invoice = sheet
-                else: result.append(0) 
-            elif index == 0 and paternType == 2:
-                if columns.max_column == 16 : 
-                    result.append(1) 
-                    self.name_column_invoice = sheet
-                else: result.append(0) 
-            elif index == 1 :
-                if columns.max_column == 20 : 
-                    result.append(1) 
-                    self.name_column_invoiceItem = sheet
-                else: result.append(0) 
-            elif index == 2 : 
-                if columns.max_column == 11 : 
-                    result.append(1) 
-                    self.name_column_payment =sheet
-                else: result.append(0) 
+        try:
+            data = openpyxl.load_workbook(self.path)
+            result = []
+            if len(data.sheetnames) > 3 or len(data.sheetnames) < 1:
+                return result
             
-            index =+ 1
-        return result
+            index = 0
+            for sheet in data.sheetnames:
+                columns = data.get_sheet_by_name(sheet)
+                if index == 0 and paternType == 1:
+                    if columns.max_column == 21 : 
+                        result.append(1) 
+                        self.name_column_invoice = sheet
+                    else: result.append(0) 
+                elif index == 0 and paternType == 2:
+                    if columns.max_column == 16 : 
+                        result.append(1) 
+                        self.name_column_invoice = sheet
+                    else: result.append(0) 
+                elif index == 1 :
+                    if columns.max_column == 20 : 
+                        result.append(1) 
+                        self.name_column_invoiceItem = sheet
+                    else: result.append(0) 
+                elif index == 2 : 
+                    if columns.max_column == 11 : 
+                        result.append(1) 
+                        self.name_column_payment = sheet
+                    else: result.append(0) 
+                
+                index =+ 1
+            return result
+        except:
+            return None
         # if len(data.sheetnames) == 3:
         #     self.name_column_invoice = data.sheetnames[0]
         #     self.name_column_invoiceItem = data.sheetnames[1]

@@ -48,8 +48,9 @@ class InvoiceData():
             "payerCardNumber": data[9],
             "payerNationalCode": data[10]
         }
+        return payment
 
-    def generateInvoice(self,invoice,type):
+    def generateInvoiceNo1(self,invoice):
         getItems = lambda x, xs: [y for y in xs if x[0] == y[0] and x[1] == y[1]]
         
         listItem= []
@@ -98,3 +99,4 @@ class InvoiceData():
                         
 
                 }
+        return factor

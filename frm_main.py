@@ -4,12 +4,15 @@ from tkinter.messagebox import showinfo , showwarning
 from tkinter import ttk
 from core.api import ApiKeysun
 from core.ExcellData import ExcellData
+from core.InvoiceData import InvoiceData
+from model.setting import SettingData
 base = Tk() 
 api = ApiKeysun() 
-
+setting = SettingData()
 class MainForm:
     def __init__(self):
         self.base = base
+        self.status = False
         self.base.geometry('500x500')  
         self.base.title("Api keysun")
         Label(self.base,bg="#d1ccc0",text="نرم افزار ارسال صورتحساب کیسان" ,width="500",height="4").pack()
@@ -35,8 +38,11 @@ class MainForm:
         self.lbl_path = Label(self.base,bg="#ffffff",width="50",height="1")
         self.lbl_path.place(x=100,y=243)
 
+        self.lbl_status = Label(self.base,text="فایل در دسترس نیست" ,bg="#ffffff",width='500', height="2")
+        self.lbl_status.place(x=0,y=450)
+       
 
-        
+        Button(self.base,text="ارسال اطلاعات",command=self.send_invoice).place(x=210,y=300)
 
     def generateForm(self) -> None:
         self.base.mainloop()  
@@ -61,9 +67,55 @@ class MainForm:
             self.path_file = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
             self.lbl_path.config(text=self.path_file)
             self.Excell = ExcellData(self.path_file)
+            result = self.Excell.checkExcel(patern)
+         
+            if result == None:
+                showwarning("خطا","فایل انتخابی مشکل دارد لطفا دوباره انتخاب کنید")
+            else:
+                messageItem = ["صورتحساب","اقلام صورتحساب","پرداخت‌های صورتحساب"]
+                self.status = True
+                for i,r in enumerate(result):
+                    if r == 0:  
+                        showwarning("خطا", " تعداد ستون های" + messageItem[i] + " " + "در الگوی انتخابی مقایرت دارد")
+                        self.status = False
+                        self.lbl_status.config(text="فایل خطا دار",bg="#a3001b")
+
+
+                if self.status : 
+                    self.lbl_status.config(text="دیتا آماده ارسال",bg="#08a300")
+                    self.numberPatern.config(state='disabled')
+                
         else:
             showwarning('انتخاب الگو',"نوع الگوی فاکتور را انتخاب کنید")
 
+
+    def send_invoice(self):
+        if self.status :
+            invoices = self.Excell.getInvoice()
+            items = self.Excell.getInvoiceItem()
+            payments = self.Excell.getPayment()
+            if len(invoices) <= 0:
+                showwarning("دیتا","تعداد صورتحساب ها صفر می باشد")
+            elif len(items) <= 0:
+                showwarning("دیتا","تعداد آیتم صورتحساب ها صفر می باشد")
+            else:
+                inD = InvoiceData(items,payments)
+                listInvoice = []
+                counter = 0
+                patern = self.numberPatern.current()
+                for index, invoice in enumerate(invoices):
+                    if patern == 1:
+                        i = inD.generateInvoiceNo1(invoice)
+                        listInvoice.append(i)
+                        counter += 1
+                
+                
+                if counter == setting.BatchSizeOfInvoices or  index ==  len(invoices) :
+                    counter = 0
+                 
+
+        else:
+            showwarning("بارگزاری اکسل","لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.")
 
 if __name__ == "__main__":
     form = MainForm()
