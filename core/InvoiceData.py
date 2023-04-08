@@ -68,7 +68,7 @@ class InvoiceData():
 
         factor = {
                     "invoiceNumber" : str(invoice[0]),
-                    "invoiceDate" : str(date),#invoice[1],
+                    "invoiceDate" : invoice[1],#str(date),#invoice[1],
                     "invoiceTime": None,
                     "invoiceType" : invoice[2],
                     "saleType" : 1,

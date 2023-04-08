@@ -24,6 +24,35 @@ class ApiKeysun:
             return token['data']['token']
         except:
             return ""
+        
+    def sendInvoice(self,invoices,listIndex,token):
+        try:
+            jsonInvoices = json.dumps(invoices)
+            header = {
+                    'Content-Type': 'application/json ; charset=utf-8',
+                    'Authorization' : "Bearer " + token
+                }
+            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6"
+            try:
+                result = r.post(url, jsonInvoices, headers=header, proxies=proxies,  verify=False,timeout=700)
+                rr = json.loads(result.content)
+                if result.status_code == 200:
+                    for invoice in listIndex:
+                        for data in rr['data']:
+                            if invoice[2] == data['uniqueId']:
+                                if data['status'] == 3:
+                                    pass
+                                else:
+                                    pass
+
+
+                else:
+                    pass
+            except:
+                pass
+
+        except:
+            pass
     
 
 if __name__ == "__main__":

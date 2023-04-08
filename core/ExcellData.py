@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import xlsxwriter
 import openpyxl
-
+from openpyxl.utils import get_column_letter
 
 class ExcellData ():
     def __init__(self, path) -> None:
@@ -69,7 +69,7 @@ class ExcellData ():
                         self.name_column_payment = sheet
                     else: result.append(0) 
                 
-                index =+ 1
+                index += 1
             return result
         except:
             return None
@@ -89,12 +89,49 @@ class ExcellData ():
         # else:
         #     return False
         # data._sheets[0]._parent.worksheets[0].max_column
+    @classmethod
+    def getLetter(col):
+        return get_column_letter(col)
+    
+    def preparationExcellN11(self):
 
-    def gettestdata(self):
-        wb = openpyxl.load_workbook(self.path)
-        data = pd.read_excel(self.path,sheet_name=None, dtype=str)
-        data = data.replace(np.nan, '')
-        item = np.array(data)
+        workbook = openpyxl.load_workbook(self.path)
+        worksheet = workbook[self.name_column_invoice]
+        worksheet[get_column_letter(22)+'1'] = "uniqueId"
+        worksheet[get_column_letter(23)+'1'] = "Status Request Server"
+        worksheet[get_column_letter(24)+'1'] = "taxSerialNumber"
+        worksheet[get_column_letter(25)+'1'] = "message"
+        worksheet[get_column_letter(26)+'1'] = "FieldError"
+        workbook.save(self.path)
+        # worksheet.write(0,22,"uniqueId")
+        # worksheet.write(0,23,"Status Request Server")
+        # worksheet.write(0,24,"taxSerialNumber")
+        # worksheet.write(0,25,"message")
+        # worksheet.write(0,26,"FieldError")
+
+        # workbook.close()
+
+
+
+    def preparationExcellN21(self):
+        workbook = openpyxl.load_workbook(self.path)
+        worksheet = workbook[self.name_column_invoice]
+        worksheet[get_column_letter(17)+'1'] = "uniqueId"
+        worksheet[get_column_letter(18)+'1'] = "Status Request Server"
+        worksheet[get_column_letter(19)+'1'] = "taxSerialNumber"
+        worksheet[get_column_letter(20)+'1'] = "message"
+        worksheet[get_column_letter(21)+'1'] = "FieldError"
+        workbook.save(self.path)
+        # workbook = xlsxwriter.Workbook(self.path)
+        # worksheet = workbook.add_worksheet(self.name_column_invoice)
+
+        # worksheet.write(0,17,"uniqueId")
+        # worksheet.write(0,18,"Status Request Server")
+        # worksheet.write(0,19,"taxSerialNumber")
+        # worksheet.write(0,20,"message")
+        # worksheet.write(0,21,"FieldError")
+
+        # workbook.close()
 
     
 

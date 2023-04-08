@@ -6,6 +6,8 @@ from core.api import ApiKeysun
 from core.ExcellData import ExcellData
 from core.InvoiceData import InvoiceData
 from model.setting import SettingData
+from threading import Thread
+
 base = Tk() 
 api = ApiKeysun() 
 setting = SettingData()
@@ -30,9 +32,10 @@ class MainForm:
         self.numberPatern = ttk.Combobox(self.base, width=40, value=["انتخاب الگو صورتحساب","الگو 1 صورتحساب همراه با اطلاعات خریدار","الگو 2 صورتحساب بدون اطلاعات خریدار"])
         self.numberPatern.current(0)
         self.numberPatern.place(x=100,y=210)
+
         
         
-        
+
         Button(self.base,text="انتخاب فایل",command=self.select_file).place(x=20,y=240)
 
         self.lbl_path = Label(self.base,bg="#ffffff",width="50",height="1")
@@ -43,6 +46,14 @@ class MainForm:
        
 
         Button(self.base,text="ارسال اطلاعات",command=self.send_invoice).place(x=210,y=300)
+
+        self.progressbar = ttk.Progressbar()
+        self.progressbar.place(x=50,y=330,width=400)
+       
+
+    def btn_SendInvoice_click(self):
+        self.Tread = Thread(target=self.send_invoice)
+        self.Tread.start()
 
     def generateForm(self) -> None:
         self.base.mainloop()  
@@ -88,12 +99,15 @@ class MainForm:
         else:
             showwarning('انتخاب الگو',"نوع الگوی فاکتور را انتخاب کنید")
 
+  
 
     def send_invoice(self):
         if self.status :
             invoices = self.Excell.getInvoice()
             items = self.Excell.getInvoiceItem()
             payments = self.Excell.getPayment()
+            self.progressbar.configure(maximum=len(invoices))
+
             if len(invoices) <= 0:
                 showwarning("دیتا","تعداد صورتحساب ها صفر می باشد")
             elif len(items) <= 0:
@@ -101,19 +115,34 @@ class MainForm:
             else:
                 inD = InvoiceData(items,payments)
                 listInvoice = []
+                listIndex = []
                 counter = 0
                 patern = self.numberPatern.current()
+
+                # if patern == 1:
+                #     self.Excell.preparationExcellN11()
+                # elif patern == 2:
+                #     self.Excell.preparationExcellN21()
+                
                 for index, invoice in enumerate(invoices):
+                  
+                  
                     if patern == 1:
                         i = inD.generateInvoiceNo1(invoice)
                         listInvoice.append(i)
+                        listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
                         counter += 1
-                
-                
-                if counter == setting.BatchSizeOfInvoices or  index ==  len(invoices) :
-                    counter = 0
-                 
+                    
+                    
+                    if counter == setting.BatchSizeOfInvoices or  index ==  (len(invoices) - 1) :
+                        print (listIndex)
+                        counter = 0
+                    
+                    self.progressbar['value'] = index+1
+                    self.base.update_idletasks()
+                    self.base.after(100)
 
+                
         else:
             showwarning("بارگزاری اکسل","لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.")
 
