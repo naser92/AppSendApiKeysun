@@ -100,3 +100,55 @@ class InvoiceData():
 
                 }
         return factor
+    
+    def generateInvoiceNo2(self,invoice):
+        getItems = lambda x, xs: [y for y in xs if x[0] == y[0] and x[1] == y[1]]
+        
+        listItem= []
+        indexItem = getItems(invoice,self.ListInvoiceItem)
+        for item in indexItem:
+                invoiceItemM = self.generateInvoiceItem(item)
+                listItem.append(invoiceItemM)
+        
+        listPayment =[]
+        indexPay = getItems(invoice,self.ListPayment)
+        if len(indexPay) > 0:
+            for item in indexPay:
+                    PaymentM = self.generateInvoiceItem(item)
+                    listPayment.append(PaymentM)
+
+        
+        factor = {
+                    "invoiceNumber" : str(invoice[0]),
+                    "invoiceDate" : invoice[1],#str(date),#
+                    "invoiceTime": str(invoice[11]) if invoice[11] != "" else None,#None,
+                    "invoiceType" : invoice[2],
+                    "saleType" : invoice[5],
+                    "referenceTaxSerialNumber" : invoice[6],
+                    "invoicePattern" : invoice[3],
+                    "invoiceSubject" : invoice[4],
+                    "paymentType" : 1,#invoice[11],
+                    "uniqueId": str(uuid.uuid4()),
+                    "buyerType" : invoice[7],
+                    "buyerCompanyName": None,
+                    "buyerFirstName": None ,
+                    "buyerLastName": None,
+                    "buyerNationalCode" : invoice[8] if invoice[8] != "" else None,
+                    "buyerEconomicCode" : invoice[9] if invoice[9] != "" else None,
+                    "buyerPassportNumber": None,
+                    "buyerPostalCode" : None,#invoice[10],
+                    "buyerPhoneNumber": None ,
+                    "sellerCustomsDeclarationNumber " :None,#invoice[15],
+                    "sellerCustomsLicenseNumber" :None,#invoice[14],
+                    "sellerContractRegistrationNumber" :None,#invoice[16],
+                    "flightType": None,
+                    "billId": None,
+                    "tax17" : invoice[14],
+                    "creditPaymentAmount" :None,# invoice[12],
+                    "description": invoice[15],
+                    "invoiceItems":  listItem,
+                    "invoicePayments": listPayment
+                        
+
+                }
+        return factor

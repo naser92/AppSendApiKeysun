@@ -103,13 +103,6 @@ class ExcellData ():
         worksheet[get_column_letter(25)+'1'] = "message"
         worksheet[get_column_letter(26)+'1'] = "FieldError"
         workbook.save(self.path)
-        # worksheet.write(0,22,"uniqueId")
-        # worksheet.write(0,23,"Status Request Server")
-        # worksheet.write(0,24,"taxSerialNumber")
-        # worksheet.write(0,25,"message")
-        # worksheet.write(0,26,"FieldError")
-
-        # workbook.close()
 
 
 
@@ -122,17 +115,26 @@ class ExcellData ():
         worksheet[get_column_letter(20)+'1'] = "message"
         worksheet[get_column_letter(21)+'1'] = "FieldError"
         workbook.save(self.path)
-        # workbook = xlsxwriter.Workbook(self.path)
-        # worksheet = workbook.add_worksheet(self.name_column_invoice)
+        
+    def SaveResultN11(self,data,index):
+        workbook = openpyxl.load_workbook(self.path)
+        worksheet = workbook[self.name_column_invoice]
+        worksheet[get_column_letter(22)+str(index+1)] = data[0]#"uniqueId"
+        worksheet[get_column_letter(23)+str(index+1)] = data[1]#"Status Request Server"
+        worksheet[get_column_letter(24)+str(index+1)] = data[2]#"taxSerialNumber"
+        worksheet[get_column_letter(25)+str(index+1)] = data[3]#"message"
+        worksheet[get_column_letter(26)+str(index+1)] = data[4]#"FieldError"
+        workbook.save(self.path)
 
-        # worksheet.write(0,17,"uniqueId")
-        # worksheet.write(0,18,"Status Request Server")
-        # worksheet.write(0,19,"taxSerialNumber")
-        # worksheet.write(0,20,"message")
-        # worksheet.write(0,21,"FieldError")
-
-        # workbook.close()
-
+    def SaveResultN21(self,data,index):
+        workbook = openpyxl.load_workbook(self.path)
+        worksheet = workbook[self.name_column_invoice]
+        worksheet[get_column_letter(17)+str(index+1)] = data[0]#"uniqueId"
+        worksheet[get_column_letter(18)+str(index+1)] = data[1]#"Status Request Server"
+        worksheet[get_column_letter(19)+str(index+1)] = data[2]#"taxSerialNumber"
+        worksheet[get_column_letter(20)+str(index+1)] = data[3]#"message"
+        worksheet[get_column_letter(21)+str(index+1)] = data[4]#"FieldError
+        workbook.save(self.path)
     
 
 if __name__ == "__main__":

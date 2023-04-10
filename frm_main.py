@@ -32,9 +32,26 @@ class MainForm:
         self.numberPatern = ttk.Combobox(self.base, width=40, value=["انتخاب الگو صورتحساب","الگو 1 صورتحساب همراه با اطلاعات خریدار","الگو 2 صورتحساب بدون اطلاعات خریدار"])
         self.numberPatern.current(0)
         self.numberPatern.place(x=100,y=210)
+        
+        #start--------------Result_Lable
+        Label(self.base,text="تعداد کل فاکتور ها").place(x=350,y=360)
+        self.lbl_number_allFactor  = Label(self.base,text="0")  
+        self.lbl_number_allFactor.place(x=300,y=360)   
 
         
+        Label(self.base,text="تعداد فاکاور ارسالی").place(x=350,y=380)  
+        self.lbl_number_sendFactor  = Label(self.base,text="0")
+        self.lbl_number_sendFactor.place(x=300,y=380)   
+
+        Label(self.base,text="فاکتور ثبت شده").place(x=350,y=400)
+        self.lbl_number_successFactor  = Label(self.base,text="0")
+        self.lbl_number_successFactor.place(x=300,y=400) 
+
+        Label(self.base,text="فاکتور خطادار").place(x=350,y=420)
+        self.lbl_number_ErrorFactor  = Label(self.base,text="0")
+        self.lbl_number_ErrorFactor.place(x=300,y=420) 
         
+        #end--------------Result_Lable
 
         Button(self.base,text="انتخاب فایل",command=self.select_file).place(x=20,y=240)
 
@@ -102,49 +119,108 @@ class MainForm:
   
 
     def send_invoice(self):
-        if self.status :
-            invoices = self.Excell.getInvoice()
-            items = self.Excell.getInvoiceItem()
-            payments = self.Excell.getPayment()
-            self.progressbar.configure(maximum=len(invoices))
-
-            if len(invoices) <= 0:
-                showwarning("دیتا","تعداد صورتحساب ها صفر می باشد")
-            elif len(items) <= 0:
-                showwarning("دیتا","تعداد آیتم صورتحساب ها صفر می باشد")
-            else:
-                inD = InvoiceData(items,payments)
-                listInvoice = []
-                listIndex = []
-                counter = 0
-                patern = self.numberPatern.current()
-
-                # if patern == 1:
-                #     self.Excell.preparationExcellN11()
-                # elif patern == 2:
-                #     self.Excell.preparationExcellN21()
-                
-                for index, invoice in enumerate(invoices):
-                  
-                  
-                    if patern == 1:
-                        i = inD.generateInvoiceNo1(invoice)
-                        listInvoice.append(i)
-                        listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
-                        counter += 1
-                    
-                    
-                    if counter == setting.BatchSizeOfInvoices or  index ==  (len(invoices) - 1) :
-                        print (listIndex)
-                        counter = 0
-                    
-                    self.progressbar['value'] = index+1
-                    self.base.update_idletasks()
-                    self.base.after(100)
-
-                
+        str_usename = self.txt_username.get("1.0", "end-1c")
+        str_password = self.txt_password.get("1.0", "end-1c")
+        if str_usename == '' or str_password == '':
+            showwarning("ورود","نام کاربری ویا کلمه عبور را به درستی وارد کنید")
         else:
-            showwarning("بارگزاری اکسل","لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.")
+            if self.status :
+                invoices = self.Excell.getInvoice()
+                items = self.Excell.getInvoiceItem()
+                payments = self.Excell.getPayment()
+                
+
+                
+                self.progressbar.configure(maximum=len(invoices))
+                sucessCount = 0
+                errorCount = 0
+                
+
+                if len(invoices) <= 0:
+                    showwarning("دیتا","تعداد صورتحساب ها صفر می باشد")
+                elif len(items) <= 0:
+                    showwarning("دیتا","تعداد آیتم صورتحساب ها صفر می باشد")
+                else:
+                    inD = InvoiceData(items,payments)
+                    listInvoice = []
+                    listIndex = []
+                    counter = 0
+                    patern = self.numberPatern.current()
+
+                    if patern == 1:
+                        self.Excell.preparationExcellN11()
+                    elif patern == 2:
+                        self.Excell.preparationExcellN21()
+
+                    self.lbl_number_allFactor.config(text=str(len(invoices)))
+                    
+                    for index, invoice in enumerate(invoices):
+                    
+                    
+                        if patern == 1:
+                            i = inD.generateInvoiceNo1(invoice)
+                            listInvoice.append(i)
+                            listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
+                            counter += 1
+                        elif patern == 2:
+                            i = inD.generateInvoiceNo1
+                        
+                        if counter == setting.BatchSizeOfInvoices or  index ==  (len(invoices) - 1) :
+                            # print (listIndex)
+                            token = api.getToken(str_usename,str_password)
+                            if token != "":
+                                result = api.sendInvoice(listInvoice,token)
+                                if result[0] == 200:
+                                    data = result[1]
+                                    for invoiceItem in listIndex:
+                                        for d in data['data']:
+                                            if invoiceItem[2] == d['uniqueId']:
+                                                if  d['status'] == 3:
+                                                    if patern == 1:
+                                                        self.Excell.SaveResultN11([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
+                                                    elif patern ==2:
+                                                        self.Excell.SaveResultN21([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
+                                                    sucessCount += 1
+                                                else:
+                                                    if patern == 1:
+                                                        self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
+                                                    elif patern ==2:
+                                                        self.Excell.SaveResultN21([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
+                                                    errorCount += 1
+
+                                            elif d == "Erorrserver":
+                                                if patern == 1:
+                                                    self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
+                                                elif patern ==2:
+                                                    self.Excell.SaveResultN21([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
+                                                errorCount += 1
+                                
+                                else:
+                                    if patern == 1:
+                                        self.Excell.SaveResultN11([listInvoice[1],d['status'],"systemError","server"],invoiceItem[0])
+                                    elif patern ==2:
+                                        self.Excell.SaveResultN11([listInvoice[1],d['status'],"systemError","server"],invoiceItem[0])
+                                    errorCount += 1
+                            
+                            
+                            else:                    
+                                print("login Faild")
+                            counter = 0
+                            listInvoice = []
+                            listIndex = []
+                        
+                            self.lbl_number_sendFactor.config(text=str(index+1))
+                        
+                        self.lbl_number_ErrorFactor.config(text=str(errorCount))
+                        self.lbl_number_successFactor.config(text=str(sucessCount))
+
+                        self.progressbar['value'] = index+1
+                        self.base.update_idletasks()
+                        self.base.after(100)
+
+                    showinfo("اتمام","تعداد %d فاکتور با موفقیت ارسال گردید میتوانید نتیجه را در اکسل انتخابی مشاهده نمایید"%len(invoices))
+            else:
+                showwarning("بارگزاری اکسل","لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.")
 
 if __name__ == "__main__":
     form = MainForm()

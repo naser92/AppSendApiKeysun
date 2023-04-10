@@ -25,8 +25,10 @@ class ApiKeysun:
         except:
             return ""
         
-    def sendInvoice(self,invoices,listIndex,token):
+    def sendInvoice(self,invoices,token):
         try:
+            
+            proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
             jsonInvoices = json.dumps(invoices)
             header = {
                     'Content-Type': 'application/json ; charset=utf-8',
@@ -37,22 +39,27 @@ class ApiKeysun:
                 result = r.post(url, jsonInvoices, headers=header, proxies=proxies,  verify=False,timeout=700)
                 rr = json.loads(result.content)
                 if result.status_code == 200:
-                    for invoice in listIndex:
-                        for data in rr['data']:
-                            if invoice[2] == data['uniqueId']:
-                                if data['status'] == 3:
-                                    pass
-                                else:
-                                    pass
+                    return [result.status_code,rr]
+                # returnResult = []
+                # if result.status_code == 200:
+                #     for invoice in listIndex:
+                #         for data in rr['data']:
+                #             if invoice[2] == data['uniqueId']:
+                #                 if data['status'] == 3:
+                                    
+                #                 else:
+                #                     pass
 
 
                 else:
-                    pass
+                    return [result.status_code,"serverError"]
+            
             except:
-                pass
+                return [result.status_code,"Erorrserver"]
+
 
         except:
-            pass
+            return[-1,"ErrorSystem"]
     
 
 if __name__ == "__main__":
