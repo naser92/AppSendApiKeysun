@@ -28,7 +28,7 @@ class ApiKeysun:
     def sendInvoice(self,invoices,token):
         try:
             
-            proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
+            # proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
             jsonInvoices = json.dumps(invoices)
             header = {
                     'Content-Type': 'application/json ; charset=utf-8',
@@ -36,7 +36,8 @@ class ApiKeysun:
                 }
             url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6"
             try:
-                result = r.post(url, jsonInvoices, headers=header, proxies=proxies,  verify=False,timeout=700)
+                # result = r.post(url, jsonInvoices, headers=header, proxies=proxies,  verify=False,timeout=700)
+                result = r.post(url, jsonInvoices, headers=header,timeout=700)
                 rr = json.loads(result.content)
                 if result.status_code == 200:
                     return [result.status_code,rr]

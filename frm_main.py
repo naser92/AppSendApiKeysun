@@ -40,7 +40,7 @@ class MainForm:
         self.lbl_number_allFactor.place(x=300,y=360)   
 
         
-        Label(self.base,text="تعداد فاکاور ارسالی").place(x=350,y=380)  
+        Label(self.base,text="تعداد فاکتور ارسالی").place(x=350,y=380)  
         self.lbl_number_sendFactor  = Label(self.base,text="0")
         self.lbl_number_sendFactor.place(x=300,y=380)   
 
@@ -215,7 +215,7 @@ class MainForm:
                             self.base.update_idletasks()
                             self.base.after(500)
                             self.base.update()
-                            time.sleep(1)
+                            
                         
                         self.lbl_number_ErrorFactor.config(text=str(errorCount))
                         self.lbl_number_successFactor.config(text=str(sucessCount))
@@ -224,7 +224,7 @@ class MainForm:
                         self.base.update_idletasks()
                         self.base.after(500)
                         self.base.update()
-                        time.sleep(1)
+                        
 
 
                     showinfo("اتمام","تعداد %d فاکتور با موفقیت ارسال گردید میتوانید نتیجه را در اکسل انتخابی مشاهده نمایید"%len(invoices))
