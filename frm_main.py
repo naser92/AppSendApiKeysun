@@ -1,6 +1,6 @@
 from tkinter import*  
 from tkinter import filedialog as fd
-from tkinter.messagebox import showinfo , showwarning
+from tkinter.messagebox import showinfo , showwarning,showerror
 from tkinter import ttk
 from core.api import ApiKeysun
 from core.ExcellData import ExcellData
@@ -18,6 +18,9 @@ class MainForm:
         self.status = False
         self.base.geometry('500x500')  
         self.base.title("Api keysun")
+        self.base.iconbitmap("data/logo.ico")
+        self.base.eval('tk::PlaceWindow . center')
+        self.base.resizable(0,0)
         Label(self.base,bg="#d1ccc0",text="نرم افزار ارسال صورتحساب کیسان" ,width="500",height="4").pack()
         
         Label(self.base,text="نام کاربری").place(x=400,y=100)
@@ -59,7 +62,7 @@ class MainForm:
         self.lbl_path = Label(self.base,bg="#ffffff",width="50",height="1")
         self.lbl_path.place(x=100,y=243)
 
-        self.lbl_status = Label(self.base,text="فایل در دسترس نیست" ,bg="#ffffff",width='500', height="2")
+        self.lbl_status = Label(self.base,text="فایل در دسترس نیست" ,bg="#ffffff",width='100', height="2")
         self.lbl_status.place(x=0,y=450)
        
 
@@ -83,7 +86,7 @@ class MainForm:
         if token != "":
             showinfo("موفقیت","ورود با موفقیت انجام شد")
         else:
-            showwarning("خطا","خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید")
+            showerror("خطا","خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید")
 
 
     def select_file(self):
@@ -117,7 +120,8 @@ class MainForm:
         else:
             showwarning('انتخاب الگو',"نوع الگوی فاکتور را انتخاب کنید")
 
-  
+    def reset_form(self):
+        pass
 
     def send_invoice(self):
         str_usename = self.txt_username.get("1.0", "end-1c")
@@ -229,7 +233,7 @@ class MainForm:
 
                     showinfo("اتمام","تعداد %d فاکتور با موفقیت ارسال گردید میتوانید نتیجه را در اکسل انتخابی مشاهده نمایید"%len(invoices))
             else:
-                showwarning("بارگزاری اکسل","لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.")
+                showerror("بارگزاری اکسل","لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.")
 
 if __name__ == "__main__":
     form = MainForm()
