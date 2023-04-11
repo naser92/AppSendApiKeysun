@@ -1,5 +1,5 @@
 import uuid
-
+import jdatetime
 class InvoiceData():
     def __init__(self,listInvoiceItem,listPayment) -> None:
         self.ListInvoiceItem = listInvoiceItem
@@ -65,10 +65,12 @@ class InvoiceData():
             for item in indexPay:
                     PaymentM = self.generateInvoiceItem(item)
                     listPayment.append(PaymentM)
+        date = str(invoice[1]).split('/')
+        date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
 
         factor = {
                     "invoiceNumber" : str(invoice[0]),
-                    "invoiceDate" : invoice[1],#str(date),#invoice[1],
+                    "invoiceDate" : str(date),
                     "invoiceTime": None,
                     "invoiceType" : invoice[2],
                     "saleType" : 1,
@@ -94,6 +96,8 @@ class InvoiceData():
                     "tax17" : invoice[19],
                     "creditPaymentAmount" : invoice[12],
                     "description": invoice[20],
+                    "sellerBranch":invoice[12],
+                    "buyerBranch":invoice[13],
                     "invoiceItems":  listItem,
                     "invoicePayments": listPayment
                         
@@ -116,11 +120,13 @@ class InvoiceData():
             for item in indexPay:
                     PaymentM = self.generateInvoiceItem(item)
                     listPayment.append(PaymentM)
-
+        
+        date = str(invoice[1]).split('/')
+        date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
         
         factor = {
                     "invoiceNumber" : str(invoice[0]),
-                    "invoiceDate" : invoice[1],#str(date),#
+                    "invoiceDate" : str(date),
                     "invoiceTime": str(invoice[11]) if invoice[11] != "" else None,#None,
                     "invoiceType" : invoice[2],
                     "saleType" : invoice[5],
@@ -136,7 +142,7 @@ class InvoiceData():
                     "buyerNationalCode" : invoice[8] if invoice[8] != "" else None,
                     "buyerEconomicCode" : invoice[9] if invoice[9] != "" else None,
                     "buyerPassportNumber": None,
-                    "buyerPostalCode" : None,#invoice[10],
+                    "buyerPostalCode" : invoice[10] if invoice[10] != "" else None,
                     "buyerPhoneNumber": None ,
                     "sellerCustomsDeclarationNumber " :None,#invoice[15],
                     "sellerCustomsLicenseNumber" :None,#invoice[14],

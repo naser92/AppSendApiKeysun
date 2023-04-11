@@ -7,6 +7,7 @@ from core.ExcellData import ExcellData
 from core.InvoiceData import InvoiceData
 from model.setting import SettingData
 from threading import Thread
+import time
 
 base = Tk() 
 api = ApiKeysun() 
@@ -160,10 +161,12 @@ class MainForm:
                         if patern == 1:
                             i = inD.generateInvoiceNo1(invoice)
                             listInvoice.append(i)
-                            listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
-                            counter += 1
                         elif patern == 2:
-                            i = inD.generateInvoiceNo1
+                            i = inD.generateInvoiceNo2(invoice)
+                            listInvoice.append(i)
+
+                        listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
+                        counter += 1
                         
                         if counter == setting.BatchSizeOfInvoices or  index ==  (len(invoices) - 1) :
                             # print (listIndex)
@@ -208,15 +211,21 @@ class MainForm:
                             counter = 0
                             listInvoice = []
                             listIndex = []
-                        
                             self.lbl_number_sendFactor.config(text=str(index+1))
+                            self.base.update_idletasks()
+                            self.base.after(500)
+                            self.base.update()
+                            time.sleep(1)
                         
                         self.lbl_number_ErrorFactor.config(text=str(errorCount))
                         self.lbl_number_successFactor.config(text=str(sucessCount))
-
                         self.progressbar['value'] = index+1
+                        self.progressbar.update()
                         self.base.update_idletasks()
-                        self.base.after(100)
+                        self.base.after(500)
+                        self.base.update()
+                        time.sleep(1)
+
 
                     showinfo("اتمام","تعداد %d فاکتور با موفقیت ارسال گردید میتوانید نتیجه را در اکسل انتخابی مشاهده نمایید"%len(invoices))
             else:
