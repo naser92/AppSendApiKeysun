@@ -25,22 +25,57 @@ class MainForm:
         self.base.resizable(0,0)
         Label(self.base,bg="#d1ccc0",text="نرم افزار ارسال صورتحساب کیسان" ,width="500",height="4").pack()
         
-        self.frm_login = Frame(self.base)
-        self.frm_login.pack()
-        Label(self.frm_login,text="نام کاربری").place(x=400,y=100)
+        #start-------------fromLogin
+        # self.frm_login = Frame(self.base)
+        # self.frm_login.pack()
+        Label(self.base,text="نام کاربری").place(x=350,y=70)
         self.txt_username = Text(self.base,width="30",height="1")
-        self.txt_username.place(x=100,y=100) 
+        self.txt_username.place(x=100,y=70) 
 
-        Label(self.frm_login,text="کلمه عبور").place(x=400,y=130)
+        Label(self.base,text="کلمه عبور").place(x=350,y=100)
         self.txt_password = Text(self.base,width="30",height="1")
-        self.txt_password.place(x=100,y=130)
+        self.txt_password.place(x=100,y=100)
 
         self.btn_testLogin = ttk.Button(self.base,text="تست لاگین",command=self.loginTest)
-        self.btn_testLogin.place(x=200,y=165)
+        self.btn_testLogin.place(x=250,y=130)
 
-        self.numberPatern = ttk.Combobox(self.base, width=40,state="readonly" ,value=["انتخاب الگو صورتحساب","الگو 1 صورتحساب همراه با اطلاعات خریدار","الگو 2 صورتحساب بدون اطلاعات خریدار"])
+        self.btn_reset = ttk.Button(self.base,text="ریست  فرم",command=self.reset_form)
+        self.btn_reset.place(x=110,y=130)
+        #End-------------fromLogin
+
+        
+    
+
+
+        self.numberPatern = ttk.Combobox(self.base, width=45,state="readonly" ,value=["انتخاب الگو صورتحساب","الگو 1 صورتحساب همراه با اطلاعات خریدار","الگو 2 صورتحساب بدون اطلاعات خریدار"])
         self.numberPatern.current(0)
-        self.numberPatern.place(x=100,y=210)
+        self.numberPatern.place(x=100,y=180)
+        
+
+        self.btn_selectFile = ttk.Button(self.base,text="انتخاب فایل",command=self.select_file)
+        self.btn_selectFile.place(x=20,y=210)
+
+        self.lbl_path = Label(self.base,bg="#ffffff",width="50",height="1")
+        self.lbl_path.place(x=100,y=213)
+
+        #start------------radioButom
+        self.valDate = IntVar()
+        self.R1 = ttk.Radiobutton(self.base,text="تاریخ ورودی میلادی",variable=self.valDate,value=1)
+        self.R1.place(x=300,y=235)
+        Label(self.base,text="yyyy-mm-dd").place(x=320,y=255)
+
+        self.R2 = ttk.Radiobutton(self.base,text="تاریخ ورودی شمسی",variable=self.valDate,value=2)
+        self.R2.place(x=120,y=235)
+        Label(self.base,text="yyyy/mm/dd").place(x=140,y=255)
+
+        #end------------radioButom
+
+        self.btn_sendInvoice = ttk.Button(self.base,text="ارسال اطلاعات",command=self.send_invoice)
+        self.btn_sendInvoice.place(x=360,y=300)
+
+        self.progressbar = ttk.Progressbar()
+        self.progressbar.place(x=50,y=330,width=400)
+
         
         #start--------------Result_Lable
         Label(self.base,text="تعداد کل فاکتور ها").place(x=350,y=360)
@@ -62,24 +97,11 @@ class MainForm:
         
         #end--------------Result_Lable
 
-        self.btn_selectFile = ttk.Button(self.base,text="انتخاب فایل",command=self.select_file)
-        self.btn_selectFile.place(x=20,y=240)
-
-        self.lbl_path = Label(self.base,bg="#ffffff",width="50",height="1")
-        self.lbl_path.place(x=100,y=243)
-
+        
         self.lbl_status = Label(self.base,text="فایل در دسترس نیست" ,bg="#ffffff",width='100', height="2")
-        self.lbl_status.place(x=0,y=450)
-       
+        self.lbl_status.place(x=0,y=464)
 
-        self.btn_sendInvoice = ttk.Button(self.base,text="ارسال اطلاعات",command=self.send_invoice)
-        self.btn_sendInvoice.place(x=360,y=300)
 
-        self.progressbar = ttk.Progressbar()
-        self.progressbar.place(x=50,y=330,width=400)
-
-        self.btn_reset = ttk.Button(self.base,text="ریست  فرم",command=self.reset_form)
-        self.btn_reset.place(x=60,y=300)
        
 
     def btn_SendInvoice_click(self):
@@ -134,6 +156,8 @@ class MainForm:
         self.btn_reset.state(["disabled"])
         self.btn_sendInvoice.state(["disabled"])
         self.lbl_status.config(text="در حال ارسال لطفا منتظر بمانید ...",bg="#009FBD")
+        self.R1.config(state="disabled")
+        self.R2.config(state="disabled")
         
 
     def select_file(self):
@@ -179,13 +203,18 @@ class MainForm:
         self.btn_reset.state(["!disabled"])
         self.btn_sendInvoice.state(["!disabled"])
         self.lbl_path.config(text="")
+        self.R1.config(state="normal")
+        self.R2.config(state="normal")
 
 
     def send_invoice(self):
         str_usename = self.txt_username.get("1.0", "end-1c")
         str_password = self.txt_password.get("1.0", "end-1c")
+        vdate = self.valDate.get()
         if str_usename == '' or str_password == '':
             showwarning("ورود","نام کاربری ویا کلمه عبور را به درستی وارد کنید")
+        elif vdate == 0 :
+            showwarning("نوع تاریخ","نوع ورودی تاریخ را مشخص نمایید")
         else:
             c = self.checkToken(str_usename)
             if c:
@@ -201,7 +230,7 @@ class MainForm:
                     sucessCount = 0
                     errorCount = 0
                     
-
+                    
                     if len(invoices) <= 0:
                         showwarning("دیتا","تعداد صورتحساب ها صفر می باشد")
                     elif len(items) <= 0:
