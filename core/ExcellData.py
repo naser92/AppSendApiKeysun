@@ -3,11 +3,13 @@ import numpy as np
 import xlsxwriter
 import openpyxl
 from openpyxl.utils import get_column_letter
+import shutil
+import os
 
 class ExcellData ():
     def __init__(self, path) -> None:
         self.path = path
-
+          
     
     def getInvoice(self):
         try:
@@ -73,28 +75,24 @@ class ExcellData ():
             return result
         except:
             return None
-        # if len(data.sheetnames) == 3:
-        #     self.name_column_invoice = data.sheetnames[0]
-        #     self.name_column_invoiceItem = data.sheetnames[1]
-        #     self.name_column_payment = data.sheetnames[2]
-        #     if paternType == 1:
-        #         c = data.get_sheet_by_name(self.name_column_invoice)
-        #         print(c)  
-        # elif len(data.sheetnames) == 2:
-        #     self.name_column_invoice = data.sheetnames[0]
-        #     self.name_column_invoiceItem = data.sheetnames[1]
-        #     if paternType == 1:
-        #         c = data.get_sheet_by_name(self.name_column_invoice)
-        #         print(c.max_column)  
-        # else:
-        #     return False
-        # data._sheets[0]._parent.worksheets[0].max_column
+     
     @classmethod
     def getLetter(col):
         return get_column_letter(col)
     
+    def copyFile(self,path):
+        try:
+            new  = path[:-5] + "_read.xlsx"
+            result = path[:-5] + "_result.xlsx"
+            shutil.copyfile(path, new,follow_symlinks=True)
+            shutil.copyfile(path, result,follow_symlinks=True)
+            os.remove(path)
+            self.path = result
+        except:
+            self.path = path
+    
     def preparationExcellN11(self):
-
+        self.copyFile(self.path)
         workbook = openpyxl.load_workbook(self.path)
         worksheet = workbook[self.name_column_invoice]
         worksheet[get_column_letter(22)+'1'] = "uniqueId"
@@ -107,6 +105,7 @@ class ExcellData ():
 
 
     def preparationExcellN21(self):
+        self.copyFile(self.path)
         workbook = openpyxl.load_workbook(self.path)
         worksheet = workbook[self.name_column_invoice]
         worksheet[get_column_letter(17)+'1'] = "uniqueId"
@@ -138,6 +137,8 @@ class ExcellData ():
     
 
 if __name__ == "__main__":
-    ed = ExcellData("./data/sampel11.xl")
-    a = ed.checkExcel(2)
-    print (a)
+    ed = ExcellData("./data/sampel11.xlsx")
+    # a = ed.checkExcel(2)
+    p = "./data/sampel11.xlsx"
+    p = p[:-5] + "_result.xlsx"  
+    print (p)

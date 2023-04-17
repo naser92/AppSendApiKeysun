@@ -50,7 +50,7 @@ class InvoiceData():
         }
         return payment
 
-    def generateInvoiceNo1(self,invoice):
+    def generateInvoiceNo1(self,invoice,vDate):
         getItems = lambda x, xs: [y for y in xs if x[0] == y[0] and x[1] == y[1]]
         
         listItem= []
@@ -65,8 +65,13 @@ class InvoiceData():
             for item in indexPay:
                     PaymentM = self.generateInvoiceItem(item)
                     listPayment.append(PaymentM)
-        date = str(invoice[1]).split('/')
-        date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
+        if vDate == 1:
+            date = invoice[1]
+        elif vDate == 2 :
+            date = str(invoice[1]).split('/')
+            date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
+        else:
+            date = ""
 
         factor = {
                     "invoiceNumber" : str(invoice[0]),
@@ -105,7 +110,7 @@ class InvoiceData():
                 }
         return factor
     
-    def generateInvoiceNo2(self,invoice):
+    def generateInvoiceNo2(self,invoice,vDate):
         getItems = lambda x, xs: [y for y in xs if x[0] == y[0] and x[1] == y[1]]
         
         listItem= []
@@ -120,10 +125,14 @@ class InvoiceData():
             for item in indexPay:
                     PaymentM = self.generateInvoiceItem(item)
                     listPayment.append(PaymentM)
-        
-        date = str(invoice[1]).split('/')
-        date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
-        
+        if vDate == 1:
+            date = invoice[1]
+        elif vDate == 2 :
+            date = str(invoice[1]).split('/')
+            date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
+        else:
+            date = ""
+
         factor = {
                     "invoiceNumber" : str(invoice[0]),
                     "invoiceDate" : str(date),

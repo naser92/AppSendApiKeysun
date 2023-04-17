@@ -29,45 +29,41 @@ class MainForm:
         # self.frm_login = Frame(self.base)
         # self.frm_login.pack()
         Label(self.base,text="نام کاربری").place(x=350,y=70)
-        self.txt_username = Text(self.base,width="30",height="1")
+        # self.txt_username = Text(self.base,width="30",height="1")
+        self.txt_username = ttk.Entry(self.base,width=40)
         self.txt_username.place(x=100,y=70) 
 
         Label(self.base,text="کلمه عبور").place(x=350,y=100)
-        self.txt_password = Text(self.base,width="30",height="1")
+        # self.txt_password = ttk.Entry(self.base,width="30",height="1",show='*')
+        self.txt_password = ttk.Entry(self.base,width=40,show='*')
         self.txt_password.place(x=100,y=100)
 
-        self.btn_testLogin = ttk.Button(self.base,text="تست لاگین",command=self.loginTest)
+        self.btn_testLogin = ttk.Button(self.base,text="لاگین",command=self.loginTest)
         self.btn_testLogin.place(x=250,y=130)
 
-        self.btn_reset = ttk.Button(self.base,text="ریست  فرم",command=self.reset_form)
+        self.btn_reset = ttk.Button(self.base,text="کنسل",command=self.reset_form)
         self.btn_reset.place(x=110,y=130)
         #End-------------fromLogin
-
         
-    
-
-
         self.numberPatern = ttk.Combobox(self.base, width=45,state="readonly" ,value=["انتخاب الگو صورتحساب","الگو 1 صورتحساب همراه با اطلاعات خریدار","الگو 2 صورتحساب بدون اطلاعات خریدار"])
         self.numberPatern.current(0)
-        self.numberPatern.place(x=100,y=180)
+        self.numberPatern.place(x=100,y=230)
         
-
         self.btn_selectFile = ttk.Button(self.base,text="انتخاب فایل",command=self.select_file)
-        self.btn_selectFile.place(x=20,y=210)
+        self.btn_selectFile.place(x=20,y=260)
 
         self.lbl_path = Label(self.base,bg="#ffffff",width="50",height="1")
-        self.lbl_path.place(x=100,y=213)
+        self.lbl_path.place(x=100,y=263)
 
         #start------------radioButom
         self.valDate = IntVar()
         self.R1 = ttk.Radiobutton(self.base,text="تاریخ ورودی میلادی",variable=self.valDate,value=1)
-        self.R1.place(x=300,y=235)
-        Label(self.base,text="yyyy-mm-dd").place(x=320,y=255)
+        self.R1.place(x=300,y=170)
+        Label(self.base,text="yyyy-mm-dd").place(x=320,y=190)
 
         self.R2 = ttk.Radiobutton(self.base,text="تاریخ ورودی شمسی",variable=self.valDate,value=2)
-        self.R2.place(x=120,y=235)
-        Label(self.base,text="yyyy/mm/dd").place(x=140,y=255)
-
+        self.R2.place(x=120,y=170)
+        Label(self.base,text="yyyy/mm/dd").place(x=140,y=190)
         #end------------radioButom
 
         self.btn_sendInvoice = ttk.Button(self.base,text="ارسال اطلاعات",command=self.send_invoice)
@@ -130,22 +126,23 @@ class MainForm:
             return False
     
     def loginTest(self):
-        str_usename = self.txt_username.get("1.0", "end-1c")
-        str_password = self.txt_password.get("1.0", "end-1c")
-        
-        c = self.checkToken(str_usename)
-        if c:
-            token = api.getToken(str_usename,str_password)
-            if token != "":
-                showinfo("موفقیت","ورود با موفقیت انجام شد")
-                self.txt_username.config(state=DISABLED)
-                self.txt_password.config(state=DISABLED)
-                self.btn_testLogin.state(["disabled"]) 
-            
-           
-
-            else:
-                showerror("خطا","خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید")
+        # str_usename = self.txt_username.get("1.0", "end-1c")
+        # str_password = self.txt_password.get("1.0", "end-1c")
+        str_usename = self.txt_username.get()
+        str_password = self.txt_password.get()
+        if str_usename == '' or str_password == '':
+            showwarning("ورود","نام کاربری ویا کلمه عبور را به درستی وارد کنید")
+        else:
+            c = self.checkToken(str_usename)
+            if c:
+                token = api.getToken(str_usename,str_password)
+                if token != "":
+                    showinfo("موفقیت","ورود با موفقیت انجام شد")
+                    self.txt_username.config(state="disabled")
+                    self.txt_password.config(state="disabled")
+                    self.btn_testLogin.state(["disabled"]) 
+                else:
+                    showerror("خطا","خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید")
 
     def lockElement(self):
         self.txt_username.config(state="disabled")
@@ -208,8 +205,12 @@ class MainForm:
 
 
     def send_invoice(self):
-        str_usename = self.txt_username.get("1.0", "end-1c")
-        str_password = self.txt_password.get("1.0", "end-1c")
+        self.lbl_number_allFactor.config(text="0")
+        self.lbl_number_ErrorFactor.config(text="0")
+        self.lbl_number_sendFactor.config(text="0")
+        self.lbl_number_successFactor.config(text="0")
+        str_usename = self.txt_username.get()
+        str_password = self.txt_password.get()
         vdate = self.valDate.get()
         if str_usename == '' or str_password == '':
             showwarning("ورود","نام کاربری ویا کلمه عبور را به درستی وارد کنید")
@@ -253,10 +254,10 @@ class MainForm:
                         
                         
                             if patern == 1:
-                                i = inD.generateInvoiceNo1(invoice)
+                                i = inD.generateInvoiceNo1(invoice,vdate)
                                 listInvoice.append(i)
                             elif patern == 2:
-                                i = inD.generateInvoiceNo2(invoice)
+                                i = inD.generateInvoiceNo2(invoice,vdate)
                                 listInvoice.append(i)
 
                             listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
@@ -269,7 +270,9 @@ class MainForm:
                                     result = api.sendInvoice(listInvoice,token)
                                     if result[0] == 200:
                                         data = result[1]
+                                        listUniqeId = []
                                         for invoiceItem in listIndex:
+                                            
                                             for d in data['data']:
                                                 if invoiceItem[2] == d['uniqueId']:
                                                     if  d['status'] == 3:
@@ -283,8 +286,11 @@ class MainForm:
                                                             self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
                                                         elif patern ==2:
                                                             self.Excell.SaveResultN21([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
-                                                        errorCount += 1
-
+                                                        try:
+                                                            listUniqeId.index(d['uniqueId'])
+                                                        except ValueError:
+                                                            errorCount += 1
+                                                        listUniqeId.append(invoiceItem[2])
                                                 elif d == "Erorrserver":
                                                     if patern == 1:
                                                         self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
