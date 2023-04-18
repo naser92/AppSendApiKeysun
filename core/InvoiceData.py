@@ -1,5 +1,6 @@
 import uuid
 import jdatetime
+import math
 class InvoiceData():
     def __init__(self,listInvoiceItem,listPayment) -> None:
         self.ListInvoiceItem = listInvoiceItem
@@ -16,9 +17,9 @@ class InvoiceData():
             "equivalentToRial": data[6],
             "unitPrice": data[7],
             "discount": data[8],
-            "taxPercent": data[9],
-            "taxPrice": data[10],
-            "dutyPercent": data[11],
+            "taxPercent": self.serializeFloat(data[9]),
+            "taxPrice":  data[10],
+            "dutyPercent": self.serializeFloat(data[11]),
             "dutyPrice": data[12],
             "dutyTitle": data[13],
             "otherLegalFundsPercent": data[14],
@@ -167,3 +168,14 @@ class InvoiceData():
 
                 }
         return factor
+    
+    def serializeFloat(self,number):
+        try:
+             text = math.modf(number)
+             t1 = str(text[1])[:-2]
+             t2 = str(text[0])[1:4]
+             t = t1 + t2
+             number = float(t)
+             return number
+        except:
+             return None

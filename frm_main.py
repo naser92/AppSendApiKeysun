@@ -19,11 +19,11 @@ class MainForm:
         self.base = base
         self.status = False
         self.base.geometry('500x500')  
-        self.base.title("Api keysun")
+        self.base.title("EITAK")
         self.base.iconbitmap("data/logo.ico")
         self.base.eval('tk::PlaceWindow . center')
         self.base.resizable(0,0)
-        Label(self.base,bg="#d1ccc0",text="نرم افزار ارسال صورتحساب کیسان" ,width="500",height="4").pack()
+        Label(self.base,bg="#d1ccc0",text="(EITAK  نرم افزار ارسال صورتحساب کیسان (ایتاک" ,width="500",height="4").pack()
         
         #start-------------fromLogin
         # self.frm_login = Frame(self.base)

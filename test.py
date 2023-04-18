@@ -18,9 +18,21 @@
 # with open('personal.txt', 'w') as json_file:
 #     json_file.write(str(token))
 
-programming_languages = ["JavaScript","Python","Java","C++"]
+# programming_languages = ["JavaScript","Python","Java","C++"]
+# try:
+#     programming_languages.index("Python")
+#     print("ok")
+# except ValueError:
+#     print("That item does not exist")
+
+import math
+x = 1234.223154145
 try:
-    programming_languages.index("Python")
-    print("ok")
-except ValueError:
-    print("That item does not exist")
+    a = math.modf(x)
+    qq = str(a[0])[1:4]
+    ww = str(a[1])[:-2]
+    a = ww + qq
+    a = float(a)
+    print (a)
+except:
+    a = None
