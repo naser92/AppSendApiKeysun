@@ -10,6 +10,7 @@ from threading import Thread
 import time
 from cryptography.fernet import Fernet
 import hashlib
+from PIL import Image, ImageTk
 
 base = Tk() 
 api = ApiKeysun() 
@@ -97,8 +98,21 @@ class MainForm:
         self.lbl_status = Label(self.base,text="فایل در دسترس نیست" ,bg="#ffffff",width='100', height="2")
         self.lbl_status.place(x=0,y=464)
 
+        Label(self.base,text="Version:1.0.0").place(x=10,y=440)
 
-       
+        load = Image.open('data/logo.png')
+        render = ImageTk.PhotoImage(load)
+        img = Label(self.base, image=render,width=70,height=50)
+        img.image = render
+        img.place(x=10, y=390)
+
+        load2 = Image.open('data/keysunlogo.png')
+        render2 = ImageTk.PhotoImage(load2)
+        img2 = Label(self.base, image=render2,width=60,height=55,bg="#d1ccc0")
+        img2.image = render2
+        img2.place(x=400, y=5)
+
+
 
     def btn_SendInvoice_click(self):
         self.Tread = Thread(target=self.send_invoice)
