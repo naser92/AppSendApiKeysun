@@ -22,7 +22,7 @@ class InvoiceData():
             "dutyPercent": self.serializeFloat(data[11]),
             "dutyPrice": data[12],
             "dutyTitle": data[13],
-            "otherLegalFundsPercent": data[14],
+            "otherLegalFundsPercent":self.serializeFloat(data[14]),
             "otherLegalFundsPrice": data[15],
             "otherLegalFundsTitle": data[16],
             "brokerContractNumber": data[17],
