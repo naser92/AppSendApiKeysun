@@ -5,6 +5,7 @@ from tkinter import ttk
 from core.api import ApiKeysun
 from core.ExcellData import ExcellData
 from core.InvoiceData import InvoiceData
+from core.csvFile import CSVFile
 from model.setting import SettingData
 from threading import Thread
 import time
@@ -181,6 +182,7 @@ class MainForm:
             self.path_file = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
             self.lbl_path.config(text=self.path_file)
             self.Excell = ExcellData(self.path_file)
+            self.CSV = CSVFile(self.path_file)
             result = self.Excell.checkExcel(patern)
          
             if result == None:
@@ -283,41 +285,59 @@ class MainForm:
                                 if token != "":
                                     result = api.sendInvoice(listInvoice,token)
                                     if result[0] == 200:
-                                        data = result[1]
-                                        listUniqeId = []
+                                        indexResult = lambda x,xy : [y for y in xy if y['uniqueId'] == x ] 
+                                        data = result[1]['data']
+                                        # listUniqeId = []
                                         for invoiceItem in listIndex:
-                                            
-                                            for d in data['data']:
-                                                if invoiceItem[2] == d['uniqueId']:
-                                                    if  d['status'] == 3:
-                                                        if patern == 1:
-                                                            self.Excell.SaveResultN11([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
-                                                        elif patern ==2:
-                                                            self.Excell.SaveResultN21([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
-                                                        sucessCount += 1
-                                                    else:
-                                                        if patern == 1:
-                                                            self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
-                                                        elif patern ==2:
-                                                            self.Excell.SaveResultN21([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
-                                                        try:
-                                                            listUniqeId.index(d['uniqueId'])
-                                                        except ValueError:
-                                                            errorCount += 1
-                                                        listUniqeId.append(invoiceItem[2])
-                                                elif d == "Erorrserver":
+                                            dataResultPerInvoice = indexResult(invoiceItem[2],data)
+                                            for i,d in enumerate(dataResultPerInvoice):
+                                                if  d['status'] == 3:
+                                                    if patern == 1:
+                                                        self.Excell.SaveResultN11([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
+                                                    elif patern ==2:
+                                                        self.Excell.SaveResultN21([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
+                                                    sucessCount += 1
+                                                else:
                                                     if patern == 1:
                                                         self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
                                                     elif patern ==2:
                                                         self.Excell.SaveResultN21([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
-                                                    errorCount += 1
+                                                    if i == 0:
+                                                        errorCount += 1
+
+
+                                            # for d in data['data']:
+                                            #     if invoiceItem[2] == d['uniqueId']:
+                                            #         if  d['status'] == 3:
+                                            #             if patern == 1:
+                                            #                 self.Excell.SaveResultN11([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
+                                            #             elif patern ==2:
+                                            #                 self.Excell.SaveResultN21([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
+                                            #             sucessCount += 1
+                                            #         else:
+                                            #             if patern == 1:
+                                            #                 self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
+                                            #             elif patern ==2:
+                                            #                 self.Excell.SaveResultN21([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
+                                            #             try:
+                                            #                 listUniqeId.index(d['uniqueId'])
+                                            #             except ValueError:
+                                            #                 errorCount += 1
+                                            #             listUniqeId.append(invoiceItem[2])
+                                            #     elif d == "Erorrserver":
+                                            #         if patern == 1:
+                                            #             self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
+                                            #         elif patern ==2:
+                                            #             self.Excell.SaveResultN21([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
+                                            #         errorCount += 1
                                     
                                     else:
-                                        if patern == 1:
-                                            self.Excell.SaveResultN11([listInvoice[1],d['status'],"systemError","server"],invoiceItem[0])
-                                        elif patern ==2:
-                                            self.Excell.SaveResultN11([listInvoice[1],d['status'],"systemError","server"],invoiceItem[0])
-                                        errorCount += 1
+                                        for invoiceItem in listIndex: 
+                                            if patern == 1:
+                                                self.Excell.SaveResultN11([listInvoice[1],d['status'],"systemError","server"],invoiceItem[0])
+                                            elif patern ==2:
+                                                self.Excell.SaveResultN11([listInvoice[1],d['status'],"systemError","server"],invoiceItem[0])
+                                            errorCount += 1
                                 
                                 
                                 else:                    
