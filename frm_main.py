@@ -12,6 +12,8 @@ import time
 from cryptography.fernet import Fernet
 import hashlib
 from PIL import Image, ImageTk
+from datetime import date
+
 
 base = Tk() 
 api = ApiKeysun() 
@@ -99,7 +101,7 @@ class MainForm:
         self.lbl_status = Label(self.base,text="فایل در دسترس نیست" ,bg="#ffffff",width='100', height="2")
         self.lbl_status.place(x=0,y=464)
 
-        Label(self.base,text="Version:1.0.0").place(x=10,y=440)
+        Label(self.base,text="Version:1.1.0").place(x=10,y=440)
 
         load = Image.open('data/logo.png')
         render = ImageTk.PhotoImage(load)
@@ -228,6 +230,8 @@ class MainForm:
         str_usename = self.txt_username.get()
         str_password = self.txt_password.get()
         vdate = self.valDate.get()
+        # today = date.today()
+        
         if str_usename == '' or str_password == '':
             showwarning("ورود","نام کاربری ویا کلمه عبور را به درستی وارد کنید")
         elif vdate == 0 :
@@ -259,10 +263,10 @@ class MainForm:
                         counter = 0
                         patern = self.numberPatern.current()
 
-                        if patern == 1:
-                            self.Excell.preparationExcellN11()
-                        elif patern == 2:
-                            self.Excell.preparationExcellN21()
+                        # if patern == 1:
+                        #     self.Excell.preparationExcellN11()
+                        # elif patern == 2:
+                        #     self.Excell.preparationExcellN21()
 
                         self.lbl_number_allFactor.config(text=str(len(invoices)))
                         
@@ -284,59 +288,24 @@ class MainForm:
                                 token = api.getToken(str_usename,str_password)
                                 if token != "":
                                     result = api.sendInvoice(listInvoice,token)
+                                    # curentTime = time.strftime("%H:%M:%S")
                                     if result[0] == 200:
                                         indexResult = lambda x,xy : [y for y in xy if y['uniqueId'] == x ] 
                                         data = result[1]['data']
-                                        # listUniqeId = []
                                         for invoiceItem in listIndex:
                                             dataResultPerInvoice = indexResult(invoiceItem[2],data)
                                             for i,d in enumerate(dataResultPerInvoice):
                                                 if  d['status'] == 3:
-                                                    if patern == 1:
-                                                        self.Excell.SaveResultN11([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
-                                                    elif patern ==2:
-                                                        self.Excell.SaveResultN21([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
+                                                    self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['taxSerialNumber']])
                                                     sucessCount += 1
                                                 else:
-                                                    if patern == 1:
-                                                        self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
-                                                    elif patern ==2:
-                                                        self.Excell.SaveResultN21([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
+                                                    self.CSV.saveError([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['title'],d['description']])
                                                     if i == 0:
                                                         errorCount += 1
-
-
-                                            # for d in data['data']:
-                                            #     if invoiceItem[2] == d['uniqueId']:
-                                            #         if  d['status'] == 3:
-                                            #             if patern == 1:
-                                            #                 self.Excell.SaveResultN11([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
-                                            #             elif patern ==2:
-                                            #                 self.Excell.SaveResultN21([d['uniqueId'],d['status'],d['taxSerialNumber'],"",""],invoiceItem[0])
-                                            #             sucessCount += 1
-                                            #         else:
-                                            #             if patern == 1:
-                                            #                 self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
-                                            #             elif patern ==2:
-                                            #                 self.Excell.SaveResultN21([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
-                                            #             try:
-                                            #                 listUniqeId.index(d['uniqueId'])
-                                            #             except ValueError:
-                                            #                 errorCount += 1
-                                            #             listUniqeId.append(invoiceItem[2])
-                                            #     elif d == "Erorrserver":
-                                            #         if patern == 1:
-                                            #             self.Excell.SaveResultN11([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
-                                            #         elif patern ==2:
-                                            #             self.Excell.SaveResultN21([d['uniqueId'],d['status'],"",d['description'],d['title']],invoiceItem[0])
-                                            #         errorCount += 1
                                     
                                     else:
                                         for invoiceItem in listIndex: 
-                                            if patern == 1:
-                                                self.Excell.SaveResultN11([listInvoice[1],d['status'],"systemError","server"],invoiceItem[0])
-                                            elif patern ==2:
-                                                self.Excell.SaveResultN11([listInvoice[1],d['status'],"systemError","server"],invoiceItem[0])
+                                            self.CSV.saveError([invoiceItem[0],invoiceItem[1],invoiceItem[2],result[0],result[1]])
                                             errorCount += 1
                                 
                                 

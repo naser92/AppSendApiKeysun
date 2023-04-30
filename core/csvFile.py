@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from csv import writer
 from datetime import date
-
+import time
 
 class CSVFile():
     def __init__(self,path:str) -> None:
@@ -13,20 +13,21 @@ class CSVFile():
         name_file = name_file[:-1]
         self.fileName = ".".join(name_file)
         self.path = "/".join(path_file) + "/"
-
+        self.curentTime = str(time.strftime("%H-%M"))
+        self.today = date.today()
 
 
     def saveData(self,data):
-        d = date.today()
-        file = self.path + self.fileName + "_success" + str(d) + ".csv" 
+       
+        file = self.path + self.fileName + "_success_" + str(self.today) + "_" + self.curentTime + ".csv" 
         with open(file, 'a',encoding="utf-8",newline='') as f_object:
             writer_object = writer(f_object)
             writer_object.writerow(data)
             f_object.close()
     
     def saveError(self,data):
-        d = date.today()
-        file = self.path + self.fileName + "_error" + d + ".csv" 
+      
+        file = self.path + self.fileName + "_error_" + str(self.today) +"_" + self.curentTime + ".csv" 
         with open(file, 'a',encoding="utf-8",newline='') as f_object:
             writer_object = writer(f_object)
             writer_object.writerow(data)
@@ -34,4 +35,5 @@ class CSVFile():
 
 
 if __name__ == "__main__":
-    p = "Z:\@User\ناصر داورزنی\پخش هجرت\out of memory"
+    import time
+    print (time.strftime("%H:%M"))
