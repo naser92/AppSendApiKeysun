@@ -62,6 +62,46 @@ class ApiKeysun:
         except:
             return[-1,"ErrorSystem"]
     
+    def inquiryInvoiceByUniqeId(self,listUniqeId,token):
+        try:
+            jsonInvoices = json.dumps(listUniqeId)
+            header = {
+                    'Content-Type': 'application/json ; charset=utf-8',
+                    'Authorization' : "Bearer " + token
+                }
+            url = self.baseUrl + "api/InvoiceExternalService_v6/InquiryByUniqueId"
+            try:
+                result = r.post(url, jsonInvoices, headers=header,timeout=700)
+                rr = json.loads(result.content)
+                if result.status_code == 200:
+                    return [result.status_code,rr]
+                    
+            except:
+                return [result.status_code,"serverError"]
+        except:
+            return[-1,"ErrorSystem"]
+
+    def inquiryInvoiceByTaxserialnumber(self,listTaxSerialNumber,token):
+        try:
+            jsonInvoices = json.dumps(listTaxSerialNumber)
+            header = {
+                    'Content-Type': 'application/json ; charset=utf-8',
+                    'Authorization' : "Bearer " + token
+                }
+            url = self.baseUrl + "api/InvoiceExternalService_v6/InquiryByTaxSerialNumber"
+            try:
+                result = r.post(url, jsonInvoices, headers=header,timeout=700)
+                rr = json.loads(result.content)
+                if result.status_code == 200:
+                    return [result.status_code,rr]
+                    
+            except:
+                return [result.status_code,"serverError"]
+        except:
+            return[-1,"ErrorSystem"]
+
+    def cancellationInvoice(self,invoices,token):
+        pass
 
 if __name__ == "__main__":
     api = ApiKeysun()

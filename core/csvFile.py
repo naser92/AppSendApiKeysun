@@ -6,6 +6,7 @@ import time
 
 class CSVFile():
     def __init__(self,path:str) -> None:
+        self.mainpath = path
         split_str = path.split("/")
         name_file = split_str[-1]
         path_file = split_str[:-1]
@@ -33,6 +34,16 @@ class CSVFile():
             writer_object.writerow(data)
             f_object.close()
 
+    def read_file_inquiry(self,numberCoulum):
+        path = self.path + self.fileName + ".csv"
+        df = pd.read_csv(path, sep=',')
+        data = df.replace(np.nan, None)
+        data = np.array(data)
+        taxSerialNumber = []
+        for row in data:
+            taxSerialNumber.append(row[numberCoulum])
+
+        return taxSerialNumber
 
 if __name__ == "__main__":
     import time

@@ -335,6 +335,7 @@ class MainForm:
                     showerror("بارگزاری اکسل","لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.")
 
                 self.reset_form()
+
 if __name__ == "__main__":
     form = MainForm()
     basef = form.generateForm()
