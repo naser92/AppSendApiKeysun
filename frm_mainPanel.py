@@ -57,13 +57,15 @@ class MainPanel():
         self.sendinvoice_group_date = ttk.Labelframe(self.frm_sendinvoice, text='انتخاب نوع تاریخ ورودی', width=480, height=80)
         self.sendinvoice_group_date.place(x=10,y=10)
         self.valDate = IntVar()
-        self.R1 = ttk.Radiobutton(self.sendinvoice_group_date,text="تاریخ ورودی میلادی",variable=self.valDate,value=1)
-        self.R1.place(x=10,y=5)
-        Label(self.sendinvoice_group_date,text="yyyy-mm-dd").place(x=10,y=25)
+        self.R1 = ttk.Radiobutton(self.sendinvoice_group_date,variable=self.valDate,value=1)
+        self.R1.place(x=200,y=15)
+        Label(self.sendinvoice_group_date,text="تاریخ ورودی میلادی").place(x=90,y=5)
+        Label(self.sendinvoice_group_date,text="yyyy-mm-dd").place(x=100,y=25)
 
-        self.R2 = ttk.Radiobutton(self.sendinvoice_group_date,text="تاریخ ورودی شمسی",variable=self.valDate,value=2)
-        self.R2.place(x=200,y=5)
-        Label(self.sendinvoice_group_date,text="yyyy/mm/dd").place(x=220,y=25)
+        self.R2 = ttk.Radiobutton(self.sendinvoice_group_date,variable=self.valDate,value=2)
+        self.R2.place(x=380,y=15)
+        Label(self.sendinvoice_group_date,text="تاریخ ورودی شمسی").place(x=270,y=5)
+        Label(self.sendinvoice_group_date,text="yyyy/mm/dd").place(x=280,y=25)
         #inputfile
         self.sendinvoice_group_file = ttk.Labelframe(self.frm_sendinvoice, text='ورود فایل', width=480, height=90)
         self.sendinvoice_group_file.place(x=10,y=90)
@@ -82,12 +84,12 @@ class MainPanel():
         self.sendinvoice_group_send = ttk.Labelframe(self.frm_sendinvoice, text='ارسال فایل', width=480, height=80)
         self.sendinvoice_group_send.place(x=10,y=180)
 
-        self.btn_sendInvoice = ttk.Button(self.sendinvoice_group_send,text="ارسال اطلاعات",command=self.send_invoice)
+        self.btn_sendInvoice = ttk.Button(self.sendinvoice_group_send,text="ارسال صورتحساب",command=self.send_invoice)
         self.btn_sendInvoice.place(x=360,y=5)
 
         
         self.btn_reset = ttk.Button(self.sendinvoice_group_send,text="کنسل",command=self.reset_form)
-        self.btn_reset.place(x=110,y=5)
+        self.btn_reset.place(x=285,y=5)
 
         self.progressbar = ttk.Progressbar(self.sendinvoice_group_send)
         self.progressbar.place(x=10,y=35,width=450)
@@ -143,34 +145,49 @@ class MainPanel():
         self.inquiry_group_fielType = ttk.Labelframe(self.frm_inquiry, text='نحوه استعلام صورتحساب', width=480, height=80)
         self.inquiry_group_fielType.place(x=10,y=120)
         self.valTypeinquiry = IntVar()
-        self.R11 = ttk.Radiobutton(self.inquiry_group_fielType,text="UniqeId ارسال به وسیله",variable=self.valTypeinquiry,value=2)
+        self.R11 = ttk.Radiobutton(self.inquiry_group_fielType,text="UniqeId",variable=self.valTypeinquiry,value=2)
         self.R11.place(x=10,y=15)
         
 
-        self.R22 = ttk.Radiobutton(self.inquiry_group_fielType,text="TaxSerialNumber ارسال به وسیله",variable=self.valTypeinquiry,value=4)
+        self.R22 = ttk.Radiobutton(self.inquiry_group_fielType,text="TaxSerialNumber",variable=self.valTypeinquiry,value=4)
         self.R22.place(x=250,y=15)
        
+         #send element
+        self.inquiry_group_send = ttk.Labelframe(self.frm_inquiry, text='ارسال فایل', width=480, height=80)
+        self.inquiry_group_send.place(x=10,y=200)
 
-        self.btn_sendInvoice = ttk.Button(self.frm_inquiry,text="ارسال اطلاعات",command=self.inquiry_incvoice)
-        self.btn_sendInvoice.place(x=360,y=200)
+        self.btn_sendInvoice = ttk.Button(self.inquiry_group_send,text="استعلام",command=self.inquiry_incvoice)
+        self.btn_sendInvoice.place(x=375,y=5)
 
-        self.progressbar = ttk.Progressbar(self.frm_inquiry)
-        self.progressbar.place(x=50,y=230,width=400)
+        self.inquiry_progressbar = ttk.Progressbar(self.inquiry_group_send)
+        self.inquiry_progressbar.place(x=10,y=35,width=450)
         #Result_Lable
         
         
-        Label(self.frm_inquiry,text="تعداد کل فاکتور ها").place(x=350,y=260)
+        Label(self.frm_inquiry,text="تعداد کل فاکتور ها").place(x=350,y=300)
         self.inquiry_lbl_number_allFactor  = Label(self.frm_inquiry,text="0")  
-        self.inquiry_lbl_number_allFactor.place(x=300,y=260)   
+        self.inquiry_lbl_number_allFactor.place(x=300,y=300)   
 
         
-        Label(self.frm_inquiry,text="تعداد فاکتور استعلام شده").place(x=350,y=280)  
+        Label(self.frm_inquiry,text="تعداد فاکتور استعلام شده").place(x=350,y=320)  
         self.inquiry_lbl_number_sendFactor  = Label(self.frm_inquiry,text="0")
-        self.inquiry_lbl_number_sendFactor.place(x=300,y=280)   
+        self.inquiry_lbl_number_sendFactor.place(x=300,y=320)   
         # end   ------------frm_inquiry------------
-         
+        Label(self.base,text="Version:2.0.0").place(x=10,y=478)
         self.notebook.place(x=0,y=70)
+
+        load = Image.open('data/logo.png')
+        render = ImageTk.PhotoImage(load)
+        img = Label(self.base, image=render,width=70,height=50)
+        img.image = render
+        img.place(x=10, y=380)
+
          
+        load2 = Image.open('data/keysunlogo.png')
+        render2 = ImageTk.PhotoImage(load2)
+        img2 = Label(self.base, image=render2,width=60,height=55,bg="#d1ccc0")
+        img2.image = render2
+        img2.place(x=400, y=5)
 
         self.base.mainloop()
 
@@ -228,13 +245,19 @@ class MainPanel():
             return False
 
     def lockElement(self):
-        self.numberPatern.config(state="disabled")
-        self.btn_selectFile.state(["disabled"])
-        self.btn_reset.state(["disabled"])
-        self.btn_sendInvoice.state(["disabled"])
+        # self.numberPatern.config(state="disabled")
+        # self.btn_selectFile.state(["disabled"])
+        # self.btn_reset.state(["disabled"])
+        # self.btn_sendInvoice.state(["disabled"])
         self.lbl_status.config(text="در حال ارسال لطفا منتظر بمانید ...",bg="#009FBD")
-        self.R1.config(state="disabled")
-        self.R2.config(state="disabled")
+        # self.R1.config(state="disabled")
+        # self.R2.config(state="disabled")
+        self.notebook.tab(1, state="disabled")
+        for child in self.sendinvoice_group_date.winfo_children():
+            child.configure(state='disable')
+        
+        for child in self.sendinvoice_group_file.winfo_children():
+            child.configure(state='disable')
 
     def send_invoice(self):
             self.lbl_number_allFactor.config(text="0")
@@ -301,6 +324,10 @@ class MainPanel():
                                     # print (listIndex)
                                     token = api.getToken(str_usename,str_password)
                                     if token != "":
+                                        import json
+                                        json_object = json.dumps(listInvoice)
+                                        with open("sample1.json", "w") as outfile:
+                                             outfile.write(json_object)
                                         result = api.sendInvoice(listInvoice,token)
                                         # curentTime = time.strftime("%H:%M:%S")
                                         if result[0] == 200:
@@ -352,16 +379,22 @@ class MainPanel():
 
 
     def reset_form(self):
-        self.numberPatern.config(state="readonly")
-        self.numberPatern.current(0)
+        # self.numberPatern.config(state="readonly")
+        # self.numberPatern.current(0)
         self.lbl_status.config(text="فایل در دسترس نیست",bg="#ffffff")
-        self.status = False
-        self.btn_selectFile.state(["!disabled"])
-        self.btn_reset.state(["!disabled"])
-        self.btn_sendInvoice.state(["!disabled"])
-        self.lbl_path.config(text="")
-        self.R1.config(state="normal")
-        self.R2.config(state="normal")
+        # self.status = False
+        # self.btn_selectFile.state(["!disabled"])
+        # self.btn_reset.state(["!disabled"])
+        # self.btn_sendInvoice.state(["!disabled"])
+        # self.lbl_path.config(text="")
+        # self.R1.config(state="normal")
+        # self.R2.config(state="normal")
+        self.notebook.tab(1, state="normal")
+        for child in self.sendinvoice_group_date.winfo_children():
+            child.configure(state='normal')
+        
+        for child in self.sendinvoice_group_file.winfo_children():
+            child.configure(state='normal')
 
     #inquiry_function
     def select_file_inquiry(self):
@@ -388,6 +421,17 @@ class MainPanel():
         else:
             showerror("نوع فایل انتخابی","فایل انتخابی باید یکی از فرمت های %s و یا %s باشد"%("csv","xlsx"))
         
+    def lock_inquiry_element(self):
+        for child in self.inquiry_group_inputType.winfo_children():
+            child.configure(state='disable')
+        
+        for child in self.inquiry_group_fielType.winfo_children():
+            child.configure(state='disable')
+        
+        self.notebook.tab(0, state="disabled")
+        self.base.update_idletasks()
+        self.base.after(500)
+        self.base.update()
 
 
     def inquiry_incvoice(self):
@@ -403,23 +447,21 @@ class MainPanel():
         elif self.path_inquiry_file == None:
             showwarning("انتخاب فایل","فایل را انتخاب کنید")
         else:
-            for child in self.inquiry_group_inputType.winfo_children():
-                child.configure(state='disable')
-        
-            for child in self.inquiry_group_fielType.winfo_children():
-                child.configure(state='disable')
+            self.lock_inquiry_element()
             
-            v = valTypeinquiry - 1
-            listinquiry = self.CSV.read_file_inquiry(v)#self.CSV.read_file_inquiry(v)
+            v = valTypeinquiry
+            listinquiry = self.CSV.read_file_inquiry(v)
             if listinquiry != None:
                 listitem = []
                 counter = 0
+                self.inquiry_progressbar['value'] = 0
+                self.inquiry_progressbar.configure(maximum=len(listinquiry))
                 self.inquiry_lbl_number_allFactor.config(text=str(len(listinquiry)))
                 for index,item in enumerate(listinquiry):
                     listitem.append(item)
                     counter += 1
 
-                    if (counter == setting.BatchSizeOfInvoices or index == len(listinquiry)):
+                    if counter == setting.BatchSizeOfInvoices or index ==  (len(listinquiry) - 1):
                         token = api.getToken(self.username,self.password)
                         if token != "":
                             if valTypeinquiry == 2 :
@@ -427,15 +469,25 @@ class MainPanel():
                             elif valTypeinquiry == 4 :
                                 result = api.inquiryInvoiceByTaxserialnumber(listitem,token)
                             
-                            if result[0] == 200 and len(result[1]['data'] > 0):
+                            if result[0] == 200 and len(result[1]['data']) > 0:
                                 data = result[1]['data']
                                 for d in data:
-                                    self.CSV.saveData([(index+1),d['uniqueId'],d['taxSerialNumber'],d['statusCode'],d['statusTitle']])
+                                    if valTypeinquiry == 2 :
+                                        self.CSV.saveDatainquiry2([d['uniqueId'],d['trackingId'],d['taxSerialNumber'],d['statusCode'],d['statusTitle']])
+                                    elif valTypeinquiry == 4 :
+                                        self.CSV.saveDatainquiry4([d['trackingId'],d['taxSerialNumber'],d['statusCode'],d['statusTitle']])
+
                         else:                    
                             self.CSV.saveError(['loginError'])
                         
+                        listitem = []
                         counter = 0
-                        self.inquiry_lbl_number_allFactor.config(text=str(index+1))
+                        self.inquiry_lbl_number_sendFactor.config(text=str(index+1))
+                        self.inquiry_progressbar['value'] = index+1
+                        self.inquiry_progressbar.update()
+                        self.base.update_idletasks()
+                        self.base.after(500)
+                        self.base.update()
             else:
                 showerror("خطا در خواندن فایل")
         
@@ -444,6 +496,12 @@ class MainPanel():
         
         for child in self.inquiry_group_fielType.winfo_children():
             child.configure(state='normal')
+        
+        self.notebook.tab(0, state="normal")
+        self.base.update_idletasks()
+        self.base.after(500)
+        self.base.update()
+        showinfo("اتمام","عملیات با موفقیت انجام شد نتیجه را می توانید در پوشه ای که خود فایل وجود دارد مشاهده نمایید")
 
 if __name__ == "__main__":
     MainPanel("","")

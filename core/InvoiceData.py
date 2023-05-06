@@ -17,12 +17,12 @@ class InvoiceData():
             "equivalentToRial": data[6],
             "unitPrice": data[7],
             "discount": data[8],
-            "taxPercent": self.serializeFloat(data[9]),
+            "taxPercent": data[9],
             "taxPrice":  data[10],
-            "dutyPercent": self.serializeFloat(data[11]),
+            "dutyPercent": data[11],
             "dutyPrice": data[12],
             "dutyTitle": data[13],
-            "otherLegalFundsPercent":self.serializeFloat(data[14]),
+            "otherLegalFundsPercent":data[14],
             "otherLegalFundsPrice": data[15],
             "otherLegalFundsTitle": data[16],
             "brokerContractNumber": data[17],
@@ -37,11 +37,18 @@ class InvoiceData():
             }
         return invoiceItems
     
-    def generatePayment(self,data):
+    def generatePayment(self,data,vDate):
+        if vDate == 1:
+            date = data[4]
+        elif vDate == 2 :
+            date = str(data[4]).split('/')
+            date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
+        else:
+            date = ""
         payment =    {
             "paymentMethod":data[2],
             "paymentAmount":data[3],
-            "paymentDate": data[4],
+            "paymentDate": str(date),
             "switchNumber": data[5],
             "acceptanceNumber": data[6],
             "terminalNumber": data[7],
@@ -64,7 +71,7 @@ class InvoiceData():
         indexPay = getItems(invoice,self.ListPayment)
         if len(indexPay) > 0:
             for item in indexPay:
-                    PaymentM = self.generateInvoiceItem(item)
+                    PaymentM = self.generatePayment(item,vDate)
                     listPayment.append(PaymentM)
         if vDate == 1:
             date = invoice[1]
@@ -169,13 +176,14 @@ class InvoiceData():
                 }
         return factor
     
-    def serializeFloat(self,number):
-        try:
-             text = math.modf(number)
-             t1 = str(text[1])[:-2]
-             t2 = str(text[0])[1:4]
-             t = t1 + t2
-             number = float(t)
-             return number
-        except:
-             return None
+    # def serializeFloat(self,number):
+    #     try:
+    #          num = float(number)
+    #          text = math.modf(num)
+    #          t1 = str(text[1])[:-2]
+    #          t2 = str(text[0])[1:4]
+    #          t = t1 + t2
+    #          number = float(t)
+    #          return number
+    #     except:
+    #          return None
