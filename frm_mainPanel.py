@@ -326,8 +326,8 @@ class MainPanel():
                                     if token != "":
                                         import json
                                         json_object = json.dumps(listInvoice)
-                                        with open("sample1.json", "w") as outfile:
-                                             outfile.write(json_object)
+                                        # with open("sample1.json", "w") as outfile:
+                                        #      outfile.write(json_object)
                                         result = api.sendInvoice(listInvoice,token)
                                         # curentTime = time.strftime("%H:%M:%S")
                                         if result[0] == 200:
@@ -337,7 +337,10 @@ class MainPanel():
                                                 dataResultPerInvoice = indexResult(invoiceItem[2],data)
                                                 for i,d in enumerate(dataResultPerInvoice):
                                                     if  d['status'] == 3:
-                                                        self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['taxSerialNumber']])
+                                                        try:
+                                                            self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['taxSerialNumber']])
+                                                        except:
+                                                             self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status']])
                                                         sucessCount += 1
                                                     else:
                                                         self.CSV.saveError([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['title'],d['description']])
