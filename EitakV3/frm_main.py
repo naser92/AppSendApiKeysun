@@ -83,12 +83,12 @@ class MainPanel():
         #invoice Frame
         self.invoice_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
         self.invoice_frame.place(x=5,y=90)
-        FormSendInvoice(self.invoice_frame,"","")
+        FormSendInvoice(self.invoice_frame,self.username,self.password)
 
         #invoice Frame 
         self.inquiry_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
         self.inquiry_frame.place(x=5,y=90)
-        FormInquiryInvoice(self.inquiry_frame)
+        FormInquiryInvoice(self.inquiry_frame,self.username,self.password)
 
         #Revok Frame 
         self.revok_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"

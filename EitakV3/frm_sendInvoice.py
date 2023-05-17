@@ -10,6 +10,8 @@ from package.CTkMessagebox import CTkMessagebox
 from model.formData import Patern
 import hashlib
 from model.setting import SettingData
+from tkinter import ttk
+
 
 api = ApiKeysun() 
 setting = SettingData()
@@ -79,9 +81,9 @@ class FormSendInvoice():
         self.btn_reset = ck.CTkButton(self.group_send,text="کنسل",font=self.font,command=self.reset_form)
         self.btn_reset.place(x=200,y=10)
 
-        self.progressbar = ck.CTkProgressBar(self.group_send,orientation="horizontal",width=500,border_width=2)
-        self.progressbar.place(x=35,y=50)
-        self.progressbar.set(0)
+        self.progressbar =  ttk.Progressbar(self.group_send)
+        self.progressbar.place(x=35,y=50,width=500)
+        
 
         
         # ck.CTkLabel(self.frame,text="تعداد کل فاکتور ها",font=self.font12).place(x=355,y=270)
@@ -174,8 +176,6 @@ class FormSendInvoice():
         for child in self.group_file.winfo_children():
             child.configure(state='disable')
 
-
-
     def send_invoice(self):
         self.lbl_number_allFactor.configure(text="0")
         self.lbl_number_ErrorFactor.configure(text="0")
@@ -219,7 +219,9 @@ class FormSendInvoice():
                         #     self.Excell.preparationExcellN11()
                         # elif patern == 2:
                         #     self.Excell.preparationExcellN21()
-                        self.lbl_number_allFactor.config(text=str(len(invoices)))
+                        self.lbl_number_allFactor.configure(text=str(len(invoices)))
+                        self.frame.after(500)
+                        self.frame.update()
                         
                         for index, invoice in enumerate(invoices):
                         
@@ -271,14 +273,14 @@ class FormSendInvoice():
                                 counter = 0
                                 listInvoice = []
                                 listIndex = []
-                                self.lbl_number_sendFactor.config(text=str(index+1))
+                                self.lbl_number_sendFactor.configure(text=str(index+1))
                                 self.frame.update_idletasks()
                                 self.frame.after(500)
                                 self.frame.update()
                                 
                             
-                            self.lbl_number_ErrorFactor.config(text=str(errorCount))
-                            self.lbl_number_successFactor.config(text=str(sucessCount))
+                            self.lbl_number_ErrorFactor.configure(text=str(errorCount))
+                            self.lbl_number_successFactor.configure(text=str(sucessCount))
                             self.progressbar['value'] = index+1
                             self.progressbar.update()
                             self.frame.update_idletasks()
