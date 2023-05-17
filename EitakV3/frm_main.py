@@ -83,7 +83,7 @@ class MainPanel():
         #invoice Frame
         self.invoice_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
         self.invoice_frame.place(x=5,y=90)
-        FormSendInvoice(self.invoice_frame)
+        FormSendInvoice(self.invoice_frame,"","")
 
         #invoice Frame 
         self.inquiry_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
@@ -100,7 +100,7 @@ class MainPanel():
         self.inqiuryPerson_frame.place(x=5,y=90)
         FormInquiryPerson(self.inqiuryPerson_frame)
 
-        self.select_frame_by_name("inquiry")
+        self.select_frame_by_name("send")
         self.base.mainloop()
 
     def change_appearance_mode_event(self, new_appearance_mode):
