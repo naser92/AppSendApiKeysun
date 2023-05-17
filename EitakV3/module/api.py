@@ -57,11 +57,35 @@ class ApiKeysun:
             
             except:
                 return [result.status_code,"Erorrserver"]
-
-
         except:
             return[-1,"ErrorSystem"]
     
+
+    def revokeInvoice(self, revoke, token):
+        try:
+            jsonInvoices = json.dumps(revoke)
+            header = {
+                    'Content-Type': 'application/json ; charset=utf-8',
+                    'Authorization' : "Bearer " + token
+                }
+            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InvoiceRevok"
+            
+            try:
+                result = r.post(url, jsonInvoices, headers=header,timeout=700)
+                rr = json.loads(result.content)
+                result = r.post(url, jsonInvoices, headers=header,timeout=700)
+                rr = json.loads(result.content)
+                if result.status_code == 200:
+                    return [result.status_code,rr]
+                else:
+                    return [result.status_code,"serverError"]
+
+            except:
+                return [result.status_code,"Erorrserver"]
+        except:
+            return[-1,"ErrorSystem"]
+
+
     def inquiryInvoiceByUniqeId(self,listUniqeId,token):
         try:
             jsonInvoices = json.dumps(listUniqeId)

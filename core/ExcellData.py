@@ -75,6 +75,22 @@ class ExcellData ():
             return result
         except:
             return None
+    
+    def excelCheckRevok(self):
+        try:
+            data = openpyxl.load_workbook(self.path)
+            flag = False
+            if len(data.sheetnames) > 1:
+                return flag
+            sheet = data.sheetnames[0]
+            columns = data.get_sheet_by_name(sheet)
+            if columns.max_column == 7:
+                flag = True
+            
+            return flag
+
+        except:
+            return False
      
     @classmethod
     def getLetter(col):
