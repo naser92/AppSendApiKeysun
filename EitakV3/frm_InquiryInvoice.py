@@ -25,7 +25,7 @@ class FormInquiryInvoice():
         lbl_input = ck.CTkLabel(self.frame_data,text=" :ورود فایل",font=self.font)
         lbl_input.place(x=480,y=25)
 
-        self.lbl_path = ck.CTkLabel(self.frame_data,bg_color="#ffffff",width=275,height=20,text="")
+        self.lbl_path = ck.CTkLabel(self.frame_data,bg_color="#ffffff",width=275,height=20,text="",text_color="#000000")
         self.lbl_path.place(x=180,y=30)
 
         self.btn_selectFile = ck.CTkButton(self.frame_data,text="انتخاب فایل",font=self.font,command=self.select_file)
@@ -91,13 +91,11 @@ class FormInquiryInvoice():
         self.frame.update()
 
     def inquiry_incvoice(self):
-        self.lbl_number_allFactor.configure(text="0")
-        self.lbl_number_sendFactor.configure(text="0")
         valTypeinquiry = self.valTypeinquiry.get()
         if valTypeinquiry == 0 :
             CTkMessagebox(title="نوع روش استفاده",message="مشخص کنید از چه طریقی اقدانم به استعلام می نمایید ")
         elif self.path_file == None:
-            CTkMessagebox(title="انتخاب فایل",message="فایل را انتخاب کنید")
+            CTkMessagebox(title="انتخاب فایل",message="فایل را انتخاب کنید",icon="cancel")
         else:
             self.lock_element()
             listinquiry = self.CSV.read_file_inquiry(valTypeinquiry)
@@ -148,4 +146,4 @@ class FormInquiryInvoice():
         self.frame.update_idletasks()
         self.frame.after(500)
         self.frame.update()
-        CTkMessagebox(title="اتمام",file="عملیات با موفقیت انجام شد نتیجه را می توانید در پوشه ای که خود فایل وجود دارد مشاهده نمایید",icon="check")
+        CTkMessagebox(title="اتمام",message="عملیات با موفقیت انجام شد نتیجه را می توانید در پوشه ای که خود فایل وجود دارد مشاهده نمایید",icon="check")

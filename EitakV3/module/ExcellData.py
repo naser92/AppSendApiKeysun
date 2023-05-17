@@ -38,6 +38,14 @@ class ExcellData ():
         except:
             return []
         
+    def getRevokeInvoice(self):
+        try:
+            data = pd.read_excel(self.path,sheet_name=self.name_column_revoke, dtype=str)
+            data = data.replace(np.nan, '')
+            pay = np.array(data)
+            return pay
+        except:
+            return []
     
         
     def checkExcel(self, paternType:int):
@@ -75,7 +83,24 @@ class ExcellData ():
             return result
         except:
             return None
-     
+        
+    def excelCheckRevok(self):
+        try:
+            data = openpyxl.load_workbook(self.path)
+            flag = False
+            if len(data.sheetnames) > 1:
+                return flag
+            sheet = data.sheetnames[0]
+            columns = data.get_sheet_by_name(sheet)
+            if columns.max_column == 7:
+                self.name_column_revoke = sheet
+                flag = True
+            
+            return flag
+
+        except:
+            return False
+    
     @classmethod
     def getLetter(col):
         return get_column_letter(col)

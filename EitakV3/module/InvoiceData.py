@@ -187,3 +187,33 @@ class InvoiceData():
     #          return number
     #     except:
     #          return None
+
+
+class InvoiceRevoke():
+    def __init__(self) -> None:
+        pass
+     
+    def generatRevokeInvoiceApi(self,data,Vdate):
+        if Vdate == 1:
+            date = data[1]
+        elif Vdate == 2 :
+            date = str(data[1]).split('/')
+            date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
+
+        invoce = {
+            "uniqueId" : str(uuid.uuid4()),
+            "InvoiceNumber": data[0],
+            "InvoiceDate": date,
+            "invoiceType" : data[2],
+            "invoicePattern" : data[3],
+            "invoiceSubject" : data[4],
+            "ReferenceTaxSerialNumber" : data[5],
+            "Description" : data[6]
+        }
+
+        return invoce
+          
+    
+
+    
+        

@@ -93,7 +93,7 @@ class MainPanel():
         #Revok Frame 
         self.revok_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
         self.revok_frame.place(x=5,y=90)
-        FormRevokInvoice(self.revok_frame)
+        FormRevokInvoice(self.revok_frame,self.username,self.password)
        
         #inqiuryPerson Frame 
         self.inqiuryPerson_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
