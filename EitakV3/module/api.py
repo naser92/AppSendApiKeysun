@@ -94,7 +94,8 @@ class ApiKeysun:
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
                 }
-            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/DeleteByUniqueId"
+            # url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/DeleteByUniqueId"
+            url = self.baseUrl + "/api/InvoiceExternalService_v6/DeleteByUniqueId"
             try:
                 result = r.post(url, jsonInvoices, headers=header,verify=False)
                 rr = json.loads(result.content)
@@ -114,8 +115,8 @@ class ApiKeysun:
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
                 }
-            # url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InquiryByUniqueId"
-            url = self.baseUrl + "/api/InvoiceExternalService_v6/InquiryByUniqueId"
+            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InquiryByUniqueId"
+            # url = self.baseUrl + "/api/InvoiceExternalService_v6/InquiryByUniqueId"
             try:
                 result = r.post(url, jsonInvoices, headers=header,verify=False)
                 rr = json.loads(result.content)
@@ -134,8 +135,8 @@ class ApiKeysun:
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
                 }
-            # url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InquiryByTaxSerialNumber"
-            url = self.baseUrl + "/api/InvoiceExternalService_v6/InquiryByTaxSerialNumber"
+            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InquiryByTaxSerialNumber"
+            # url = self.baseUrl + "/api/InvoiceExternalService_v6/InquiryByTaxSerialNumber"
             try:
                 result = r.post(url, jsonInvoices, headers=header,verify=False)
                 rr = json.loads(result.content)

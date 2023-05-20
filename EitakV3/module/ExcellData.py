@@ -49,7 +49,7 @@ class ExcellData ():
         
     def getDeleteUniquId(self):
         try:
-            data = pd.read_excel(self.path,sheet_name=self.name_column_revoke, dtype=str)
+            data = pd.read_excel(self.path,sheet_name=self.name_column_delete, dtype=str)
             data = data.replace(np.nan, '')
             pay = np.array(data)
             return pay
@@ -117,6 +117,7 @@ class ExcellData ():
             sheet = data.sheetnames[0]
             columns = data.get_sheet_by_name(sheet)
             if columns.max_column == 1:
+                self.name_column_delete = sheet
                 flag = True
             return flag
         except:

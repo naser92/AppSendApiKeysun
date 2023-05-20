@@ -34,6 +34,21 @@ class CSVFile():
             writer_object.writerow(data)
             f_object.close()
     
+    def saveDataDelete(self,data):
+        file = self.path + self.fileName + "_success_delete_" + str(self.today) + "_" + self.curentTime + ".csv" 
+        p = Path(file)
+        check = p.is_file()
+        if check == False:
+            d = (["ExcelRowNumber","uniqueId","status","description"])
+            with open(file, 'a',encoding="utf-8",newline='') as f_object:
+                writer_object = writer(f_object)
+                writer_object.writerow(d)
+                f_object.close()
+        with open(file, 'a',encoding="utf-8",newline='') as f_object:
+            writer_object = writer(f_object)
+            writer_object.writerow(data)
+            f_object.close()
+    
     def saveDatainquiry2(self,data):
         file = self.path + self.fileName + "_inquiry_" + str(self.today) + "_" + self.curentTime + ".csv" 
         p = Path(file)
@@ -73,6 +88,21 @@ class CSVFile():
         check = p.is_file()
         if check == False:
             d = (["ExcelRowNumber","InvoiceNumber","uniqueId","status","title","description"])
+            with open(file, 'a',encoding="utf-8",newline='') as f_object:
+                writer_object = writer(f_object)
+                writer_object.writerow(d)
+                f_object.close()
+        with open(file, 'a',encoding="utf-8",newline='') as f_object:
+            writer_object = writer(f_object)
+            writer_object.writerow(data)
+            f_object.close()
+        
+    def saveErrordelete(self,data):
+        file = self.path + self.fileName + "_error_delete_" + str(self.today) +"_" + self.curentTime + ".csv" 
+        p = Path(file)
+        check = p.is_file()
+        if check == False:
+            d = (["ExcelRowNumber","uniqueId","status","description"])
             with open(file, 'a',encoding="utf-8",newline='') as f_object:
                 writer_object = writer(f_object)
                 writer_object.writerow(d)

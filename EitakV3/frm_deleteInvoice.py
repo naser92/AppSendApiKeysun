@@ -51,7 +51,7 @@ class FormDeleteInvoice():
         self.group_send = ck.CTkFrame(self.frame,border_width=2, width=570, height=80)
         self.group_send.place(x=10,y=220)
 
-        self.btn_sendInvoice = ck.CTkButton(self.group_send,text="پاک کردن صورتحساب",font=self.font,command=self.lock_element)
+        self.btn_sendInvoice = ck.CTkButton(self.group_send,text="پاک کردن صورتحساب",font=self.font,command=self.deleteInvoice)
         self.btn_sendInvoice.place(x=360,y=10)
         
         self.progressbar = ttk.Progressbar(self.group_send)
@@ -101,7 +101,7 @@ class FormDeleteInvoice():
         for child in self.group_date.winfo_children():
             child.configure(state='disable')
         
-        # self.btn_selectFile.configure(state='disable')
+        self.btn_selectFile.configure(state='disabled')
         self.frame.update_idletasks()
         self.frame.after(500)
         self.frame.update()
@@ -113,7 +113,7 @@ class FormDeleteInvoice():
         for child in self.group_date.winfo_children():
             child.configure(state='normal')
         
-        # self.btn_selectFile.configure(state='disable')
+        self.btn_selectFile.configure(state='normal')
         self.frame.update_idletasks()
         self.frame.after(500)
         self.frame.update()
@@ -142,7 +142,9 @@ class FormDeleteInvoice():
 
                 for index ,uniqeId in enumerate(uniqeIds):
                     # i = inD.generatRevokeInvoiceApi(revoke,valDateType)
+                    uniqeId = uniqeId[0]
                     listIndex.append([index + 1 ,uniqeId])
+                    listInvoice.append(uniqeId)
                     counter += 1
                     if counter == setting.BatchSizeOfInvoices or  index ==  (len(uniqeIds) - 1) :
                         token = api.getToken(self.username, self.passwoerd)
@@ -153,21 +155,21 @@ class FormDeleteInvoice():
                                 indexResult = lambda x,xy : [y for y in xy if y['uniqueId'] == x ] 
                                 data = result[1]['data']
                                 for invoiceItem in listIndex:
-                                    dataResultPerInvoice = indexResult(invoiceItem[2],data)
+                                    dataResultPerInvoice = indexResult(invoiceItem[1],data)
                                     for i,d in enumerate(dataResultPerInvoice):
                                         if  d['status'] == 3:
                                             try:
-                                                self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['taxSerialNumber']])
+                                                self.CSV.saveDataDelete([invoiceItem[0],d['uniqueId'],d['status'],d['description']])
                                             except:
-                                                 self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status']])
+                                                 self.CSV.saveDataDelete([invoiceItem[0],d['uniqueId'],d['status'],d['description']])
                                             sucessCount += 1
                                         else:
-                                            self.CSV.saveError([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['title'],d['description']])
+                                            self.CSV.saveErrordelete([invoiceItem[0],d['uniqueId'],d['status'],d['description']])
                                             if i == 0:
                                                 errorCount += 1
                             else:
                                 for invoiceItem in listIndex: 
-                                    self.CSV.saveError([invoiceItem[0],invoiceItem[1],invoiceItem[2],result[0],result[1]])
+                                    self.CSV.saveErrordelete([invoiceItem[0],invoiceItem[1],result[0],result[1]])
                                     errorCount += 1
                         else:                    
                             print("login Faild")
@@ -190,4 +192,6 @@ class FormDeleteInvoice():
             else:
                 CTkMessagebox(title="بارگزاری اکسل",message="لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.",icon="cancel")
             self.reset_element()
+            CTkMessagebox(title="اتمام",message="عملیات با موفقیت به پایان رسید",icon="info")
+
 
