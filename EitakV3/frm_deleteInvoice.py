@@ -148,7 +148,7 @@ class FormDeleteInvoice():
                         token = api.getToken(self.username, self.passwoerd)
 
                         if token != "":
-                            result = api.revokeInvoice(listInvoice,token)
+                            result = api.deleteInvoice(listInvoice,token)
                             if result[0] == 200:
                                 indexResult = lambda x,xy : [y for y in xy if y['uniqueId'] == x ] 
                                 data = result[1]['data']

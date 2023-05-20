@@ -36,7 +36,7 @@ class ApiKeysun:
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
                 }
-            url = self.baseUrl + "/api/InvoiceExternalService_v6"
+            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6"
             try:
                 # result = r.post(url, jsonInvoices, headers=header, proxies=proxies,  verify=False,timeout=700)
                 result = r.post(url, jsonInvoices, headers=header,timeout=700,verify=False)
@@ -75,9 +75,7 @@ class ApiKeysun:
             url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InvoiceRevok"
             
             try:
-                result = r.post(url, jsonInvoices, headers=header,timeout=700)
-                rr = json.loads(result.content)
-                result = r.post(url, jsonInvoices, headers=header,timeout=700)
+                result = r.post(url, jsonInvoices, headers=header,timeout=700,verify=False)
                 rr = json.loads(result.content)
                 if result.status_code == 200:
                     return [result.status_code,rr]
@@ -98,7 +96,7 @@ class ApiKeysun:
                 }
             url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/DeleteByUniqueId"
             try:
-                result = r.post(url, jsonInvoices, headers=header)
+                result = r.post(url, jsonInvoices, headers=header,verify=False)
                 rr = json.loads(result.content)
                 if result.status_code == 200:
                     return [result.status_code,rr]
@@ -116,9 +114,10 @@ class ApiKeysun:
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
                 }
-            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InquiryByUniqueId"
+            # url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InquiryByUniqueId"
+            url = self.baseUrl + "/api/InvoiceExternalService_v6/InquiryByUniqueId"
             try:
-                result = r.post(url, jsonInvoices, headers=header)
+                result = r.post(url, jsonInvoices, headers=header,verify=False)
                 rr = json.loads(result.content)
                 if result.status_code == 200:
                     return [result.status_code,rr]
@@ -135,9 +134,10 @@ class ApiKeysun:
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
                 }
-            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InquiryByTaxSerialNumber"
+            # url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InquiryByTaxSerialNumber"
+            url = self.baseUrl + "/api/InvoiceExternalService_v6/InquiryByTaxSerialNumber"
             try:
-                result = r.post(url, jsonInvoices, headers=header)
+                result = r.post(url, jsonInvoices, headers=header,verify=False)
                 rr = json.loads(result.content)
                 if result.status_code == 200:
                     return [result.status_code,rr]

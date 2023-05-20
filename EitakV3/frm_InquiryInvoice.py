@@ -39,10 +39,10 @@ class FormInquiryInvoice():
         lbl_selectTypeDate.place(x=420,y=25)
 
         self.valTypeinquiry = tkinter.IntVar()
-        self.R1 = ck.CTkRadioButton(self.frame_TypeInquire,text="UniqeId",variable=self.valTypeinquiry,value=1)
+        self.R1 = ck.CTkRadioButton(self.frame_TypeInquire,text="UniqeId",variable=self.valTypeinquiry,value=2)
         self.R1.place(x=100,y=25)
 
-        self.R2 = ck.CTkRadioButton(self.frame_TypeInquire,text="TaxSerialNumber",variable=self.valTypeinquiry,value=2)
+        self.R2 = ck.CTkRadioButton(self.frame_TypeInquire,text="TaxSerialNumber",variable=self.valTypeinquiry,value=4)
         self.R2.place(x=250,y=25)
 
         #send Element
@@ -85,6 +85,8 @@ class FormInquiryInvoice():
         
         for child in self.frame_data.winfo_children():
             child.configure(state='disable')
+
+        self.btn_selectFile.configure(state="disabled")
         
         self.frame.update_idletasks()
         self.frame.after(500)
@@ -119,10 +121,11 @@ class FormInquiryInvoice():
                             if result[0] == 200 and len(result[1]['data']) > 0:
                                 data = result[1]['data']
                                 for d in data:
-                                    if valTypeinquiry == 2 :
-                                        self.CSV.saveDatainquiry2([d['uniqueId'],d['trackingId'],d['taxSerialNumber'],d['statusCode'],d['statusTitle']])
-                                    elif valTypeinquiry == 4 :
-                                        self.CSV.saveDatainquiry4([d['trackingId'],d['taxSerialNumber'],d['statusCode'],d['statusTitle']])
+                                    self.CSV.saveDatainquiry2([d['uniqueId'],d['trackingId'],d['taxSerialNumber'],d['statusCode'],d['statusTitle']])
+                                    # if valTypeinquiry == 2 :
+                                    #     self.CSV.saveDatainquiry2([d['uniqueId'],d['trackingId'],d['taxSerialNumber'],d['statusCode'],d['statusTitle']])
+                                    # elif valTypeinquiry == 4 :
+                                    #     self.CSV.saveDatainquiry4([d['trackingId'],d['taxSerialNumber'],d['statusCode'],d['statusTitle']])
                         else:                    
                             self.CSV.saveError(['loginError'])
                         
@@ -142,6 +145,9 @@ class FormInquiryInvoice():
         
         for child in self.frame_data.winfo_children():
             child.configure(state='normal')
+
+        self.btn_selectFile.configure(state="normal")
+        
 
         self.frame.update_idletasks()
         self.frame.after(500)
