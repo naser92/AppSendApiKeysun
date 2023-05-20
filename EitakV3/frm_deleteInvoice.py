@@ -136,6 +136,7 @@ class FormDeleteInvoice():
                 listIndex = []
                 counter = 0
                 self.lbl_number_allFactor.configure(text=str(len(uniqeIds)))
+                
                 self.frame.after(500)
                 self.frame.update()
 

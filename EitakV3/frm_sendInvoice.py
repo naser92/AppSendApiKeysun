@@ -150,6 +150,9 @@ class FormSendInvoice():
         
         for child in self.group_file.winfo_children():
             child.configure(state='normal')
+
+        self.btn_selectFile.configure(state="normal")
+        self.btn_reset.configure(state="normal")
     
     def checkToken(self,username):
         try:
@@ -176,6 +179,9 @@ class FormSendInvoice():
         for child in self.group_file.winfo_children():
             child.configure(state='disable')
 
+        self.btn_selectFile.configure(state="disabled")
+        self.btn_reset.configure(state="disabled")
+
     def send_invoice(self):
         self.lbl_number_allFactor.configure(text="0")
         self.lbl_number_ErrorFactor.configure(text="0")
@@ -194,6 +200,8 @@ class FormSendInvoice():
             c = self.checkToken(str_usename)
             if c:
                 self.LockElement()
+                self.lbl_status.configure(text="در حال ارسال لطفا منتظر بمانید ...",bg="#009FBD")
+
                 if self.status :
                     invoices = self.Excell.getInvoice()
                     items = self.Excell.getInvoiceItem()

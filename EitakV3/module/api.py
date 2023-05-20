@@ -2,12 +2,14 @@ import requests as r
 import json 
 
 class ApiKeysun:
-    def __init__(self,baseUrl = "https://mizeOnline.ir" ) -> None:
+    # def __init__(self,baseUrl = "https://mizeOnline.ir" ) -> None:
+    def __init__(self,baseUrl = "https://localhost:44353" ) -> None:
         self.baseUrl = baseUrl
 
     def getToken(self,username:str,password:str) -> str:
         url = "/identity/api/ServiceToken" 
-        urlMain = self.baseUrl + url
+        # urlMain = self.baseUrl + url
+        urlMain = "https://stage.keysundp.ir" + url
         data = {
             "UserName": username,
             "Password": password
@@ -34,10 +36,10 @@ class ApiKeysun:
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
                 }
-            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6"
+            url = self.baseUrl + "/api/InvoiceExternalService_v6"
             try:
                 # result = r.post(url, jsonInvoices, headers=header, proxies=proxies,  verify=False,timeout=700)
-                result = r.post(url, jsonInvoices, headers=header,timeout=700)
+                result = r.post(url, jsonInvoices, headers=header,timeout=700,verify=False)
                 rr = json.loads(result.content)
                 if result.status_code == 200:
                     return [result.status_code,rr]
@@ -52,12 +54,14 @@ class ApiKeysun:
                 #                     pass
 
 
-                else:
+                else :
                     return [result.status_code,"serverError"]
             
-            except:
+            except Exception as ex:
+                print(ex)
                 return [result.status_code,"Erorrserver"]
-        except:
+        except Exception as ex:
+            print(ex)
             return[-1,"ErrorSystem"]
     
 
@@ -143,8 +147,6 @@ class ApiKeysun:
         except:
             return[-1,"ErrorSystem"]
 
-    def cancellationInvoice(self,invoices,token):
-        pass
 
 class APIEconomicCode():
     def __init__(self) -> None:
