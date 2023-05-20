@@ -46,6 +46,15 @@ class ExcellData ():
             return pay
         except:
             return []
+        
+    def getDeleteUniquId(self):
+        try:
+            data = pd.read_excel(self.path,sheet_name=self.name_column_revoke, dtype=str)
+            data = data.replace(np.nan, '')
+            pay = np.array(data)
+            return pay
+        except:
+            return []
     
         
     def checkExcel(self, paternType:int):
@@ -98,6 +107,18 @@ class ExcellData ():
             
             return flag
 
+        except:
+            return False
+        
+    def excelCheckDelete(self):
+        try:
+            data = openpyxl.load_workbook(self.path)
+            flag = False
+            sheet = data.sheetnames[0]
+            columns = data.get_sheet_by_name(sheet)
+            if columns.max_column == 1:
+                flag = True
+            return flag
         except:
             return False
     

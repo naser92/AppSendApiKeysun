@@ -84,6 +84,25 @@ class ApiKeysun:
                 return [result.status_code,"Erorrserver"]
         except:
             return[-1,"ErrorSystem"]
+        
+    def deleteInvoice(self,listUniqeId,token):
+        try:
+            jsonInvoices = json.dumps(listUniqeId)
+            header = {
+                    'Content-Type': 'application/json ; charset=utf-8',
+                    'Authorization' : "Bearer " + token
+                }
+            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/DeleteByUniqueId"
+            try:
+                result = r.post(url, jsonInvoices, headers=header)
+                rr = json.loads(result.content)
+                if result.status_code == 200:
+                    return [result.status_code,rr]
+                    
+            except:
+                return [result.status_code,"serverError"]
+        except:
+            return[-1,"ErrorSystem"]
 
 
     def inquiryInvoiceByUniqeId(self,listUniqeId,token):
@@ -126,6 +145,35 @@ class ApiKeysun:
 
     def cancellationInvoice(self,invoices,token):
         pass
+
+class APIEconomicCode():
+    def __init__(self) -> None:
+        pass
+
+    def InquiryPerson(self,economic):
+        url = "https://mizeonline.ir/externalservice/api/TaxEconomicCodeInformation"
+        heder = {
+            "Content-Type": "application/json",                
+            "secret-key": "A9F6307A-C00C-42B5-9170-84ED4D58BF56"
+        }
+
+        body ={
+            "economicCode": economic
+        }
+        bodyj = json.dumps(body)
+
+        try:
+            result = r.post(url,bodyj,headers=heder, verify=False)
+            rr = json.loads(result.content)
+            if rr['result'] != None:
+                return rr['result']
+            elif rr['error'] != None:
+                return rr['error']
+            else:
+                return "پاسخی از سرور دریافت نشد"
+        except:
+            message = "خطا در شبکه"
+            return message
 
 if __name__ == "__main__":
     api = ApiKeysun()

@@ -6,6 +6,7 @@ from frm_sendInvoice import FormSendInvoice
 from frm_InquiryInvoice import FormInquiryInvoice
 from frm_revokInvoice import FormRevokInvoice
 from frm_InquiryPerson import FormInquiryPerson
+from frm_deleteInvoice import FormDeleteInvoice
 import os
 
 class MainPanel():
@@ -47,10 +48,16 @@ class MainPanel():
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.revok_button_event)
         self.btn_revok_invoice.place(x=20,y=220)
 
+        
+        self.btn_delete_invoice = ck.CTkButton(self.menu_frame, text="پاک کردن صورتحساب", compound="right", font=self.font,width=150,
+                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.delete_button_event)
+        self.btn_delete_invoice.place(x=20,y=270)
+
         self.btn_inqiurePerson_invoice = ck.CTkButton(self.menu_frame, text="استعلام مودیان مالیاتی", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.inquiryPerson_button_event)
-        self.btn_inqiurePerson_invoice.place(x=20,y=270)
+        self.btn_inqiurePerson_invoice.place(x=20,y=320)
 
 
         label_theme = ck.CTkLabel(self.menu_frame,text="تم",font=self.font)
@@ -100,7 +107,12 @@ class MainPanel():
         self.inqiuryPerson_frame.place(x=5,y=90)
         FormInquiryPerson(self.inqiuryPerson_frame)
 
-        self.select_frame_by_name("send")
+        #inqiuryPerson Frame 
+        self.delete_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.delete_frame.place(x=5,y=90)
+        FormDeleteInvoice(self.delete_frame,self.username,self.password)
+
+        self.select_frame_by_name("delete")
         self.base.mainloop()
 
     def change_appearance_mode_event(self, new_appearance_mode):
@@ -111,6 +123,7 @@ class MainPanel():
         self.btn_inqiure_invoice.configure(fg_color=("gray75", "gray25") if name == "inquiry" else "transparent")
         self.btn_revok_invoice.configure(fg_color=("gray75", "gray25") if name == "revok" else "transparent")
         self.btn_inqiurePerson_invoice.configure(fg_color=("gray75", "gray25") if name == "inquiryPerson" else "transparent")
+        self.btn_delete_invoice.configure(fg_color=("gray75", "gray25") if name == "delete" else "transparent")
 
         # show selected frame
         if name == "send":
@@ -133,6 +146,11 @@ class MainPanel():
         else:
             self.inqiuryPerson_frame.place_forget()
 
+        if name == "delete":
+            self.delete_frame.place(x=5,y=90)
+        else:
+            self.delete_frame.place_forget()
+
 
     def send_button_event(self):
         self.select_frame_by_name("send")
@@ -141,10 +159,14 @@ class MainPanel():
         self.select_frame_by_name("inquiry")
 
     def revok_button_event(self):
-            self.select_frame_by_name("revok")
+        self.select_frame_by_name("revok")
 
     def inquiryPerson_button_event(self):
-            self.select_frame_by_name("inquiryPerson")
+         self.select_frame_by_name("inquiryPerson")
+
+    def delete_button_event(self):
+        self.select_frame_by_name("delete")
+        
 
 if __name__ == "__main__":
     MainPanel("","")
