@@ -18,7 +18,12 @@ class MainPanel():
         self.base.geometry('800x600')
         self.base.title("EITAK")
         self.base.iconbitmap("data/logo.ico")
-        self.base.eval('tk::PlaceWindow . center')
+        screen_width = self.base.winfo_screenwidth()
+        screen_height = self.base.winfo_screenheight()
+        x = (screen_width // 2) - (800 // 2)
+        y = (screen_height // 2) - (600 // 2)
+        self.base.geometry("+{}+{}".format(x, y))
+        # self.base.eval('tk::PlaceWindow . center')
         self.base.resizable(0,0)
         # self.font = font.Font(family='IRANYekan', size=12,file='data/IRANYekanBlackFaNum.ttf' ,weight="bold")
         self.font : tuple = ("Tahoma",12)
@@ -28,44 +33,45 @@ class MainPanel():
         self.sendInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "sendInvice.jpg")),size=(20,20))
         self.inquiryInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "inquiryInvoice.png")),size=(15,20))
         self.revokInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "revokInvoice.png")),size=(20,20))
+        self.inquiryPerson_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "person.png")),size=(20,20))
 
         #create menu frame
         self.menu_frame = ck.CTkFrame(self.base,corner_radius=0,height=600,width=200)
         self.menu_frame.place(x=600,y=0)
 
-        self.btn_send_invoice = ck.CTkButton(self.menu_frame, text="ارسال صورتحساب", compound="right", font=self.font,
+        self.btn_send_invoice = ck.CTkButton(self.menu_frame, text="      ارسال صورتحساب", compound="right", font=self.font,
                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",width=150,
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.sendInvoice_image,command=self.send_button_event)
         self.btn_send_invoice.place(x=20,y=120)
 
-        self.btn_inqiure_invoice = ck.CTkButton(self.menu_frame, text="استعلام صورتحساب", compound="right", font=self.font,
+        self.btn_inqiure_invoice = ck.CTkButton(self.menu_frame, text="    استعلام صورتحساب", compound="right", font=self.font,
                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",width=150,
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.inquiryInvoice_image,command=self.inquiry_button_event)
         self.btn_inqiure_invoice.place(x=20,y=170)
 
-        self.btn_revok_invoice = ck.CTkButton(self.menu_frame, text="ابطال صورتحساب", compound="right", font=self.font,width=150,
+        self.btn_revok_invoice = ck.CTkButton(self.menu_frame, text="       ابطال صورتحساب", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.revok_button_event)
         self.btn_revok_invoice.place(x=20,y=220)
 
         
-        self.btn_delete_invoice = ck.CTkButton(self.menu_frame, text="پاک کردن صورتحساب", compound="right", font=self.font,width=150,
+        self.btn_delete_invoice = ck.CTkButton(self.menu_frame, text="  پاک کردن صورتحساب", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.delete_button_event)
         self.btn_delete_invoice.place(x=20,y=270)
 
         self.btn_inqiurePerson_invoice = ck.CTkButton(self.menu_frame, text="استعلام مودیان مالیاتی", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
-                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.inquiryPerson_button_event)
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.inquiryPerson_image,command=self.inquiryPerson_button_event)
         self.btn_inqiurePerson_invoice.place(x=20,y=320)
 
 
-        label_theme = ck.CTkLabel(self.menu_frame,text="تم",font=self.font)
-        label_theme.place(x=150,y=410)
+        # label_theme = ck.CTkLabel(self.menu_frame,text="تم",font=self.font)
+        # label_theme.place(x=150,y=410)
 
         self.appearance_mode_menu = ck.CTkOptionMenu(self.menu_frame, values=["System","Light", "Dark"],width=160,
                                                                 command=self.change_appearance_mode_event)
-        self.appearance_mode_menu.place(x=20,y=450)
+        self.appearance_mode_menu.place(x=20,y=30)
 
         load = ck.CTkImage(Image.open('data/logo.png'),size=(60,60))
         img = ck.CTkLabel(self.menu_frame, image=load,text="")

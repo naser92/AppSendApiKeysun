@@ -58,7 +58,7 @@ class FormRevokInvoice():
         self.group_send = ck.CTkFrame(self.frame,border_width=2, width=570, height=80)
         self.group_send.place(x=10,y=220)
 
-        self.btn_sendInvoice = ck.CTkButton(self.group_send,text="ابطال صورتحساب",font=self.font,command=self.lock_element)
+        self.btn_sendInvoice = ck.CTkButton(self.group_send,text="ابطال صورتحساب",font=self.font,command=self.revokeInvoice)
         self.btn_sendInvoice.place(x=360,y=10)
         
         self.progressbar = ttk.Progressbar(self.group_send)
@@ -108,7 +108,7 @@ class FormRevokInvoice():
         for child in self.group_date.winfo_children():
             child.configure(state='disable')
         
-        # self.btn_selectFile.configure(state='disable')
+        self.btn_selectFile.configure(state='disabled')
         self.frame.update_idletasks()
         self.frame.after(500)
         self.frame.update()
@@ -120,7 +120,7 @@ class FormRevokInvoice():
         for child in self.group_date.winfo_children():
             child.configure(state='normal')
         
-        # self.btn_selectFile.configure(state='disable')
+        self.btn_selectFile.configure(state='normal')
         self.frame.update_idletasks()
         self.frame.after(500)
         self.frame.update()
@@ -152,6 +152,7 @@ class FormRevokInvoice():
                 for index ,revoke in enumerate(invoiceRevokes):
                     i = inD.generatRevokeInvoiceApi(revoke,valDateType)
                     listIndex.append([index + 1 ,revoke[0],i['uniqueId']])
+                    listInvoice.append(i)
                     counter += 1
                     if counter == setting.BatchSizeOfInvoices or  index ==  (len(invoiceRevokes) - 1) :
                         token = api.getToken(self.username, self.passwoerd)
@@ -168,7 +169,7 @@ class FormRevokInvoice():
                                             try:
                                                 self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['taxSerialNumber']])
                                             except:
-                                                 self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status']])
+                                                self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status']])
                                             sucessCount += 1
                                         else:
                                             self.CSV.saveError([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['title'],d['description']])

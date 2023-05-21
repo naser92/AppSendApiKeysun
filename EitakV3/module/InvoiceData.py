@@ -203,7 +203,7 @@ class InvoiceRevoke():
         invoce = {
             "uniqueId" : str(uuid.uuid4()),
             "InvoiceNumber": data[0],
-            "InvoiceDate": date,
+            "InvoiceDate": str(date),
             "invoiceType" : data[2],
             "invoicePattern" : data[3],
             "invoiceSubject" : data[4],

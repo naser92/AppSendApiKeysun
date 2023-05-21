@@ -72,7 +72,8 @@ class ApiKeysun:
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
                 }
-            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InvoiceRevok"
+            # url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InvoiceRevok"
+            url = self.baseUrl + "/api/InvoiceExternalService_v6/InvoiceRevok"
             
             try:
                 result = r.post(url, jsonInvoices, headers=header,timeout=700,verify=False)
