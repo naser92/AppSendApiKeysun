@@ -59,27 +59,27 @@ class FormRevokInvoice():
         self.group_send.place(x=10,y=220)
 
         self.btn_sendInvoice = ck.CTkButton(self.group_send,text="ابطال صورتحساب",font=self.font,command=self.revokeInvoice)
-        self.btn_sendInvoice.place(x=360,y=10)
+        self.btn_sendInvoice.place(x=400,y=10)
         
         self.progressbar = ttk.Progressbar(self.group_send)
-        self.progressbar.place(x=35,y=50,width=500)
+        self.progressbar.place(x=20,y=50,width=520)
 
 
 
         #Result
-        ck.CTkLabel(self.frame,text="تعداد کل فاکتور ها",font=self.font12).place(x=405,y=320)
+        ck.CTkLabel(self.frame,text="تعداد کل فاکتور ها",font=self.font12).place(x=455,y=320)
         self.lbl_number_allFactor  =  ck.CTkLabel(self.frame,text="0")  
         self.lbl_number_allFactor.place(x=350,y=320)   
         
-        ck.CTkLabel(self.frame,text="تعداد فاکتور ارسالی",font=self.font12).place(x=400,y=350)  
+        ck.CTkLabel(self.frame,text="تعداد فاکتور ارسالی",font=self.font12).place(x=450,y=350)  
         self.lbl_number_sendFactor  =  ck.CTkLabel(self.frame,text="0")
         self.lbl_number_sendFactor.place(x=350,y=350)   
 
-        ck.CTkLabel(self.frame,text="فاکتور ثبت شده",font=self.font12).place(x=420,y=380)
+        ck.CTkLabel(self.frame,text="فاکتور ثبت شده",font=self.font12).place(x=470,y=380)
         self.lbl_number_successFactor  =  ck.CTkLabel(self.frame,text="0")
         self.lbl_number_successFactor.place(x=350,y=380) 
 
-        ck.CTkLabel(self.frame,text="فاکتور خطادار",font=self.font12).place(x=430,y=410)
+        ck.CTkLabel(self.frame,text="فاکتور خطادار",font=self.font12).place(x=480,y=410)
         self.lbl_number_ErrorFactor  =  ck.CTkLabel(self.frame,text="0")
         self.lbl_number_ErrorFactor.place(x=350,y=410) 
 

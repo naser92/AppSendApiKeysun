@@ -3,6 +3,7 @@
 import customtkinter as ck
 import tkinter as tk
 from module.api import APIEconomicCode
+import json
 
 api = APIEconomicCode()
 class FormInquiryPerson():
@@ -26,14 +27,19 @@ class FormInquiryPerson():
 
         self.textbox = ck.CTkTextbox(self.frame, width=570,height=300, corner_radius=0,font=self.font)
         self.textbox.place(x=10,y=100)
+        
 
 
     def InquiryPerson(self):
         self.textbox.delete("1.0","end")
         e = self.txt_economicCode.get()
         # if len(r) > 0 :
-        #      self.textbox.delete(tk.SEL_FIRST)
+        #      self.textbox.delete(tk.SEL_FIRST) result['data']
         result = api.InquiryPerson(e)
+        if "data" in result:
+            # result = result['data']
+            self.textbox.insert(index="1.0",text=json.dumps(result['data'], indent=4,ensure_ascii=False))
+            return
         self.textbox.insert(index="1.0",text=result)
 
     

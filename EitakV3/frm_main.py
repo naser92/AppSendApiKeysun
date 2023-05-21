@@ -73,25 +73,25 @@ class MainPanel():
                                                                 command=self.change_appearance_mode_event)
         self.appearance_mode_menu.place(x=20,y=30)
 
-        load = ck.CTkImage(Image.open('data/logo.png'),size=(60,60))
+        load = ck.CTkImage(Image.open('data/logo.png'),size=(60,50))
         img = ck.CTkLabel(self.menu_frame, image=load,text="")
         img.place(x=80, y=510)
 
-        label_version = ck.CTkLabel(self.menu_frame,text="Version 3.0.0")
-        label_version.place(x=73,y=570)
+        label_version = ck.CTkLabel(self.menu_frame,text="Version 6.3.0")
+        label_version.place(x=73,y=565)
 
 
         #create header
         self.header_frame = ck.CTkFrame(self.base,corner_radius=0,height=80,width=590)
         self.header_frame.place(x=5,y=5)
         label = ck.CTkLabel(self.header_frame,text="(نرم افزار ارسال صورتحساب کیسان (ایتاک" ,width=300,height=50,font=("Tahoma",14))
-        label.place(x=260,y=15)
+        label.place(x=240,y=15)
 
         
 
         load2 = ck.CTkImage(Image.open('data/keysunlogo.png'),size=(60,60))
         img2 = ck.CTkLabel(self.header_frame, image=load2,text="")
-        img2.place(x=40, y=10)
+        img2.place(x=520, y=10)
 
         #invoice Frame
         self.invoice_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"

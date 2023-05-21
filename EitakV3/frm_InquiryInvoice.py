@@ -50,20 +50,20 @@ class FormInquiryInvoice():
         self.frame_send.place(x=10,y=190)
 
         self.btn_sendInvoice = ck.CTkButton(self.frame_send,text="استعلام",font=self.font,command=self.inquiry_incvoice)
-        self.btn_sendInvoice.place(x=360,y=10)
+        self.btn_sendInvoice.place(x=400,y=10)
         
 
         self.progressbar = ttk.Progressbar(self.frame_send)
-        self.progressbar.place(x=35,y=50,width=500)
+        self.progressbar.place(x=20,y=50,width=520)
       
 
 
         #result lable
-        ck.CTkLabel(self.frame,text="تعداد کل فاکتور ها",font=self.font12).place(x=440,y=320)
+        ck.CTkLabel(self.frame,text="تعداد کل فاکتور ها",font=self.font12).place(x=450,y=320)
         self.lbl_number_allFactor  =  ck.CTkLabel(self.frame,text="0")  
         self.lbl_number_allFactor.place(x=350,y=320)   
         
-        ck.CTkLabel(self.frame,text="فاکتور های استعلام شده",font=self.font12).place(x=400,y=350)  
+        ck.CTkLabel(self.frame,text="فاکتور های استعلام شده",font=self.font12).place(x=410,y=350)  
         self.lbl_number_sendFactor  =  ck.CTkLabel(self.frame,text="0")
         self.lbl_number_sendFactor.place(x=350,y=350)  
 
