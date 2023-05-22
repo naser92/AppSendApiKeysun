@@ -2,14 +2,14 @@ import requests as r
 import json 
 
 class ApiKeysun:
-    # def __init__(self,baseUrl = "https://mizeOnline.ir" ) -> None:
-    def __init__(self,baseUrl = "https://localhost:44353" ) -> None:
+    def __init__(self,baseUrl = "https://mizeOnline.ir" ) -> None:
+    # def __init__(self,baseUrl = "https://localhost:44353" ) -> None:
         self.baseUrl = baseUrl
 
     def getToken(self,username:str,password:str) -> str:
         url = "/identity/api/ServiceToken" 
-        # urlMain = self.baseUrl + url
-        urlMain = "https://stage.keysundp.ir" + url
+        urlMain = self.baseUrl + url
+        # urlMain = "https://stage.keysundp.ir" + url
         data = {
             "UserName": username,
             "Password": password
@@ -72,8 +72,8 @@ class ApiKeysun:
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
                 }
-            # url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InvoiceRevok"
-            url = self.baseUrl + "/api/InvoiceExternalService_v6/InvoiceRevok"
+            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/InvoiceRevok"
+            # url = self.baseUrl + "/api/InvoiceExternalService_v6/InvoiceRevok"
             
             try:
                 result = r.post(url, jsonInvoices, headers=header,timeout=700,verify=False)
@@ -95,8 +95,8 @@ class ApiKeysun:
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
                 }
-            # url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/DeleteByUniqueId"
-            url = self.baseUrl + "/api/InvoiceExternalService_v6/DeleteByUniqueId"
+            url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6/DeleteByUniqueId"
+            # url = self.baseUrl + "/api/InvoiceExternalService_v6/DeleteByUniqueId"
             try:
                 result = r.post(url, jsonInvoices, headers=header,verify=False)
                 rr = json.loads(result.content)
