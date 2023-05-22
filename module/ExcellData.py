@@ -73,7 +73,7 @@ class ExcellData ():
                         self.name_column_invoice = sheet
                     else: result.append(0) 
                 elif index == 0 and paternType == 2:
-                    if columns.max_column == 16 : 
+                    if columns.max_column == 18 : 
                         result.append(1) 
                         self.name_column_invoice = sheet
                     else: result.append(0) 
@@ -82,7 +82,7 @@ class ExcellData ():
                         result.append(1) 
                         self.name_column_invoiceItem = sheet
                     else: result.append(0) 
-                elif index == 2 : 
+                elif index == 2 and paternType == 1 : 
                     if columns.max_column == 11 : 
                         result.append(1) 
                         self.name_column_payment = sheet
