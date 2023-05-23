@@ -1,344 +1,178 @@
-from tkinter import*  
-from tkinter import filedialog as fd
-from tkinter.messagebox import showinfo , showwarning,showerror
-from tkinter import ttk
-from core.api import ApiKeysun
-from core.ExcellData import ExcellData
-from core.InvoiceData import InvoiceData
-from core.csvFile import CSVFile
-from model.setting import SettingData
-from threading import Thread
-import time
-from cryptography.fernet import Fernet
-import hashlib
+import customtkinter as ck
+from package.CTkMessagebox import CTkMessagebox
 from PIL import Image, ImageTk
-from datetime import date
+from tkinter import font
+from frm_sendInvoice import FormSendInvoice
+from frm_InquiryInvoice import FormInquiryInvoice
+from frm_revokInvoice import FormRevokInvoice
+from frm_InquiryPerson import FormInquiryPerson
+from frm_deleteInvoice import FormDeleteInvoice
+import os
 
-
-base = Tk() 
-api = ApiKeysun() 
-setting = SettingData()
-class MainForm:
-    def __init__(self):
-        self.base = base
+class MainPanel():
+    def __init__(self,username,password) -> None:
+        self.username = username 
+        self.password = password
+        self.base = ck.CTk()
         self.status = False
-        self.base.geometry('500x500')  
+        self.base.geometry('800x600')
         self.base.title("EITAK")
-        self.base.iconbitmap("data/logo.ico")
-        self.base.eval('tk::PlaceWindow . center')
+        self.base.iconbitmap("media/image/logo.ico")
+        screen_width = self.base.winfo_screenwidth()
+        screen_height = self.base.winfo_screenheight()
+        x = (screen_width // 2) - (800 // 2)
+        y = (screen_height // 2) - (600 // 2)
+        self.base.geometry("+{}+{}".format(x, y))
+        # self.base.eval('tk::PlaceWindow . center')
         self.base.resizable(0,0)
-        Label(self.base,bg="#d1ccc0",text="(EITAK  نرم افزار ارسال صورتحساب کیسان (ایتاک" ,width="500",height="4").pack()
-        
-        #start-------------fromLogin
-        # self.frm_login = Frame(self.base)
-        # self.frm_login.pack()
-        Label(self.base,text="نام کاربری").place(x=350,y=70)
-        # self.txt_username = Text(self.base,width="30",height="1")
-        self.txt_username = ttk.Entry(self.base,width=40)
-        self.txt_username.place(x=100,y=70) 
+        # self.font = font.Font(family='IRANYekan', size=12,file='data/IRANYekanBlackFaNum.ttf' ,weight="bold")
+        self.font : tuple = ("Tahoma",12)
+        # self.base.config(bg="#0003a1")
+        # load Image 
+        image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "media/image")
+        self.sendInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "sendInvice.jpg")),size=(20,20))
+        self.inquiryInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "inquiryInvoice.png")),size=(15,20))
+        self.revokInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "revokInvoice.png")),size=(20,20))
+        self.inquiryPerson_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "person.png")),size=(20,20))
 
-        Label(self.base,text="کلمه عبور").place(x=350,y=100)
-        # self.txt_password = ttk.Entry(self.base,width="30",height="1",show='*')
-        self.txt_password = ttk.Entry(self.base,width=40,show='*')
-        self.txt_password.place(x=100,y=100)
+        #create menu frame
+        self.menu_frame = ck.CTkFrame(self.base,corner_radius=0,height=600,width=200)
+        self.menu_frame.place(x=600,y=0)
 
-        self.btn_testLogin = ttk.Button(self.base,text="لاگین",command=self.loginTest)
-        self.btn_testLogin.place(x=250,y=130)
+        self.btn_send_invoice = ck.CTkButton(self.menu_frame, text="      ارسال صورتحساب", compound="right", font=self.font,
+                                             corner_radius=0, height=40, border_spacing=10,fg_color="transparent",width=150,
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.sendInvoice_image,command=self.send_button_event)
+        self.btn_send_invoice.place(x=20,y=120)
 
-        self.btn_reset = ttk.Button(self.base,text="کنسل",command=self.reset_form)
-        self.btn_reset.place(x=110,y=130)
-        #End-------------fromLogin
-        
-        self.numberPatern = ttk.Combobox(self.base, width=45,state="readonly" ,value=["انتخاب الگو صورتحساب","الگو 1 صورتحساب همراه با اطلاعات خریدار","الگو 2 صورتحساب بدون اطلاعات خریدار"])
-        self.numberPatern.current(0)
-        self.numberPatern.place(x=100,y=230)
-        
-        self.btn_selectFile = ttk.Button(self.base,text="انتخاب فایل",command=self.select_file)
-        self.btn_selectFile.place(x=20,y=260)
+        self.btn_inqiure_invoice = ck.CTkButton(self.menu_frame, text="    استعلام صورتحساب", compound="right", font=self.font,
+                                             corner_radius=0, height=40, border_spacing=10,fg_color="transparent",width=150,
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.inquiryInvoice_image,command=self.inquiry_button_event)
+        self.btn_inqiure_invoice.place(x=20,y=170)
 
-        self.lbl_path = Label(self.base,bg="#ffffff",width="50",height="1")
-        self.lbl_path.place(x=100,y=263)
-
-        #start------------radioButom
-        self.valDate = IntVar()
-        self.R1 = ttk.Radiobutton(self.base,text="تاریخ ورودی میلادی",variable=self.valDate,value=1)
-        self.R1.place(x=300,y=170)
-        Label(self.base,text="yyyy-mm-dd").place(x=320,y=190)
-
-        self.R2 = ttk.Radiobutton(self.base,text="تاریخ ورودی شمسی",variable=self.valDate,value=2)
-        self.R2.place(x=120,y=170)
-        Label(self.base,text="yyyy/mm/dd").place(x=140,y=190)
-        #end------------radioButom
-
-        self.btn_sendInvoice = ttk.Button(self.base,text="ارسال اطلاعات",command=self.send_invoice)
-        self.btn_sendInvoice.place(x=360,y=300)
-
-        self.progressbar = ttk.Progressbar()
-        self.progressbar.place(x=50,y=330,width=400)
+        self.btn_revok_invoice = ck.CTkButton(self.menu_frame, text="       ابطال صورتحساب", compound="right", font=self.font,width=150,
+                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.revok_button_event)
+        self.btn_revok_invoice.place(x=20,y=220)
 
         
-        #start--------------Result_Lable
-        Label(self.base,text="تعداد کل فاکتور ها").place(x=350,y=360)
-        self.lbl_number_allFactor  = Label(self.base,text="0")  
-        self.lbl_number_allFactor.place(x=300,y=360)   
+        self.btn_delete_invoice = ck.CTkButton(self.menu_frame, text="  پاک کردن صورتحساب", compound="right", font=self.font,width=150,
+                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.delete_button_event)
+        self.btn_delete_invoice.place(x=20,y=270)
+
+        self.btn_inqiurePerson_invoice = ck.CTkButton(self.menu_frame, text="استعلام مودیان مالیاتی", compound="right", font=self.font,width=150,
+                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.inquiryPerson_image,command=self.inquiryPerson_button_event)
+        self.btn_inqiurePerson_invoice.place(x=20,y=320)
+
+
+        # label_theme = ck.CTkLabel(self.menu_frame,text="تم",font=self.font)
+        # label_theme.place(x=150,y=410)
+
+        self.appearance_mode_menu = ck.CTkOptionMenu(self.menu_frame, values=["System","Light", "Dark"],width=160,
+                                                                command=self.change_appearance_mode_event)
+        self.appearance_mode_menu.place(x=20,y=30)
+
+        load = ck.CTkImage(Image.open('media/image/logo.png'),size=(60,50))
+        img = ck.CTkLabel(self.menu_frame, image=load,text="")
+        img.place(x=80, y=510)
+
+        label_version = ck.CTkLabel(self.menu_frame,text="Version 6.3.0")
+        label_version.place(x=73,y=565)
+
+
+        #create header
+        self.header_frame = ck.CTkFrame(self.base,corner_radius=0,height=80,width=590)
+        self.header_frame.place(x=5,y=5)
+        label = ck.CTkLabel(self.header_frame,text="(نرم افزار ارسال صورتحساب کیسان (ایتاک" ,width=300,height=50,font=("Tahoma",14))
+        label.place(x=240,y=15)
 
         
-        Label(self.base,text="تعداد فاکتور ارسالی").place(x=350,y=380)  
-        self.lbl_number_sendFactor  = Label(self.base,text="0")
-        self.lbl_number_sendFactor.place(x=300,y=380)   
 
-        Label(self.base,text="فاکتور ثبت شده").place(x=350,y=400)
-        self.lbl_number_successFactor  = Label(self.base,text="0")
-        self.lbl_number_successFactor.place(x=300,y=400) 
+        load2 = ck.CTkImage(Image.open('media/image/keysunlogo.png'),size=(60,60))
+        img2 = ck.CTkLabel(self.header_frame, image=load2,text="")
+        img2.place(x=520, y=10)
 
-        Label(self.base,text="فاکتور خطادار").place(x=350,y=420)
-        self.lbl_number_ErrorFactor  = Label(self.base,text="0")
-        self.lbl_number_ErrorFactor.place(x=300,y=420) 
-        
-        #end--------------Result_Lable
+        #invoice Frame
+        self.invoice_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.invoice_frame.place(x=5,y=90)
+        FormSendInvoice(self.invoice_frame,self.username,self.password)
 
-        
-        self.lbl_status = Label(self.base,text="فایل در دسترس نیست" ,bg="#ffffff",width='100', height="2")
-        self.lbl_status.place(x=0,y=464)
+        #invoice Frame 
+        self.inquiry_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.inquiry_frame.place(x=5,y=90)
+        FormInquiryInvoice(self.inquiry_frame,self.username,self.password)
 
-        Label(self.base,text="Version:1.1.0").place(x=10,y=440)
+        #Revok Frame 
+        self.revok_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.revok_frame.place(x=5,y=90)
+        FormRevokInvoice(self.revok_frame,self.username,self.password)
+       
+        #inqiuryPerson Frame 
+        self.inqiuryPerson_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.inqiuryPerson_frame.place(x=5,y=90)
+        FormInquiryPerson(self.inqiuryPerson_frame)
 
-        load = Image.open('data/logo.png')
-        render = ImageTk.PhotoImage(load)
-        img = Label(self.base, image=render,width=70,height=50)
-        img.image = render
-        img.place(x=10, y=390)
+        #inqiuryPerson Frame 
+        self.delete_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.delete_frame.place(x=5,y=90)
+        FormDeleteInvoice(self.delete_frame,self.username,self.password)
 
-        load2 = Image.open('data/keysunlogo.png')
-        render2 = ImageTk.PhotoImage(load2)
-        img2 = Label(self.base, image=render2,width=60,height=55,bg="#d1ccc0")
-        img2.image = render2
-        img2.place(x=400, y=5)
+        self.select_frame_by_name("send")
+        self.base.mainloop()
 
+    def change_appearance_mode_event(self, new_appearance_mode):
+        ck.set_appearance_mode(new_appearance_mode)
 
+    def select_frame_by_name(self, name):
+        self.btn_send_invoice.configure(fg_color=("gray75", "gray25") if name == "send" else "transparent")
+        self.btn_inqiure_invoice.configure(fg_color=("gray75", "gray25") if name == "inquiry" else "transparent")
+        self.btn_revok_invoice.configure(fg_color=("gray75", "gray25") if name == "revok" else "transparent")
+        self.btn_inqiurePerson_invoice.configure(fg_color=("gray75", "gray25") if name == "inquiryPerson" else "transparent")
+        self.btn_delete_invoice.configure(fg_color=("gray75", "gray25") if name == "delete" else "transparent")
 
-    def btn_SendInvoice_click(self):
-        self.Tread = Thread(target=self.send_invoice)
-        self.Tread.start()
-
-    def generateForm(self) -> None:
-        self.base.mainloop()  
- 
-    def checkToken(self,username):
-        try:
-            with open("string.txt", "rb") as f1, open("key.txt", "rb") as f2:
-                token = f1.read()
-                key = f2.read()
-
-            f = Fernet(key)
-            what_d = str(f.decrypt(token),'utf-8') 
-            r = hashlib.md5(str.encode(username[:10]))
-            if what_d != r.hexdigest():
-                showerror("دسترسی","نام کاربری مجاز نمیباشد")
-                return False
-            else:
-                return True
-        except:
-            showerror("دسترسی","نام کاربری مجاز نمیباشد")
-            return False
-    
-    def loginTest(self):
-        # str_usename = self.txt_username.get("1.0", "end-1c")
-        # str_password = self.txt_password.get("1.0", "end-1c")
-        str_usename = self.txt_username.get()
-        str_password = self.txt_password.get()
-        if str_usename == '' or str_password == '':
-            showwarning("ورود","نام کاربری ویا کلمه عبور را به درستی وارد کنید")
+        # show selected frame
+        if name == "send":
+            self.invoice_frame.place(x=5,y=90)
+        else:  
+            self.invoice_frame.place_forget()
+       
+        if name == "inquiry":
+            self.inquiry_frame.place(x=5,y=90)
         else:
-            c = self.checkToken(str_usename)
-            if c:
-                token = api.getToken(str_usename,str_password)
-                if token != "":
-                    showinfo("موفقیت","ورود با موفقیت انجام شد")
-                    self.txt_username.config(state="disabled")
-                    self.txt_password.config(state="disabled")
-                    self.btn_testLogin.state(["disabled"]) 
-                else:
-                    showerror("خطا","خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید")
-
-    def lockElement(self):
-        self.txt_username.config(state="disabled")
-        self.txt_password.config(state="disabled")
-        self.numberPatern.config(state="disabled")
-        self.btn_testLogin.state(["disabled"])
-        self.btn_selectFile.state(["disabled"])
-        self.btn_reset.state(["disabled"])
-        self.btn_sendInvoice.state(["disabled"])
-        self.lbl_status.config(text="در حال ارسال لطفا منتظر بمانید ...",bg="#009FBD")
-        self.R1.config(state="disabled")
-        self.R2.config(state="disabled")
+            self.inquiry_frame.place_forget()
         
-
-    def select_file(self):
-        filetypes = (
-            ('Excel files', '*.xlsx'),
-            ('All files', '*.*')
-        )
-        patern = self.numberPatern.current()
-        if patern != 0:
-            self.path_file = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
-            self.lbl_path.config(text=self.path_file)
-            self.Excell = ExcellData(self.path_file)
-            self.CSV = CSVFile(self.path_file)
-            result = self.Excell.checkExcel(patern)
-         
-            if result == None:
-                showwarning("خطا","فایل انتخابی مشکل دارد لطفا دوباره انتخاب کنید")
-            else:
-                messageItem = ["صورتحساب","اقلام صورتحساب","پرداخت‌های صورتحساب"]
-                self.status = True
-                for i,r in enumerate(result):
-                    if r == 0:  
-                        showwarning("خطا", " تعداد ستون های" + messageItem[i] + " " + "در الگوی انتخابی مقایرت دارد")
-                        self.status = False
-                        self.lbl_status.config(text="فایل خطا دار",bg="#a3001b")
-
-
-                if self.status : 
-                    self.lbl_status.config(text="دیتا آماده ارسال",bg="#08a300")
-                    self.numberPatern.config(state='disabled')
-                
+        if name == "revok":
+            self.revok_frame.place(x=5,y=90)
         else:
-            showwarning('انتخاب الگو',"نوع الگوی فاکتور را انتخاب کنید")
-
-    def reset_form(self):
-        self.txt_username.config(state="normal")
-        self.txt_password.config(state="normal")
-        self.numberPatern.config(state="readonly")
-        self.numberPatern.current(0)
-        self.lbl_status.config(text="فایل در دسترس نیست",bg="#ffffff")
-        self.status = False
-        self.btn_testLogin.state(["!disabled"])
-        self.btn_selectFile.state(["!disabled"])
-        self.btn_reset.state(["!disabled"])
-        self.btn_sendInvoice.state(["!disabled"])
-        self.lbl_path.config(text="")
-        self.R1.config(state="normal")
-        self.R2.config(state="normal")
-
-
-    def send_invoice(self):
-        self.lbl_number_allFactor.config(text="0")
-        self.lbl_number_ErrorFactor.config(text="0")
-        self.lbl_number_sendFactor.config(text="0")
-        self.lbl_number_successFactor.config(text="0")
-        str_usename = self.txt_username.get()
-        str_password = self.txt_password.get()
-        vdate = self.valDate.get()
-        # today = date.today()
+            self.revok_frame.place_forget()
         
-        if str_usename == '' or str_password == '':
-            showwarning("ورود","نام کاربری ویا کلمه عبور را به درستی وارد کنید")
-        elif vdate == 0 :
-            showwarning("نوع تاریخ","نوع ورودی تاریخ را مشخص نمایید")
+        if name == "inquiryPerson":
+            self.inqiuryPerson_frame.place(x=5,y=90)
         else:
-            c = self.checkToken(str_usename)
-            if c:
-                self.lockElement()
-                if self.status :
-                    invoices = self.Excell.getInvoice()
-                    items = self.Excell.getInvoiceItem()
-                    payments = self.Excell.getPayment()
-                    
+            self.inqiuryPerson_frame.place_forget()
 
-                    
-                    self.progressbar.configure(maximum=len(invoices))
-                    sucessCount = 0
-                    errorCount = 0
-                    
-                    
-                    if len(invoices) <= 0:
-                        showwarning("دیتا","تعداد صورتحساب ها صفر می باشد")
-                    elif len(items) <= 0:
-                        showwarning("دیتا","تعداد آیتم صورتحساب ها صفر می باشد")
-                    else:
-                        inD = InvoiceData(items,payments)
-                        listInvoice = []
-                        listIndex = []
-                        counter = 0
-                        patern = self.numberPatern.current()
-
-                        # if patern == 1:
-                        #     self.Excell.preparationExcellN11()
-                        # elif patern == 2:
-                        #     self.Excell.preparationExcellN21()
-
-                        self.lbl_number_allFactor.config(text=str(len(invoices)))
-                        
-                        for index, invoice in enumerate(invoices):
-                        
-                        
-                            if patern == 1:
-                                i = inD.generateInvoiceNo1(invoice,vdate)
-                                listInvoice.append(i)
-                            elif patern == 2:
-                                i = inD.generateInvoiceNo2(invoice,vdate)
-                                listInvoice.append(i)
-
-                            listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
-                            counter += 1
-                            
-                            if counter == setting.BatchSizeOfInvoices or  index ==  (len(invoices) - 1) :
-                                # print (listIndex)
-                                token = api.getToken(str_usename,str_password)
-                                if token != "":
-                                    result = api.sendInvoice(listInvoice,token)
-                                    # curentTime = time.strftime("%H:%M:%S")
-                                    if result[0] == 200:
-                                        indexResult = lambda x,xy : [y for y in xy if y['uniqueId'] == x ] 
-                                        data = result[1]['data']
-                                        for invoiceItem in listIndex:
-                                            dataResultPerInvoice = indexResult(invoiceItem[2],data)
-                                            for i,d in enumerate(dataResultPerInvoice):
-                                                if  d['status'] == 3:
-                                                    self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['taxSerialNumber']])
-                                                    sucessCount += 1
-                                                else:
-                                                    self.CSV.saveError([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['title'],d['description']])
-                                                    if i == 0:
-                                                        errorCount += 1
-                                    
-                                    else:
-                                        for invoiceItem in listIndex: 
-                                            self.CSV.saveError([invoiceItem[0],invoiceItem[1],invoiceItem[2],result[0],result[1]])
-                                            errorCount += 1
-                                
-                                
-                                else:                    
-                                    print("login Faild")
-                                counter = 0
-                                listInvoice = []
-                                listIndex = []
-                                self.lbl_number_sendFactor.config(text=str(index+1))
-                                self.base.update_idletasks()
-                                self.base.after(500)
-                                self.base.update()
-                                
-                            
-                            self.lbl_number_ErrorFactor.config(text=str(errorCount))
-                            self.lbl_number_successFactor.config(text=str(sucessCount))
-                            self.progressbar['value'] = index+1
-                            self.progressbar.update()
-                            self.base.update_idletasks()
-                            self.base.after(500)
-                            self.base.update()
-                            
+        if name == "delete":
+            self.delete_frame.place(x=5,y=90)
+        else:
+            self.delete_frame.place_forget()
 
 
-                        showinfo("اتمام","تعداد %d فاکتور با موفقیت ارسال گردید میتوانید نتیجه را در اکسل انتخابی مشاهده نمایید"%len(invoices))
-                else:
-                    showerror("بارگزاری اکسل","لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.")
+    def send_button_event(self):
+        self.select_frame_by_name("send")
 
-                self.reset_form()
+    def inquiry_button_event(self):
+        self.select_frame_by_name("inquiry")
+
+    def revok_button_event(self):
+        self.select_frame_by_name("revok")
+
+    def inquiryPerson_button_event(self):
+         self.select_frame_by_name("inquiryPerson")
+
+    def delete_button_event(self):
+        self.select_frame_by_name("delete")
+        
 
 if __name__ == "__main__":
-    form = MainForm()
-    basef = form.generateForm()
-
-    
-        
+    MainPanel("","")
