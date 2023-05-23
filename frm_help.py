@@ -17,7 +17,7 @@ class FormHelp():
         lbl_war2 = ck.CTkLabel(self.group_date,text="برای دریافت هر یک از قالب های مورد نیاز بر روی فایل مورد نظر کلیک کنید",font=self.font,text_color="#000")
         lbl_war2.place(x=70,y=20)
         #radioButom:
-        self.group_btn = ck.CTkFrame(self.frame,border_width=2, width=570, height=130)
+        self.group_btn = ck.CTkFrame(self.frame,border_width=2, width=570, height=180)
         self.group_btn.place(x=10,y=100)
 
         lbl_patern11 = ck.CTkLabel(self.group_btn,text="دانلود راهنمای ثبت صورتحساب نوع 1 الگوی 1 فروش همراه با اطلاعات خریدار",font=self.font)
@@ -37,6 +37,13 @@ class FormHelp():
 
         self.btn_revoke = ck.CTkButton(self.group_btn,text="دانلود",font=self.font,command=self.download_revoke,width=50)
         self.btn_revoke.place(x=10,y=90)
+
+        
+        lbl_delete = ck.CTkLabel(self.group_btn,text="دانلود فایل راهنمای حذف دسته‌ای صورتحساب‌ها",font=self.font)
+        lbl_delete.place(x=280,y=130)
+
+        self.lbl_delete = ck.CTkButton(self.group_btn,text="دانلود",font=self.font,command=self.download_delete,width=50)
+        self.lbl_delete.place(x=10,y=130)
         
     def download_patern11(self):
         url = "https://files.mizeonline.ir/tps/assets/sample/Invoice_InvoicePatternId_1.xlsx"  
@@ -56,3 +63,8 @@ class FormHelp():
         # urllib.request.urlretrieve(url, file_name)
         webbrowser.open(url)
 
+    def download_delete(self):
+        url = "https://files.mizeonline.ir/tps/assets/sample/Invoice_Remove.xlsx"  # Replace with your file URL
+        # file_name = "Invoice_InvoicePatternId_99.xlsx"  # Replace with your desired file name
+        # urllib.request.urlretrieve(url, file_name)
+        webbrowser.open(url)

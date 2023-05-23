@@ -55,21 +55,21 @@ class FormSendInvoice():
         self.group_file = ck.CTkFrame(self.frame,border_width=2, width=570, height=90)
         self.group_file.place(x=10,y=110)
 
-        self.numberPatern = ck.CTkComboBox(self.group_file, width=400,font=self.font,dropdown_font=self.font12,state="readonly",
+        self.numberPatern = ck.CTkComboBox(self.group_file, width=450,font=self.font,dropdown_font=self.font12,state="readonly",
                                             values=[self.patern[0].string,self.patern[1].string,self.patern[2].string])
         
-        self.numberPatern.place(x=70,y=10)
+        self.numberPatern.place(x=20,y=10)
         self.numberPatern.set(self.patern[0].string)
 
         lbl_selectTypeDate = ck.CTkLabel(self.group_file,text=" :ورود فایل",font=self.font)
         lbl_selectTypeDate.place(x=480,y=25)
 
-        self.lbl_path = ck.CTkLabel(self.group_file,bg_color="#ffffff",width=300,height=20,text="",text_color="#000000")
-        self.lbl_path.place(x=170,y=50)
+        self.lbl_path = ck.CTkLabel(self.group_file,bg_color="#ffffff",width=350,height=20,text="",text_color="#000000")
+        self.lbl_path.place(x=120,y=50)
 
         
         self.btn_selectFile = ck.CTkButton(self.group_file,text="انتخاب فایل",font=self.font,command=self.select_file,width=60)
-        self.btn_selectFile.place(x=70,y=45)
+        self.btn_selectFile.place(x=20,y=45)
 
         #send element
         self.group_send = ck.CTkFrame(self.frame,border_width=2, width=570, height=80)

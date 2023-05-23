@@ -23,7 +23,7 @@ class FormInquiryInvoice():
         self.frame_data.place(x=10,y=10)
 
         lbl_input = ck.CTkLabel(self.frame_data,text=" :ورود فایل",font=self.font)
-        lbl_input.place(x=480,y=25)
+        lbl_input.place(x=465,y=25)
 
         self.lbl_path = ck.CTkLabel(self.frame_data,bg_color="#ffffff",width=275,height=20,text="",text_color="#000000")
         self.lbl_path.place(x=180,y=30)
@@ -36,7 +36,7 @@ class FormInquiryInvoice():
         self.frame_TypeInquire.place(x=10,y=100)
 
         lbl_selectTypeDate = ck.CTkLabel(self.frame_TypeInquire,text=" :انتخاب روش استعلام",font=self.font)
-        lbl_selectTypeDate.place(x=420,y=25)
+        lbl_selectTypeDate.place(x=400,y=25)
 
         self.valTypeinquiry = tkinter.IntVar()
         self.R1 = ck.CTkRadioButton(self.frame_TypeInquire,text="UniqeId",variable=self.valTypeinquiry,value=2)

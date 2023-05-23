@@ -44,34 +44,34 @@ class MainPanel():
         self.btn_send_invoice = ck.CTkButton(self.menu_frame, text="      ارسال صورتحساب", compound="right", font=self.font,
                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",width=150,
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.sendInvoice_image,command=self.send_button_event)
-        self.btn_send_invoice.place(x=20,y=120)
+        self.btn_send_invoice.place(x=20,y=100)
 
         self.btn_inqiure_invoice = ck.CTkButton(self.menu_frame, text="    استعلام صورتحساب", compound="right", font=self.font,
                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",width=150,
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.inquiryInvoice_image,command=self.inquiry_button_event)
-        self.btn_inqiure_invoice.place(x=20,y=170)
+        self.btn_inqiure_invoice.place(x=20,y=150)
 
         self.btn_revok_invoice = ck.CTkButton(self.menu_frame, text="       ابطال صورتحساب", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.revok_button_event)
-        self.btn_revok_invoice.place(x=20,y=220)
+        self.btn_revok_invoice.place(x=20,y=200)
 
         
         self.btn_delete_invoice = ck.CTkButton(self.menu_frame, text="  پاک کردن صورتحساب", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.delete_button_event)
-        self.btn_delete_invoice.place(x=20,y=270)
+        self.btn_delete_invoice.place(x=20,y=250)
 
         self.btn_inqiurePerson_invoice = ck.CTkButton(self.menu_frame, text="استعلام مودیان مالیاتی", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.inquiryPerson_image,command=self.inquiryPerson_button_event)
-        self.btn_inqiurePerson_invoice.place(x=20,y=320)
+        self.btn_inqiurePerson_invoice.place(x=20,y=300)
 
         
-        self.btn_help = ck.CTkButton(self.menu_frame, text="                      راهنما", compound="right", font=self.font,width=150,
+        self.btn_help = ck.CTkButton(self.menu_frame, text="                     راهنما", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.help_image,command=self.help_button_event)
-        self.btn_help.place(x=20,y=420)
+        self.btn_help.place(x=20,y=450)
 
 
 
