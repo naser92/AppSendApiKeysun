@@ -7,6 +7,7 @@ from frm_InquiryInvoice import FormInquiryInvoice
 from frm_revokInvoice import FormRevokInvoice
 from frm_InquiryPerson import FormInquiryPerson
 from frm_deleteInvoice import FormDeleteInvoice
+from frm_help import FormHelp
 import os
 
 class MainPanel():
@@ -34,6 +35,7 @@ class MainPanel():
         self.inquiryInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "inquiryInvoice.png")),size=(15,20))
         self.revokInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "revokInvoice.png")),size=(20,20))
         self.inquiryPerson_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "person.png")),size=(20,20))
+        self.help_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "help.png")),size=(20,20))
 
         #create menu frame
         self.menu_frame = ck.CTkFrame(self.base,corner_radius=0,height=600,width=200)
@@ -64,6 +66,13 @@ class MainPanel():
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.inquiryPerson_image,command=self.inquiryPerson_button_event)
         self.btn_inqiurePerson_invoice.place(x=20,y=320)
+
+        
+        self.btn_help = ck.CTkButton(self.menu_frame, text="                      راهنما", compound="right", font=self.font,width=150,
+                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.help_image,command=self.help_button_event)
+        self.btn_help.place(x=20,y=420)
+
 
 
         # label_theme = ck.CTkLabel(self.menu_frame,text="تم",font=self.font)
@@ -113,10 +122,15 @@ class MainPanel():
         self.inqiuryPerson_frame.place(x=5,y=90)
         FormInquiryPerson(self.inqiuryPerson_frame)
 
-        #inqiuryPerson Frame 
+        #delete Frame 
         self.delete_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
         self.delete_frame.place(x=5,y=90)
         FormDeleteInvoice(self.delete_frame,self.username,self.password)
+
+        #help Frame 
+        self.help_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.help_frame.place(x=5,y=90)
+        FormHelp(self.help_frame)
 
         self.select_frame_by_name("send")
         self.base.mainloop()
@@ -130,6 +144,7 @@ class MainPanel():
         self.btn_revok_invoice.configure(fg_color=("gray75", "gray25") if name == "revok" else "transparent")
         self.btn_inqiurePerson_invoice.configure(fg_color=("gray75", "gray25") if name == "inquiryPerson" else "transparent")
         self.btn_delete_invoice.configure(fg_color=("gray75", "gray25") if name == "delete" else "transparent")
+        self.btn_help.configure(fg_color=("gray75", "gray25") if name == "help" else "transparent")
 
         # show selected frame
         if name == "send":
@@ -157,6 +172,11 @@ class MainPanel():
         else:
             self.delete_frame.place_forget()
 
+        if name == "help":
+            self.help_frame.place(x=5,y=90)
+        else:
+            self.help_frame.place_forget()
+
 
     def send_button_event(self):
         self.select_frame_by_name("send")
@@ -172,6 +192,9 @@ class MainPanel():
 
     def delete_button_event(self):
         self.select_frame_by_name("delete")
+    
+    def help_button_event(self):
+        self.select_frame_by_name("help")
         
 
 if __name__ == "__main__":

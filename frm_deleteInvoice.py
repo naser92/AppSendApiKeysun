@@ -39,9 +39,9 @@ class FormDeleteInvoice():
         self.group_date = ck.CTkFrame(self.frame,border_width=2, width=570, height=80,fg_color="#ffbe76")
         self.group_date.place(x=10,y=100)
 
-        lbl_war = ck.CTkLabel(self.group_date,text="که قبلا برای ثبت صورت حساب تولید شده استفاده نمایید UniqeId برای پاک کردن صورتحساب باید از  ",font=self.font12,text_color="#000")
+        lbl_war = ck.CTkLabel(self.group_date,text="که قبلا برای ثبت صورتحساب تولید شده استفاده نمایید UniqeId برای پاک کردن صورتحساب باید از  ",font=self.font12,text_color="#000")
         lbl_war.place(x=35,y=10)
-        lbl_war2 = ck.CTkLabel(self.group_date,text="برای استفاده ز این قسمت تمامی آی دی در قالب یک فایل اکسل تک ستونه قرار دهید",font=self.font12,text_color="#000")
+        lbl_war2 = ck.CTkLabel(self.group_date,text="برای استفاده از این قسمت تمامی آی دی در قالب یک فایل اکسل تک ستونه قرار دهید",font=self.font12,text_color="#000")
         lbl_war2.place(x=60,y=45)
 
 
