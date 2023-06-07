@@ -112,7 +112,8 @@ class InvoiceData():
                     "flightType": None,
                     "billId": None,
                     "invoiceItems":  listItem,
-                    "invoicePayments": listPayment
+                    "invoicePayments": listPayment,
+                    "CooperationCode": "Eitak_V6.3"
                         
 
                 }
@@ -171,6 +172,7 @@ class InvoiceData():
                     "sellerContractRegistrationNumber" :None,#invoice[16],
                     "billId": None,
                     "creditPaymentAmount" :None,# invoice[12],
+                    "CooperationCode": "Eitak_V6.3",
                     "invoiceItems":  listItem,
                     "invoicePayments": listPayment
                         

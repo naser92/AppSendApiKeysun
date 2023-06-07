@@ -136,8 +136,13 @@ class FormRevokInvoice():
             if self.status:
                 invoiceRevokes = self.Excell.getRevokeInvoice()
                 self.progressbar.configure(maximum=len(invoiceRevokes))
+                self.progressbar['value'] = 0
                 sucessCount = 0
                 errorCount = 0
+                self.progressbar.update()
+                self.frame.update_idletasks()
+                self.frame.after(500)
+                self.frame.update()
 
                 if len(invoiceRevokes) <= 0 :
                     CTkMessagebox(title="دیتا",message="تعداد صورتحساب ها صفر می باشد",icon="warning")

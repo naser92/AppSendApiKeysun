@@ -14,6 +14,6 @@ def encry(code):
         f2.write(key)
 
 
-username  = '2741371547083'
+username  = '10320053498'
 r = hashlib.md5(str.encode(username[:10]))
 encry(r.hexdigest())

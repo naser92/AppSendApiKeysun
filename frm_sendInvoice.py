@@ -84,6 +84,7 @@ class FormSendInvoice():
         self.progressbar =  ttk.Progressbar(self.group_send)
         self.progressbar.place(x=20,y=50,width=520)
         
+        
 
         
         # ck.CTkLabel(self.frame,text="تعداد کل فاکتور ها",font=self.font12).place(x=355,y=270)
