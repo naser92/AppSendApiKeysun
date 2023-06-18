@@ -162,6 +162,16 @@ class ApiKeysun:
         else:
             return "0"
     
+    def GetURL_Help(self) -> str:
+        try:
+            response = r.get("https://files.mizeonline.ir/tps/assets/Eitak/eitak.json")
+            if response.status_code == 200:
+                data = response.json()
+                return data['urlHelp']
+            else:
+                return "O"
+        except:
+            return "0"
     
     def getUrl(self) -> str:
         return self.urlVersion
