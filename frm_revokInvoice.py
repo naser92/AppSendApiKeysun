@@ -139,10 +139,7 @@ class FormRevokInvoice():
                 self.progressbar['value'] = 0
                 sucessCount = 0
                 errorCount = 0
-                self.progressbar.update()
-                self.frame.update_idletasks()
-                self.frame.after(500)
-                self.frame.update()
+           
 
                 if len(invoiceRevokes) <= 0 :
                     CTkMessagebox(title="دیتا",message="تعداد صورتحساب ها صفر می باشد",icon="warning")
@@ -151,6 +148,9 @@ class FormRevokInvoice():
                 listIndex = []
                 counter = 0
                 self.lbl_number_allFactor.configure(text=str(len(invoiceRevokes)))
+                
+                self.progressbar.update()
+                self.frame.update_idletasks()
                 self.frame.after(500)
                 self.frame.update()
 
@@ -195,13 +195,13 @@ class FormRevokInvoice():
                         self.frame.after(500)
                         self.frame.update()
                 
-                self.lbl_number_ErrorFactor.configure(text=str(errorCount))
-                self.lbl_number_successFactor.configure(text=str(sucessCount))
-                self.progressbar['value'] = index+1
-                self.progressbar.update()
-                self.frame.update_idletasks()
-                self.frame.after(500)
-                self.frame.update()
+                    self.lbl_number_ErrorFactor.configure(text=str(errorCount))
+                    self.lbl_number_successFactor.configure(text=str(sucessCount))
+                    self.progressbar['value'] = index+1
+                    self.progressbar.update()
+                    self.frame.update_idletasks()
+                    self.frame.after(500)
+                    self.frame.update()
             else:
                 CTkMessagebox(title="بارگزاری اکسل",message="لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.",icon="cancel")
             self.reset_element()

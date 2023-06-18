@@ -11,6 +11,8 @@ from model.formData import Patern
 import hashlib
 from model.setting import SettingData
 from tkinter import ttk
+from frm_log import FormLog
+import threading
 
 
 api = ApiKeysun() 
@@ -23,7 +25,8 @@ class FormSendInvoice():
         self.font12 : tuple = ("Tahoma",12)
         self.username = username
         self.password = password
-
+        self.fileSuccess = None # مخصوص لاگ
+        self.fileError = None
         self.patern = [
             Patern(0,"انتخاب الگو صورتحساب"),
             Patern(1,"نوع 1 الگوی 1 صورتحساب فروش همراه با اطلاعات خریدار"),
@@ -75,7 +78,7 @@ class FormSendInvoice():
         self.group_send = ck.CTkFrame(self.frame,border_width=2, width=570, height=80)
         self.group_send.place(x=10,y=220)
 
-        self.btn_sendInvoice = ck.CTkButton(self.group_send,text="ارسال صورتحساب",font=self.font,command=self.send_invoice)
+        self.btn_sendInvoice = ck.CTkButton(self.group_send,text="ارسال صورتحساب",font=self.font,command=self.thread_send_invoice)
         self.btn_sendInvoice.place(x=400,y=10)
         
         self.btn_reset = ck.CTkButton(self.group_send,text="کنسل",font=self.font,command=self.reset_form)
@@ -83,6 +86,16 @@ class FormSendInvoice():
 
         self.progressbar =  ttk.Progressbar(self.group_send)
         self.progressbar.place(x=20,y=50,width=520)
+
+        
+        self.btn_ErrorLog = ck.CTkButton(self.frame,text="لاگ خطا",font=self.font,command=self.openFormLogError)
+        self.btn_ErrorLog.place(x=20,y=320)
+        self.btn_ErrorLog.configure(state="disabled")
+
+        
+        self.btn_successLog = ck.CTkButton(self.frame,text="لاگ موفقیت",font=self.font,command=self.openFromLogSuccess)
+        self.btn_successLog.place(x=20,y=350)
+        self.btn_successLog.configure(state="disabled")
         
         
 
@@ -110,8 +123,30 @@ class FormSendInvoice():
         self.lbl_status = ck.CTkLabel(self.frame,text="فایل در دسترس نیست" ,bg_color="#ffffff",width=600, height=30,font=self.font,text_color="#000000")
         self.lbl_status.place(x=0,y=480)
 
+    def openFormLogError(self):
+        self.sendInvoice_tread.join()
+        if self.fileError != None or self.fileError != "":
+            frm = FormLog(self.fileError,self.frame)
+            frm.show()
+        else:
+            CTkMessagebox(title="خطای فایل",message="فایل لاگ برای خطا ساخته نشده است",icon="cancel")
     
+    def openFromLogSuccess(self):
+        self.sendInvoice_tread.join()
+        if self.fileSuccess != None or self.fileSuccess != "":
+            frm = FormLog(self.fileSuccess,self.frame)
+            frm.show()
+        else:
+            CTkMessagebox(title="خطای فایل",message="فایل لاگ برای درخواست های موفق ساخته نشده است",icon="cancel")
+
+    def thread_send_invoice(self):
+        self.sendInvoice_tread = threading.Thread(target=self.send_invoice)
+        self.sendInvoice_tread.daemon = True
+        self.sendInvoice_tread.start()
+
         
+
+    
     def select_file(self):
         filetypes = (
             ('Excel files', '*.xlsx'),
@@ -191,6 +226,14 @@ class FormSendInvoice():
         str_usename = self.username
         str_password = self.password
         vdate = self.valDate.get()
+        self.fileError = ""
+        self.fileError = ""
+        self.btn_successLog.configure(state="disabled")
+        self.btn_ErrorLog.configure(state="disabled")
+        self.frame.update_idletasks()
+        self.frame.after(500)
+        self.frame.update()
+
         # today = date.today()
         
         if str_usename == '' or str_password == '':
@@ -266,15 +309,33 @@ class FormSendInvoice():
                                                     except:
                                                          self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status']])
                                                     sucessCount += 1
+                                                    #فعال کردن لاگ خطا
+                                                    # state_btn_success = self.btn_successLog.cget("state") 
+                                                    # if state_btn_success == "disabled":
+                                                    #     self.btn_successLog.configure(state = "normal")
+
+                                                    #  ست کردن آدرس فایل لاگ
+                                                    if self.fileSuccess == None or self.fileSuccess == "":
+                                                        self.fileSuccess = self.CSV.getFileSuccessSendInvoiceName()
+                                                    
+
                                                 else:
                                                     self.CSV.saveError([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['title'],d['description']])
                                                     if i == 0:
                                                         errorCount += 1
+                                                    #فعال کردن لاگ خطا
+                                                    # state_btn_error = self.btn_ErrorLog.cget("state") 
+                                                    # if state_btn_error == "disabled":
+                                                    #     self.btn_ErrorLog.configure(state = "normal")
                                     
                                     else:
                                         for invoiceItem in listIndex: 
                                             self.CSV.saveError([invoiceItem[0],invoiceItem[1],invoiceItem[2],result[0],result[1]])
                                             errorCount += 1
+                                        #فعال کردن لاگ خطا
+                                        # state_btn_error = self.btn_ErrorLog.cget("state") 
+                                        # if state_btn_error == "disabled":
+                                        #     self.btn_ErrorLog.configure(state = "normal")
                                 
                                 
                                 else:                    
@@ -286,7 +347,10 @@ class FormSendInvoice():
                                 self.frame.update_idletasks()
                                 self.frame.after(500)
                                 self.frame.update()
-                                
+
+                            # set address error file log
+                            if self.fileError == None or self.fileError == "":
+                                self.fileError = self.CSV.getFileErrorSendInvoiceName()    
                             
                             self.lbl_number_ErrorFactor.configure(text=str(errorCount))
                             self.lbl_number_successFactor.configure(text=str(sucessCount))
@@ -295,7 +359,14 @@ class FormSendInvoice():
                             self.frame.update_idletasks()
                             self.frame.after(500)
                             self.frame.update()
+
                             
+                        if self.fileSuccess != None and self.fileSuccess != "":
+                            self.btn_successLog.configure(state = "normal")   
+                        
+                        if self.fileError != None and self.fileError != "":
+                            self.btn_ErrorLog.configure(state = "normal")
+
                         CTkMessagebox(title="اتمام",message="تعداد %d فاکتور با موفقیت ارسال گردید میتوانید نتیجه را در دو فایل خطا و ثبت موفقیت در مکان فایل اصلی مشاهده نمایید"%len(invoices),icon="info")
                 else:
                     CTkMessagebox(title="بارگزاری اکسل",message="لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.",icon="cancel")

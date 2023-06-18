@@ -12,3 +12,7 @@ class SettingData:
                 self.BatchSizeOfInvoices = data["BatchSizeOfInvoices"]
         except:
             self.BatchSizeOfInvoices = 10
+
+@dataclass
+class VersionApp:
+    version : str = "3.6.0"

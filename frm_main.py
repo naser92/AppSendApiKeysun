@@ -9,6 +9,7 @@ from frm_InquiryPerson import FormInquiryPerson
 from frm_deleteInvoice import FormDeleteInvoice
 from frm_help import FormHelp
 import os
+from model.setting import VersionApp
 
 class MainPanel():
     def __init__(self,username,password) -> None:
@@ -86,7 +87,7 @@ class MainPanel():
         img = ck.CTkLabel(self.menu_frame, image=load,text="")
         img.place(x=80, y=510)
 
-        label_version = ck.CTkLabel(self.menu_frame,text="Version 6.3.0")
+        label_version = ck.CTkLabel(self.menu_frame,text="Version " + VersionApp.version)
         label_version.place(x=73,y=565)
 
 

@@ -17,10 +17,13 @@ class CSVFile():
         self.path = "/".join(path_file) + "/"
         self.curentTime = str(time.strftime("%H-%M"))
         self.today = date.today()
+        self.fileSuccessSendInvoice = ""
+        self.FileErrorSendInvoice = ""
 
 
     def saveData(self,data):
         file = self.path + self.fileName + "_success_" + str(self.today) + "_" + self.curentTime + ".csv" 
+        self.fileSuccessSendInvoice = file
         p = Path(file)
         check = p.is_file()
         if check == False:
@@ -84,6 +87,7 @@ class CSVFile():
         
     def saveError(self,data):
         file = self.path + self.fileName + "_error_" + str(self.today) +"_" + self.curentTime + ".csv" 
+        self.FileErrorSendInvoice = file
         p = Path(file)
         check = p.is_file()
         if check == False:
@@ -122,6 +126,12 @@ class CSVFile():
             taxSerialNumber.append(row[numberCoulum])
 
         return taxSerialNumber
+    
+    def getFileSuccessSendInvoiceName (self):
+        return self.fileSuccessSendInvoice
+    
+    def getFileErrorSendInvoiceName(self):
+        return self.FileErrorSendInvoice 
 
 if __name__ == "__main__":
     import time

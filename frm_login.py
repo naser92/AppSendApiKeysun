@@ -3,6 +3,7 @@ from package.CTkMessagebox import CTkMessagebox
 from module.api   import ApiKeysun
 from cryptography.fernet import Fernet
 import hashlib
+from model.setting import VersionApp
 
 class LoginForm():
     def __init__(self) -> None:
@@ -14,6 +15,7 @@ class LoginForm():
         self.base.eval('tk::PlaceWindow . center')
         self.base.resizable(0,0)
         self.font: tuple = ("Tahoma",12)
+        self.version = VersionApp.version
 
         # button = ck.CTkButton(self.base, text="my button")
         # button.grid(row=0, column=0, padx=20, pady=20)
@@ -38,6 +40,8 @@ class LoginForm():
     def generateForm(self) -> None:
         self.base.mainloop()  
 
+    
+
     def loginTest(self):
             str_usename = self.txt_username.get()
             str_password = self.txt_password.get()
@@ -48,10 +52,17 @@ class LoginForm():
                 if c:
                     token = self.api.getToken(str_usename,str_password)
                     if token != "":
-                        self.base.destroy()
-                        from frm_main import MainPanel
-                        MainPanel(str_usename,str_password)
-                        
+                        v = self.api.GetVersion()
+                        if v == self.version:
+                            self.base.destroy()
+                            from frm_main import MainPanel
+                            MainPanel(str_usename,str_password)
+                        else:
+                            url = self.api.getUrl()
+                            self.base.destroy()
+                            from frm_version import VersionForm
+                            frm = VersionForm(self.version,v,url)
+                            frm.generateForm()
                       
                     else:
                         CTkMessagebox(title="خطا",message="خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید",icon="warning")

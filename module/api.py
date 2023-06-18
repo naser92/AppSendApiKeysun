@@ -1,6 +1,6 @@
 import requests as r
 import json 
-
+import time
 class ApiKeysun:
     def __init__(self,baseUrl = "https://mizeOnline.ir" ) -> None:
     # def __init__(self,baseUrl = "https://localhost:44353" ) -> None:
@@ -26,6 +26,7 @@ class ApiKeysun:
             return token['data']['token']
         except:
             return ""
+
         
     def sendInvoice(self,invoices,token):
         try:
@@ -57,11 +58,10 @@ class ApiKeysun:
                 else :
                     return [result.status_code,"serverError"]
             
-            except Exception as ex:
-                print(ex)
+            except:
                 return [result.status_code,"Erorrserver"]
-        except Exception as ex:
-            print(ex)
+                
+        except:
             return[-1,"ErrorSystem"]
     
 
@@ -148,6 +148,23 @@ class ApiKeysun:
                 return [result.status_code,"serverError"]
         except:
             return[-1,"ErrorSystem"]
+        
+    def GetVersion(self) -> str:
+        response = r.get("https://files.mizeonline.ir/tps/assets/Eitak/eitak.json")
+        if response.status_code == 200:
+            data = response.json()
+            try:
+                self.urlVersion = data['url']
+            except:
+                self.urlVersion = None
+
+            return data['version']
+        else:
+            return "0"
+    
+    
+    def getUrl(self) -> str:
+        return self.urlVersion
 
 
 class APIEconomicCode():
@@ -178,6 +195,9 @@ class APIEconomicCode():
         except:
             message = "خطا در شبکه"
             return message
+
+    
+
 
 if __name__ == "__main__":
     api = ApiKeysun()

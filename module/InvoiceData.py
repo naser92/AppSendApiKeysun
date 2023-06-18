@@ -1,6 +1,8 @@
 import uuid
 import jdatetime
 import math
+from model.setting import VersionApp
+
 class InvoiceData():
     def __init__(self,listInvoiceItem,listPayment) -> None:
         self.ListInvoiceItem = listInvoiceItem
@@ -21,10 +23,10 @@ class InvoiceData():
             "taxPrice":  data[10],
             "dutyPercent": data[11],
             "dutyPrice": data[12],
-            "dutyTitle": data[13],
+            "dutyTitle": data[13] if data[13] != "" else None,
             "otherLegalFundsPercent":data[14],
             "otherLegalFundsPrice": data[15],
-            "otherLegalFundsTitle": data[16],
+            "otherLegalFundsTitle": data[16] if data[16] != "" else None ,
             "brokerContractNumber": data[17],
             "exchangeContractNumber": data[18],
             "exchangeContractDate": data[19],
@@ -99,11 +101,11 @@ class InvoiceData():
                     "sellerCustomsLicenseNumber" :invoice[14],
                     "sellerCustomsDeclarationNumber " :invoice[15],
                     "sellerContractRegistrationNumber" :invoice[16],
-                    "sellerBranch":invoice[17],
-                    "buyerBranch":invoice[18],
+                    "sellerBranch":invoice[17] if invoice[17] != "" else None,
+                    "buyerBranch":invoice[18] if invoice[18] != "" else None,
                     "tax17" : invoice[19],
                     "uniqueId": str(uuid.uuid4()),
-                    "description": invoice[20],
+                    "description": invoice[20] if invoice[20] != "" else None,
                     "buyerCompanyName": None,
                     "buyerFirstName": None ,
                     "buyerLastName": None,
@@ -113,7 +115,7 @@ class InvoiceData():
                     "billId": None,
                     "invoiceItems":  listItem,
                     "invoicePayments": listPayment,
-                    "CooperationCode": "Eitak_V6.3"
+                    "CooperationCode": "Eitak_" + VersionApp.version
                         
 
                 }
@@ -161,7 +163,7 @@ class InvoiceData():
                     "buyerBranch":invoice[14],
                     "flightType": invoice[15],
                     "tax17" : invoice[16],
-                    "description": invoice[17],
+                    "description": invoice[17] if invoice[17] != "" else None,
                     "paymentType" : 1,
                     "buyerCompanyName": None,
                     "buyerFirstName": None ,
@@ -172,7 +174,7 @@ class InvoiceData():
                     "sellerContractRegistrationNumber" :None,#invoice[16],
                     "billId": None,
                     "creditPaymentAmount" :None,# invoice[12],
-                    "CooperationCode": "Eitak_V6.3",
+                    "CooperationCode": "Eitak_" + VersionApp.version,
                     "invoiceItems":  listItem,
                     "invoicePayments": listPayment
                         
