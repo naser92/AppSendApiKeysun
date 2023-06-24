@@ -42,7 +42,20 @@ class Updater:
         if file != None:
             try:
                 with zipfile.ZipFile(file, 'r') as zip_ref:
-                    zip_ref.extractall()
+                    for file_info in zip_ref.infolist():
+                        file_name = file_info.filename
+                        target_path = os.path.join(os.getcwd(),file_name)
+
+                        if file_name.endswith('/'):
+                            os.makedirs(target_path, exist_ok=True)
+                            continue
+
+                        if os.path.exists(target_path):
+                            os.remove(target_path)
+
+                        with open(target_path, 'wb') as f:
+                            f.write(zip_ref.read(file_info))
+
                 os.remove(file)
                 print ("The update was completed successfully")
             except:
