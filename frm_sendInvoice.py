@@ -13,6 +13,7 @@ from model.setting import SettingData
 from tkinter import ttk
 from frm_log import FormLog
 import threading
+import time
 
 
 api = ApiKeysun() 
@@ -277,90 +278,104 @@ class FormSendInvoice():
                         
                         for index, invoice in enumerate(invoices):
                         
-                        
-                            if patern == 1:
-                                i = inD.generateInvoiceNo1(invoice,vdate)
-                                listInvoice.append(i)
-                            elif patern == 2:
-                                i = inD.generateInvoiceNo2(invoice,vdate)
-                                listInvoice.append(i)
-                            listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
-                            counter += 1
-                            
-                            if counter == setting.BatchSizeOfInvoices or  index ==  (len(invoices) - 1) :
-                                # print (listIndex)
-                                token = api.getToken(str_usename,str_password)
-                                if token != "":
-                                    # import json
-                                    # json_object = json.dumps(listInvoice)
-                                    # with open("sample1.json", "w") as outfile:
-                                    #      outfile.write(json_object)
-                                    result = api.sendInvoice(listInvoice,token)
-                                    # curentTime = time.strftime("%H:%M:%S")
-                                    if result[0] == 200:
-                                        indexResult = lambda x,xy : [y for y in xy if y['uniqueId'] == x ] 
-                                        data = result[1]['data']
-                                        for invoiceItem in listIndex:
-                                            dataResultPerInvoice = indexResult(invoiceItem[2],data)
-                                            for i,d in enumerate(dataResultPerInvoice):
-                                                if  d['status'] == 3:
-                                                    try:
-                                                        self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['taxSerialNumber']])
-                                                    except:
-                                                         self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status']])
-                                                    sucessCount += 1
-                                                    #فعال کردن لاگ خطا
-                                                    # state_btn_success = self.btn_successLog.cget("state") 
-                                                    # if state_btn_success == "disabled":
-                                                    #     self.btn_successLog.configure(state = "normal")
+                            try:
+                                if patern == 1:
+                                    i = inD.generateInvoiceNo1(invoice,vdate)
+                                    listInvoice.append(i)
+                                elif patern == 2:
+                                    i = inD.generateInvoiceNo2(invoice,vdate)
+                                    listInvoice.append(i)
+                                listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
+                                counter += 1
+                                
+                                if counter == setting.BatchSizeOfInvoices or  index ==  (len(invoices) - 1) :
+                                    # print (listIndex)
+                                    token = api.getToken(str_usename,str_password)
+                                    if token != "":
+                                        # import json
+                                        # json_object = json.dumps(listInvoice)
+                                        # with open("sample1.json", "w") as outfile:
+                                        #      outfile.write(json_object)
+                                        result = api.sendInvoice(listInvoice,token)
+                                        # curentTime = time.strftime("%H:%M:%S")
+                                        if result[0] == 200:
+                                            indexResult = lambda x,xy : [y for y in xy if y['uniqueId'] == x ] 
+                                            data = result[1]['data']
+                                            for invoiceItem in listIndex:
+                                                try:
+                                                    dataResultPerInvoice = indexResult(invoiceItem[2],data)
+                                                    for i,d in enumerate(dataResultPerInvoice):
+                                                        try:
+                                                            if  d['status'] == 3:
+                                                                try:
+                                                                    self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['taxSerialNumber']])
+                                                                except:
+                                                                    self.CSV.saveData([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status']])
+                                                                sucessCount += 1
+                                                                #فعال کردن لاگ خطا
+                                                                # state_btn_success = self.btn_successLog.cget("state") 
+                                                                # if state_btn_success == "disabled":
+                                                                #     self.btn_successLog.configure(state = "normal")
 
-                                                    #  ست کردن آدرس فایل لاگ
-                                                    if self.fileSuccess == None or self.fileSuccess == "":
-                                                        self.fileSuccess = self.CSV.getFileSuccessSendInvoiceName()
-                                                    
+                                                                #  ست کردن آدرس فایل لاگ
+                                                                if self.fileSuccess == None or self.fileSuccess == "":
+                                                                    self.fileSuccess = self.CSV.getFileSuccessSendInvoiceName()
+                                                                
 
-                                                else:
-                                                    self.CSV.saveError([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['title'],d['description']])
-                                                    if i == 0:
-                                                        errorCount += 1
-                                                    #فعال کردن لاگ خطا
-                                                    # state_btn_error = self.btn_ErrorLog.cget("state") 
-                                                    # if state_btn_error == "disabled":
-                                                    #     self.btn_ErrorLog.configure(state = "normal")
+                                                            else:
+                                                                self.CSV.saveError([invoiceItem[0],invoiceItem[1],d['uniqueId'],d['status'],d['title'],d['description']])
+                                                                if i == 0:
+                                                                    errorCount += 1
+                                                                #فعال کردن لاگ خطا
+                                                                # state_btn_error = self.btn_ErrorLog.cget("state") 
+                                                                # if state_btn_error == "disabled":
+                                                                #     self.btn_ErrorLog.configure(state = "normal")
+                                                        except:
+                                                            time.sleep(50)
+                                                            continue
+                                                    #end for dataResultPerInvoice
+                                                except:
+                                                    time.sleep(50)
+                                                    continue
+                                            #end For ListIndex
+                                        else:
+                                            for invoiceItem in listIndex: 
+                                                try:
+                                                    self.CSV.saveError([invoiceItem[0],invoiceItem[1],invoiceItem[2],result[0],result[1]])
+                                                    errorCount += 1
+                                                except:
+                                                    time.sleep(50)
+                                                    continue
+                                            #فعال کردن لاگ خطا
+                                            # state_btn_error = self.btn_ErrorLog.cget("state") 
+                                            # if state_btn_error == "disabled":
+                                            #     self.btn_ErrorLog.configure(state = "normal")
                                     
-                                    else:
-                                        for invoiceItem in listIndex: 
-                                            self.CSV.saveError([invoiceItem[0],invoiceItem[1],invoiceItem[2],result[0],result[1]])
-                                            errorCount += 1
-                                        #فعال کردن لاگ خطا
-                                        # state_btn_error = self.btn_ErrorLog.cget("state") 
-                                        # if state_btn_error == "disabled":
-                                        #     self.btn_ErrorLog.configure(state = "normal")
+                                    
+                                    else:                    
+                                        print("login Faild")
+                                    counter = 0
+                                    listInvoice = []
+                                    listIndex = []
+                                    self.lbl_number_sendFactor.configure(text=str(index+1))
+                                    self.frame.update_idletasks()
+                                    self.frame.after(500)
+                                    self.frame.update()
+
+                                # set address error file log
+                                if self.fileError == None or self.fileError == "":
+                                    self.fileError = self.CSV.getFileErrorSendInvoiceName()    
                                 
-                                
-                                else:                    
-                                    print("login Faild")
-                                counter = 0
-                                listInvoice = []
-                                listIndex = []
-                                self.lbl_number_sendFactor.configure(text=str(index+1))
+                                self.lbl_number_ErrorFactor.configure(text=str(errorCount))
+                                self.lbl_number_successFactor.configure(text=str(sucessCount))
+                                self.progressbar['value'] = index+1
+                                self.progressbar.update()
                                 self.frame.update_idletasks()
                                 self.frame.after(500)
                                 self.frame.update()
-
-                            # set address error file log
-                            if self.fileError == None or self.fileError == "":
-                                self.fileError = self.CSV.getFileErrorSendInvoiceName()    
-                            
-                            self.lbl_number_ErrorFactor.configure(text=str(errorCount))
-                            self.lbl_number_successFactor.configure(text=str(sucessCount))
-                            self.progressbar['value'] = index+1
-                            self.progressbar.update()
-                            self.frame.update_idletasks()
-                            self.frame.after(500)
-                            self.frame.update()
-
-                            
+                            except:
+                                continue
+                        #end For invocie    
                         if self.fileSuccess != None and self.fileSuccess != "":
                             self.btn_successLog.configure(state = "normal")   
                         
