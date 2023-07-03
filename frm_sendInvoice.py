@@ -332,7 +332,7 @@ class FormSendInvoice():
                                                                 #     self.btn_ErrorLog.configure(state = "normal")
                                                         except:
                                                             time.sleep(50)
-                                                            self.CSV.saveError[invoiceItem[0],invoiceItem[1],"save_error","system_error","e1"] 
+                                                            self.CSV.saveError["save_error","system_error","e1"] 
                                                             continue
                                                     #end for dataResultPerInvoice
                                                 except:
@@ -355,10 +355,9 @@ class FormSendInvoice():
                                     
                                     
                                     else:                    
-                                        print("login Faild")
                                         for invoiceItem in listIndex: 
                                             try:
-                                                self.CSV.saveError([invoiceItem[0],invoiceItem[1],invoiceItem[2],"login_Error","Token"])
+                                                self.CSV.saveError([invoiceItem[0],invoiceItem[1],invoiceItem[2],"login_Error","سرویس در حال حاضر در دسترس نمیباشد"])
                                                 errorCount += 1
                                             except:
                                                 time.sleep(50)
@@ -384,7 +383,7 @@ class FormSendInvoice():
                                 self.frame.after(500)
                                 self.frame.update()
                             except:
-                                self.CSV.saveError["save_error","system_error","e3"] 
+                                self.CSV.saveError["save_error","system_error","e2"] 
                                 continue
                         #end For invocie    
                         if self.fileSuccess != None and self.fileSuccess != "":
