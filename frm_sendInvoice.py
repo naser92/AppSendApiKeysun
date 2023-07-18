@@ -298,7 +298,7 @@ class FormSendInvoice():
                                         #      outfile.write(json_object)
                                         result = api.sendInvoice(listInvoice,token)
                                         # curentTime = time.strftime("%H:%M:%S")
-                                        if result[0] == 200:
+                                        if result[0] == 200 and result[1]['error'] == False:
                                             indexResult = lambda x,xy : [y for y in xy if y['uniqueId'] == x ] 
                                             data = result[1]['data']
                                             for invoiceItem in listIndex:

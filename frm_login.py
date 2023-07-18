@@ -4,7 +4,9 @@ from module.api   import ApiKeysun
 from cryptography.fernet import Fernet
 import hashlib
 from model.setting import VersionApp
+import configparser
 
+config = configparser.ConfigParser()
 class LoginForm():
     def __init__(self) -> None:
         self.api = ApiKeysun()
@@ -24,16 +26,22 @@ class LoginForm():
         label = ck.CTkLabel(self.base,text="(نرم افزار ارسال صورتحساب کیسان (ایتاک" ,width=300,height=50,anchor="center",font=("Tahoma",14))
         label.grid(row=0, column=0, padx=0, pady=0)
 
-         
+
+
         ck.CTkLabel(self.base,text="نام کاربری",font=self.font).place(x=220,y=70)
-        self.txt_username = ck.CTkEntry(self.base,width=200,placeholder_text="username")
+        self.txt_username = ck.CTkEntry(self.base,width=200,placeholder_text="username", corner_radius=10)
         self.txt_username.place(x=10,y=70)
 
+        config.read('config.ini')
+        user = config['DEFAULT'].get('username')
+        if user is not None:
+            self.txt_username.insert(0,user)
+
         ck.CTkLabel(self.base,text="کلمه عبور",font=self.font).place(x=220,y=100)
-        self.txt_password = ck.CTkEntry(self.base,width=200,show='*',placeholder_text="Password")
+        self.txt_password = ck.CTkEntry(self.base,width=200,show='*',placeholder_text="Password",corner_radius=10)
         self.txt_password.place(x=10,y=100)
 
-        self.btn_testLogin = ck.CTkButton(self.base,text="ورود",command=self.loginTest,font=("Tahoma",12))
+        self.btn_testLogin = ck.CTkButton(self.base,text="ورود",command=self.loginTest,font=("Tahoma",12),corner_radius=100)
         self.btn_testLogin.place(x=70,y=130)
         
 
@@ -52,17 +60,35 @@ class LoginForm():
                 if c:
                     token = self.api.getToken(str_usename,str_password)
                     if token != "":
+                        config = configparser.ConfigParser()
+                        config.read('config.ini')
                         v = self.api.GetVersion()
                         if v == self.version:
                             self.base.destroy()
-                            from frm_main import MainPanel
-                            MainPanel(str_usename,str_password)
+                            isLogin = config['DEFAULT'].getboolean('LoggedIn')
+                            if not isLogin or isLogin == False:
+                                config['DEFAULT'] = {'LoggedIn': 'True','username':str_usename}
+                                with open('config.ini', 'w') as f:
+                                    config.write(f)
+                                from frm_versionDescription import DescriptinVersion
+                                DescriptinVersion(str_usename,str_password)
+                            else:
+                                config['DEFAULT'] = {'LoggedIn': 'True','username':str_usename}
+                                with open('config.ini', 'w') as f:
+                                    config.write(f)
+                                from frm_main import MainPanel
+                                MainPanel(str_usename,str_password)
                         else:
+                            config['DEFAULT'] = {'LoggedIn': 'False'}
+                            with open('config.ini', 'w') as f:
+                                config.write(f)
+
                             url = self.api.getUrl()
                             self.base.destroy()
                             from frm_version import VersionForm
                             frm = VersionForm(self.version,v,url)
                             frm.generateForm()
+
                       
                     else:
                         CTkMessagebox(title="خطا",message="خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید",icon="warning")

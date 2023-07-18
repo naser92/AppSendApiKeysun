@@ -30,6 +30,7 @@ class InvoiceData():
             "brokerContractNumber": data[17] if data[17] != "" else None,
             "exchangeContractNumber": data[18] if data[18] != "" else None,
             "exchangeContractDate": data[19] if data[19] != "" else None,
+            "ExtendStuffTitle": data[20] if data[20] != "" else None,
             "equivalentUnitType": None,
             "equivalentAmount": 0.0,
             "currencyAmount": 0.0,
@@ -115,7 +116,7 @@ class InvoiceData():
                     "billId": None,
                     "invoiceItems":  listItem,
                     "invoicePayments": listPayment,
-                    "CooperationCode": "Eitak_" + VersionApp.version
+                    "CooperationCode": "Eitak-" + VersionApp.version
                         
 
                 }
@@ -174,7 +175,7 @@ class InvoiceData():
                     "sellerContractRegistrationNumber" :None,
                     "billId": None,
                     "creditPaymentAmount" :None,
-                    "CooperationCode": "Eitak_" + VersionApp.version,
+                    "CooperationCode": "Eitak-" + VersionApp.version,
                     "invoiceItems":  listItem,
                     "invoicePayments": listPayment
                         
