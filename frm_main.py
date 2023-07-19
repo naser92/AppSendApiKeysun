@@ -8,6 +8,7 @@ from frm_revokInvoice import FormRevokInvoice
 from frm_InquiryPerson import FormInquiryPerson
 from frm_deleteInvoice import FormDeleteInvoice
 from frm_help import FormHelp
+from frm_bill import FormBill
 import os
 from model.setting import VersionApp
 
@@ -37,6 +38,7 @@ class MainPanel():
         self.revokInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "revokInvoice.png")),size=(20,20))
         self.inquiryPerson_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "person.png")),size=(20,20))
         self.help_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "help.png")),size=(20,20))
+        self.bill_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "truck.png")),size=(30,30))
 
         #create menu frame
         self.menu_frame = ck.CTkFrame(self.base,corner_radius=0,height=600,width=200)
@@ -63,10 +65,16 @@ class MainPanel():
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.delete_button_event)
         self.btn_delete_invoice.place(x=20,y=250)
 
+        
+        self.btn_bill_invoice = ck.CTkButton(self.menu_frame, text="          ارسال بارنامه", compound="right", font=self.font,width=150,
+                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.bill_image,command=self.bill_button_event)
+        self.btn_bill_invoice.place(x=20,y=300)
+
         self.btn_inqiurePerson_invoice = ck.CTkButton(self.menu_frame, text="استعلام مودیان مالیاتی", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.inquiryPerson_image,command=self.inquiryPerson_button_event)
-        self.btn_inqiurePerson_invoice.place(x=20,y=300)
+        self.btn_inqiurePerson_invoice.place(x=20,y=350)
 
         
         self.btn_help = ck.CTkButton(self.menu_frame, text="                     راهنما", compound="right", font=self.font,width=150,
@@ -133,6 +141,11 @@ class MainPanel():
         self.help_frame.place(x=5,y=90)
         FormHelp(self.help_frame)
 
+        #bill of lading Frame 
+        self.bill_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.bill_frame.place(x=5,y=90)
+        FormBill(self.bill_frame,self.username,self.password)
+
         self.select_frame_by_name("send")
         self.base.mainloop()
 
@@ -146,6 +159,7 @@ class MainPanel():
         self.btn_inqiurePerson_invoice.configure(fg_color=("gray75", "gray25") if name == "inquiryPerson" else "transparent")
         self.btn_delete_invoice.configure(fg_color=("gray75", "gray25") if name == "delete" else "transparent")
         self.btn_help.configure(fg_color=("gray75", "gray25") if name == "help" else "transparent")
+        self.btn_bill_invoice.configure(fg_color=("gray75", "gray25") if name == "bill" else "transparent")
 
         # show selected frame
         if name == "send":
@@ -172,6 +186,11 @@ class MainPanel():
             self.delete_frame.place(x=5,y=90)
         else:
             self.delete_frame.place_forget()
+        
+        if name == "bill":
+            self.bill_frame.place(x=5,y=90)
+        else:
+            self.bill_frame.place_forget()
 
         if name == "help":
             self.help_frame.place(x=5,y=90)
@@ -196,6 +215,9 @@ class MainPanel():
     
     def help_button_event(self):
         self.select_frame_by_name("help")
+
+    def bill_button_event(self):
+        self.select_frame_by_name("bill")
         
 
 if __name__ == "__main__":

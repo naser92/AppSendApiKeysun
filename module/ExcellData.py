@@ -55,6 +55,16 @@ class ExcellData ():
             return pay
         except:
             return []
+        
+        
+    def getBillInvoice(self):
+        try:
+            data = pd.read_excel(self.path,sheet_name=self.name_column_Bill, dtype=str)
+            data = data.replace(np.nan, '')
+            pay = np.array(data)
+            return pay
+        except:
+            return []
     
         
     def checkExcel(self, paternType:int):
@@ -111,6 +121,23 @@ class ExcellData ():
             columns = data.get_sheet_by_name(sheet)
             if columns.max_column == 7:
                 self.name_column_revoke = sheet
+                flag = True
+            
+            return flag
+
+        except:
+            return False
+        
+    def excelCheckBill(self):
+        try:
+            data = openpyxl.load_workbook(self.path)
+            flag = False
+            if len(data.sheetnames) > 1:
+                return flag
+            sheet = data.sheetnames[0]
+            columns = data.get_sheet_by_name(sheet)
+            if columns.max_column == 13:
+                self.name_column_Bill = sheet
                 flag = True
             
             return flag
@@ -213,7 +240,7 @@ class ExcellData ():
         yield batch
 
 if __name__ == "__main__":
-    ed = ExcellData("./data/Invoice_InvoicePatternId.xlsx")
+    ed = ExcellData("./dataTest/Invoice_InvoicePatternId.xlsx")
     # a = ed.checkExcel(2)
     a = ed.checkExcel(1)
 

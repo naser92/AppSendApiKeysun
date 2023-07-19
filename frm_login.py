@@ -71,7 +71,7 @@ class LoginForm():
                                 with open('config.ini', 'w') as f:
                                     config.write(f)
                                 from frm_versionDescription import DescriptinVersion
-                                DescriptinVersion(str_usename,str_password)
+                                DescriptinVersion(str_usename,str_password,1)
                             else:
                                 config['DEFAULT'] = {'LoggedIn': 'True','username':str_usename}
                                 with open('config.ini', 'w') as f:

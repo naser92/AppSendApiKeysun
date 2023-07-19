@@ -36,7 +36,7 @@ class InvoiceData():
             "currencyAmount": 0.0,
             "saleProfit": 0.0,
             "brokerCommission": 0.0,
-            "brokerContractNumber": None
+       
             }
         return invoiceItems
     
@@ -221,7 +221,79 @@ class InvoiceRevoke():
         return invoce
           
 
-          
 
-    
-        
+class InvoiceBill():
+    def __init__(self,invocieType,invoicePatern,invoiceSubject):
+          self.invoiceType = invocieType
+          self.invoicePatern = invoicePatern
+          self.invoiceSubject = invoiceSubject
+
+
+    def generatBillInvoiceApi(self,invoice):
+        date = str(invoice[1]).split('/')
+        date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
+        factor = {
+                    "uniqueId": str(uuid.uuid4()),
+                    "invoiceNumber" : str(invoice[0]),
+                    "invoiceDate" : str(date),
+                    "invoiceType" : self.invoiceType,
+                    "invoicePattern" : self.invoicePatern,
+                    "invoiceSubject" : self.invoiceSubject,
+                    "referenceTaxSerialNumber" : invoice[2] if invoice[2] != "" else None,
+                    "buyerType" : invoice[3] if invoice[3] != "" else None,
+                    "saleType" : 1,
+                    "paymentType" : 1,
+                    "description" : invoice[15] if invoice[15] != "" else None,
+                    # "buyerEconomicCode" : invoice[8] if invoice[8] != "" else None,
+                    # "buyerNationalCode" : invoice[9] if invoice[9] != "" else None,
+                    # "buyerPostalCode" : invoice[10] if invoice[10] != "" else None,
+                    # "buyerPassportNumber": invoice[11] if invoice[11] != "" else None,
+                    # "invoiceTime": str(invoice[12]) if invoice[12] != "" else None,
+                    # "sellerBranch":invoice[13] if invoice[13] != "" else None,
+                    # "buyerBranch":invoice[14] if invoice[14] != "" else None,
+                    # "flightType": invoice[15] if invoice[15] != "" else None,
+                    # "tax17" : invoice[16] if invoice[16] != "" else None,
+                    # "description": invoice[17] if invoice[17] != "" else None,
+                    # "buyerCompanyName": None,
+                    # "buyerFirstName": None ,
+                    # "buyerLastName": None,
+                    # "buyerPhoneNumber": None ,
+                    # "sellerCustomsDeclarationNumber " :None,
+                    # "sellerCustomsLicenseNumber" :None,
+                    # "sellerContractRegistrationNumber" :None,
+                    # "billId": None,
+                    # "creditPaymentAmount" :None,
+                    "CooperationCode": "Eitak-" + VersionApp.version,
+                    "invoiceItems": [
+                         {
+                            "commodityType": 1,
+                            "commodityCode": invoice[4] if invoice[4] != "" else None,
+                            "unitType":invoice[5] if invoice[5] != "" else None,
+                            "unitPrice": invoice[6] if invoice[6] != "" else None,
+                            "discount": invoice[7] if invoice[7] != "" else None,
+                            "taxPercent": invoice[8] if invoice[8] != "" else None,
+                            "dutyPercent": invoice[9] if invoice[9] != "" else None,
+                            "dutyPrice": invoice[10] if invoice [10] != "" else None,
+                            "dutyTitle": invoice[11] if invoice[11] != "" else None,
+                            "otherLegalFundsPercent":invoice[12] if invoice[12] != "" else None,
+                            "otherLegalFundsPrice": invoice[13] if invoice[13] != "" else None,
+                            "otherLegalFundsTitle": invoice[14] if invoice[14] != "" else None ,
+                            "amount": 1,
+                            "moneyType":364,
+                            # "equivalentToRial": invoice[6] if invoice[6] != "" else None,
+                            # "taxPrice":  invoice[10] if invoice[10] != "" else None ,
+                            # "brokerContractNumber": invoice[17] if invoice[17] != "" else None,
+                            # "exchangeContractNumber": invoice[18] if invoice[18] != "" else None,
+                            # "exchangeContractDate": invoice[19] if invoice[19] != "" else None,
+                            # "ExtendStuffTitle": invoice[20] if invoice[20] != "" else None,
+                            # "equivalentUnitType": None,
+                            # "equivalentAmount": 0.0,
+                            # "currencyAmount": 0.0,
+                            # "saleProfit": 0.0,
+                            # "brokerCommission": 0.0,
+                         }
+                    ] ,
+                    # "invoicePayments": listPayment
+                        
+
+                }

@@ -8,6 +8,8 @@ import webbrowser
 from package.CTkMessagebox import CTkMessagebox
 from module.api import ApiKeysun
 from model.setting import VersionApp
+from frm_versionDescription import DescriptinVersion
+
 class FormHelp():
     def __init__(self,frame:ck.CTkFrame) -> None:
         self.frame = frame
@@ -19,7 +21,7 @@ class FormHelp():
         lbl_war2 = ck.CTkLabel(self.group_date,text="برای دریافت هر یک از قالب های مورد نیاز بر روی فایل مورد نظر کلیک کنید",font=self.font,text_color="#000")
         lbl_war2.place(x=70,y=20)
         #radioButom:
-        self.group_btn = ck.CTkFrame(self.frame,border_width=2, width=570, height=220)
+        self.group_btn = ck.CTkFrame(self.frame,border_width=2, width=570, height=300)
         self.group_btn.place(x=10,y=100)
 
         lbl_patern11 = ck.CTkLabel(self.group_btn,text="دانلود راهنمای ثبت صورتحساب نوع 1 الگوی 1 فروش همراه با اطلاعات خریدار",font=self.font)
@@ -47,12 +49,26 @@ class FormHelp():
         self.lbl_delete = ck.CTkButton(self.group_btn,text="دانلود",font=self.font,command=self.download_delete,width=50)
         self.lbl_delete.place(x=10,y=130)
 
-           
-        lbl_delete = ck.CTkLabel(self.group_btn,text="دانلود فایل راهنمای ایتاک نسخه  " + VersionApp.version,font=self.font)
-        lbl_delete.place(x=328,y=170)
+         
+        lbl_bill = ck.CTkLabel(self.group_btn,text="دانلود فایل ارسال صورتحساب های بارنامه" + VersionApp.version,font=self.font)
+        lbl_bill.place(x=328,y=170)
 
-        self.lbl_delete = ck.CTkButton(self.group_btn,text="دانلود",font=self.font,command=self.download_help,width=50)
-        self.lbl_delete.place(x=10,y=170)
+        self.lbl_view = ck.CTkButton(self.group_btn,text="نمایش",font=self.font,command=self.OpenDescriptinVersion,width=50)
+        self.lbl_view.place(x=10,y=170)
+
+           
+        lbl_help = ck.CTkLabel(self.group_btn,text="دانلود فایل راهنمای ایتاک نسخه  " + VersionApp.version,font=self.font)
+        lbl_help.place(x=328,y=210)
+
+        self.btn_help = ck.CTkButton(self.group_btn,text="دانلود",font=self.font,command=self.download_help,width=50)
+        self.btn_help.place(x=10,y=210)
+
+          
+        lbl_view = ck.CTkLabel(self.group_btn,text="   مشاهده آخرین تغییرات نسخه " + VersionApp.version,font=self.font)
+        lbl_view.place(x=328,y=260)
+
+        self.btn_view = ck.CTkButton(self.group_btn,text="نمایش",font=self.font,command=self.OpenDescriptinVersion,width=50)
+        self.btn_view.place(x=10,y=206)
         
     def download_patern11(self):
         url = "https://files.mizeonline.ir/tps/assets/sample/Invoice_InvoicePatternId_1.xlsx"  
@@ -87,3 +103,6 @@ class FormHelp():
 
         else:
             webbrowser.open(url)
+
+    def OpenDescriptinVersion(self):
+        DescriptinVersion("","",2)

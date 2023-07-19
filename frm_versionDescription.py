@@ -5,7 +5,8 @@ import tkinter as tk
 from tkinter import Scrollbar
 
 class DescriptinVersion :
-    def __init__(self,username,password):
+    def __init__(self,username,password,type):
+        self.tyepe =  type
         self.username = username
         self.password = password
         self.base = ck.CTk()
@@ -49,9 +50,13 @@ class DescriptinVersion :
 
         self.text.configure(state="disabled")
 
+        if type == 1:
+            self.btn_sendInvoice = ck.CTkButton(self.base,text="متوجه شدم",font=self.font,command=self.closeForm)
+            self.btn_sendInvoice.place(x=170,y=463)
 
-        self.btn_sendInvoice = ck.CTkButton(self.base,text="متوجه شدم",font=self.font,command=self.closeForm)
-        self.btn_sendInvoice.place(x=170,y=463)
+        else:
+            self.btn_sendInvoice = ck.CTkButton(self.base,text="متوجه شدم",font=self.font,command=self.closeFormOnly)
+            self.btn_sendInvoice.place(x=170,y=463)
 
 
 
@@ -61,6 +66,9 @@ class DescriptinVersion :
         self.base.destroy()
         from frm_main import MainPanel
         MainPanel(self.username,self.password)
+
+    def closeFormOnly(self):
+        self.base.destroy()
 
 
 if __name__ == "__main__":
