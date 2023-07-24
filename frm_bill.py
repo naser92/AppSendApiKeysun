@@ -123,7 +123,7 @@ class FormBill():
         self.group_send = ck.CTkFrame(self.frame,border_width=2, width=570, height=80)
         self.group_send.place(x=10,y=220)
 
-        self.btn_sendInvoice = ck.CTkButton(self.group_send,text="ارسال صورتحساب",font=self.font)
+        self.btn_sendInvoice = ck.CTkButton(self.group_send,text="ارسال صورتحساب",font=self.font,command=self.send_invoice)
         self.btn_sendInvoice.place(x=400,y=10)
         
     #     self.btn_reset = ck.CTkButton(self.group_send,text="کنسل",font=self.font,command=self.reset_form)
@@ -297,7 +297,7 @@ class FormBill():
                         listIndex = []
                         counter = 0
                         type = SelectionItems.getIndex(self.InvoiceType.get(),self.TypeInvoiceItems)
-                        patern = SelectionItems.getIndex(self.InvoicePatern.get(),self.TypeInvoiceItems)
+                        patern = SelectionItems.getIndex(self.InvoicePatern.get(),self.paternInvoiceItems)
                         subject = SelectionItems.getIndex(self.InvoiceSubject.get(),self.SubjectInvoiceItems)
 
                         inD = InvoiceBill(type, subject, patern)
@@ -314,6 +314,7 @@ class FormBill():
                             try:
                                 i = inD.generatBillInvoiceApi(invoice)
                                 listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
+                                listInvoice.append(i)
                                 counter += 1
                                 
                                 if counter == setting.BatchSizeOfInvoices or  index ==  (len(invoices) - 1) :

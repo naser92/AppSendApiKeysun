@@ -297,3 +297,4 @@ class InvoiceBill():
                         
 
                 }
+        return factor
