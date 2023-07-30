@@ -70,6 +70,7 @@ class MainPanel():
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.bill_image,command=self.bill_button_event)
         self.btn_bill_invoice.place(x=20,y=300)
+        self.btn_bill_invoice.configure(state="disabled")
 
         self.btn_inqiurePerson_invoice = ck.CTkButton(self.menu_frame, text="استعلام مودیان مالیاتی", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
@@ -81,7 +82,6 @@ class MainPanel():
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.help_image,command=self.help_button_event)
         self.btn_help.place(x=20,y=450)
-
 
 
         # label_theme = ck.CTkLabel(self.menu_frame,text="تم",font=self.font)

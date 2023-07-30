@@ -7,14 +7,13 @@ from module.csvFile import CSVFile
 from module.api import ApiKeysun
 from cryptography.fernet import Fernet
 from package.CTkMessagebox import CTkMessagebox
-from model.formData import Patern
 import hashlib
 from model.setting import SettingData
 from tkinter import ttk
 from frm_log import FormLog
 import threading
 import time
-
+from model.formData import TypeInvoice_SendInvoice
 
 api = ApiKeysun() 
 setting = SettingData()
@@ -29,9 +28,11 @@ class FormSendInvoice():
         self.fileSuccess = None # مخصوص لاگ
         self.fileError = None
         self.patern = [
-            Patern(0,"انتخاب الگو صورتحساب"),
-            Patern(1,"نوع 1 الگوی 1 صورتحساب فروش همراه با اطلاعات خریدار"),
-            Patern(2,"نوع 2 الگوی 1 صورتحساب فروش بدون اطلاعات خریدار")
+            TypeInvoice_SendInvoice(0,0,"انتخاب الگو صورتحساب"),
+            TypeInvoice_SendInvoice(1,1,"نوع 1 الگوی 1 صورتحساب فروش همراه با اطلاعات خریدار"),
+            TypeInvoice_SendInvoice(2,1,"نوع 2 الگوی 1 صورتحساب فروش بدون اطلاعات خریدار"),
+            TypeInvoice_SendInvoice(1,3,"نوع 1 الگو 3 صورتحساب فروش با اطلاعات خریدار طلا و جواهرات"),
+            TypeInvoice_SendInvoice(2,3,"نوع 2 الگو 3 صورتحساب فروش بدون اطلاعات خریدار طلا و جواهرات")
         ]
 
 
@@ -60,10 +61,10 @@ class FormSendInvoice():
         self.group_file.place(x=10,y=110)
 
         self.numberPatern = ck.CTkComboBox(self.group_file, width=450,font=self.font,dropdown_font=self.font12,state="readonly",
-                                            values=[self.patern[0].string,self.patern[1].string,self.patern[2].string])
+                                            values=[self.patern[0].stringValue,self.patern[1].stringValue,self.patern[2].stringValue,self.patern[3].stringValue,self.patern[4].stringValue])
         
         self.numberPatern.place(x=20,y=10)
-        self.numberPatern.set(self.patern[0].string)
+        self.numberPatern.set(self.patern[0].stringValue)
 
         lbl_selectTypeDate = ck.CTkLabel(self.group_file,text=" :ورود فایل",font=self.font)
         lbl_selectTypeDate.place(x=480,y=25)
@@ -152,13 +153,14 @@ class FormSendInvoice():
         filetypes = (
             ('Excel files', '*.xlsx'),
         )
-        patern = Patern.getIndex(self.numberPatern.get(),self.patern)
-        if patern != 0:
+        patern = TypeInvoice_SendInvoice.getIndex(self.numberPatern.get(),self.patern)
+        
+        if patern[0] != 0:
             self.path_file = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
             self.lbl_path.configure(text=self.path_file)
             self.Excell = ExcellData(self.path_file)
             self.CSV = CSVFile(self.path_file)
-            result = self.Excell.checkExcel(patern)
+            result = self.Excell.checkExcellNew(patern[0],patern[1])
         
             if result == None:
                 CTkMessagebox(title="خطا",message="فایل انتخابی مشکل دارد لطفا دوباره انتخاب کنید",icon="cancel")
@@ -172,6 +174,7 @@ class FormSendInvoice():
                         self.status = False
                         self.lbl_status.configure(text="فایل خطا دار",bg_color="#a3001b")
                         self.lbl_path.configure(text="")
+                
                 if self.status : 
                     self.lbl_status.configure(text="دیتا آماده ارسال",bg_color="#08a300")
                     self.numberPatern.configure(state='disabled')
@@ -267,11 +270,13 @@ class FormSendInvoice():
                         listInvoice = []
                         listIndex = []
                         counter = 0
-                        patern = Patern.getIndex(self.numberPatern.get(),self.patern)
+                        patern = TypeInvoice_SendInvoice.getIndex(self.numberPatern.get(),self.patern)
                         # if patern == 1:
                         #     self.Excell.preparationExcellN11()
                         # elif patern == 2:
                         #     self.Excell.preparationExcellN21()
+                        typeId = patern[0]
+                        patternId = patern[1]
                         self.lbl_number_allFactor.configure(text=str(len(invoices)))
                         self.frame.after(500)
                         self.frame.update()
@@ -279,12 +284,21 @@ class FormSendInvoice():
                         for index, invoice in enumerate(invoices):
                         
                             try:
-                                if patern == 1:
-                                    i = inD.generateInvoiceNo1(invoice,vdate)
-                                    listInvoice.append(i)
-                                elif patern == 2:
-                                    i = inD.generateInvoiceNo2(invoice,vdate)
-                                    listInvoice.append(i)
+                                i = None
+                                if typeId == 1:
+                                    if patternId == 1:
+                                        i = inD.generateInvoice11(invoice,vdate)
+                                    elif patternId == 3:
+                                        i = inD.generateInvoice13(invoice,vdate)
+                                    
+                                elif typeId == 2:
+                                    if patternId == 1:
+                                        i = inD.generateInvoice21(invoice,vdate)
+                                    elif patternId == 3:
+                                        i = inD.generateInvoice23(invoice,vdate)
+
+                                
+                                listInvoice.append(i)
                                 listIndex.append([index + 1 ,invoice[0],i['uniqueId']])
                                 counter += 1
                                 

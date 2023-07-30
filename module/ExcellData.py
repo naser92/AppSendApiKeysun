@@ -5,6 +5,8 @@ import openpyxl
 from openpyxl.utils import get_column_letter
 import shutil
 import os
+from model.invoiceModel import InvoiceData
+
 
 class ExcellData ():
     def __init__(self, path) -> None:
@@ -13,7 +15,7 @@ class ExcellData ():
     
     def getInvoice(self):
         try:
-            data = pd.read_excel(self.path,sheet_name=self.name_column_invoice, dtype=str)
+            data = pd.read_excel(self.path,sheet_name=self.sheetNames[0], dtype=str)
             data = data.replace(np.nan, '')
             invoice = np.array(data)
             return invoice
@@ -22,7 +24,7 @@ class ExcellData ():
 
     def getInvoiceItem(self):
         try:
-            data = pd.read_excel(self.path,sheet_name= self.name_column_invoiceItem, dtype=str)
+            data = pd.read_excel(self.path,sheet_name= self.sheetNames[1], dtype=str)
             data = data.replace(np.nan, '')
             item = np.array(data)
             return item
@@ -31,7 +33,7 @@ class ExcellData ():
     
     def getPayment(self):
         try:
-            data = pd.read_excel(self.path,sheet_name=self.name_column_payment, dtype=str)
+            data = pd.read_excel(self.path,sheet_name=self.sheetNames[2], dtype=str)
             data = data.replace(np.nan, '')
             pay = np.array(data)
             return pay
@@ -238,6 +240,24 @@ class ExcellData ():
             data = [invoice.loc[key].to_dict()]
             batch.append(data)
         yield batch
+
+    
+    def checkExcellNew(self,type,pattern):
+        try:
+            excellFile = pd.ExcelFile(self.path)
+            self.data = pd.read_excel(self.path,sheet_name=None)
+            self.sheetNames = excellFile.sheet_names
+            result = []
+            for  index,(sheet_name, df) in enumerate(self.data.items()):
+                df_cols = len(df.columns)
+                cols = InvoiceData(type,pattern,index)
+                if df_cols == cols.colum:
+                    result.append(1)
+                else: result.append(0) 
+            return result
+        except:
+            return None
+
 
 if __name__ == "__main__":
     ed = ExcellData("./dataTest/Invoice_InvoicePatternId.xlsx")

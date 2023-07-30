@@ -15,4 +15,26 @@ class SettingData:
 
 @dataclass
 class VersionApp:
-    version : str = "6.3.2"
+    version : str = "6.4.0"
+
+
+@dataclass
+class Location:
+    x: int
+    y: int
+    BX : int
+    BY: int
+
+    def __init__(self, StartX, StartY , BetWeenX, BetWeenY) -> None:
+        self.x = StartX
+        self.y = StartY
+        self.BX = BetWeenX 
+        self.BY = BetWeenY
+
+    def setRowLocation(self,rowNumber) -> int:
+        return self.y + (self.BY * rowNumber )
+
+ 
+    def setColLocation(self,colNumber) -> int:
+        return self.x + (self.BX * colNumber)
+        

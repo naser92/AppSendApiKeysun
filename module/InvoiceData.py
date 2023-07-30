@@ -61,7 +61,7 @@ class InvoiceData():
         }
         return payment
 
-    def generateInvoiceNo1(self,invoice,vDate):
+    def generateInvoice11(self,invoice,vDate):
         getItems = lambda x, xs: [y for y in xs if x[0] == y[0] and x[1] == y[1]]
         
         listItem= []
@@ -122,7 +122,7 @@ class InvoiceData():
                 }
         return factor
     
-    def generateInvoiceNo2(self,invoice,vDate):
+    def generateInvoice21(self,invoice,vDate):
         getItems = lambda x, xs: [y for y in xs if x[0] == y[0] and x[1] == y[1]]
         
         listItem= []
@@ -183,6 +183,9 @@ class InvoiceData():
                 }
         return factor
     
+    
+    
+    
     # def serializeFloat(self,number):
     #     try:
     #          num = float(number)
@@ -194,6 +197,213 @@ class InvoiceData():
     #          return number
     #     except:
     #          return None
+
+    def generateInvoice13(self,invoice,vDate):
+        
+        def InsertPayment(data):
+            if vDate == 1:
+                date = data[4]
+            elif vDate == 2 :
+                date = str(data[4]).split('/')
+                date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
+            else:
+                date = ""
+            payment =    {
+                "paymentMethod":data[2] if data[2] != "" else None,
+                "paymentAmount":data[3] if data[3] != "" else None,
+                "paymentDate": str(date) if date != "" else None,
+                "switchNumber": data[5] if data[5] != "" else None,
+                "acceptanceNumber": data[6] if data[6] != "" else None,
+                "terminalNumber": data[7] if data[7] != "" else None,
+                "traceNumber": data[8] if data[8] != "" else None,
+                "payerCardNumber": data[9] if data[9] != "" else None,
+                "payerNationalCode": data[10] if data[10] != "" else None
+            }
+            return payment
+        
+        def InsertItem(data):
+            invoiceItems = {
+                "commodityType": 1,
+                "commodityCode": data[2] if data[2] != "" else None,
+                "unitType":data[3] if data[3] != "" else None,
+                "amount": data[4] if data[4] != "" else None,
+                "moneyType": data[5] if data[5] != "" else None,
+                "equivalentToRial": data[6] if data[6] != "" else None,
+                "unitPrice": data[7] if data[7] != "" else None,
+                "constructionWages": data[8] if data[8] != "" else None,
+                "saleProfit" : data[9] if data[9] != "" else None,
+                "brokerCommission": data[10] if data[10] != "" else None ,
+                "discount":  data[11] if data[11] != "" else None, 
+                "taxPercent": data[12] if data [12] != "" else None,
+                "taxPrice":  data[13] if data[13] != "" else None,
+                "dutyPercent":data[14] if data[14] != "" else None,
+                "dutyPrice": data[15] if data[15] != "" else None,
+                "dutyTitle":  data[16] if data[16] != "" else None ,
+                "otherLegalFundsPercent":data[17] if data[17] != "" else None,
+                "otherLegalFundsPrice": data[18] if data[18] != "" else None,
+                "otherLegalFundsTitle": data[19] if data[19] != "" else None,
+                "brokerContractNumber": data[20] if data[20] != "" else None,
+                "exchangeContractNumber": data[21] if data[21] != "" else None,
+                "exchangeContractDate": data[22] if data[22] != "" else None,
+                "ExtendStuffTitle": data[23] if data[23] != "" else None,
+                "equivalentUnitType": None,
+                "equivalentAmount": 0.0,
+                "currencyAmount": 0.0,
+                "saleProfit": 0.0,
+                "brokerCommission": 0.0,
+                }
+            return invoiceItems
+        
+        getItems = lambda x, xs: [y for y in xs if x[0] == y[0] and x[1] == y[1]]
+        listItem= []
+        indexItem = getItems(invoice,self.ListInvoiceItem)
+        for item in indexItem:
+                invoiceItemM = InsertItem(item)
+                listItem.append(invoiceItemM)
+        
+        listPayment =[]
+        indexPay = getItems(invoice,self.ListPayment)
+        if len(indexPay) > 0:
+            for item in indexPay:
+                    PaymentM = InsertPayment(item)
+                    listPayment.append(PaymentM)
+        if vDate == 1:
+            date = invoice[1]
+        elif vDate == 2 :
+            date = str(invoice[1]).split('/')
+            date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
+        else:
+            date = ""
+        
+        factor = {
+                    "uniqueId": str(uuid.uuid4()),
+                    "invoiceNumber" : str(invoice[0]),
+                    "invoiceDate" : str(date),
+                    "invoiceType" : invoice[2],
+                    "invoicePattern" : invoice[3],
+                    "invoiceSubject" : invoice[4],
+                    "saleType" : invoice[5] if invoice[5] != "" else None,
+                    "referenceTaxSerialNumber" : invoice[6] if invoice[6] != "" else None,
+                    "buyerType" : invoice[7] if invoice[7] != "" else None,
+                    "buyerEconomicCode" : invoice[8] if invoice[8] != "" else None,
+                    "buyerNationalCode" : invoice[9] if invoice[9] != "" else None,
+                    "buyerPostalCode" : invoice[10] if invoice[10] != "" else None,
+                    "paymentType" : invoice[11] if invoice[11] != "" else None,
+                    "creditPaymentAmount" :invoice[12] if invoice[12] != "" else None,
+                    "invoiceTime": str(invoice[13]) if invoice[13] != "" else None,
+                    "sellerContractRegistrationNumber" :invoice[14] if invoice[14] != "" else None,
+                    "sellerBranch":invoice[15] if invoice[15] != "" else None,
+                    "buyerBranch":invoice[16] if invoice[16] != "" else None,
+                    "tax17" : invoice[17] if invoice[17] != "" else None,
+                    "description": invoice[18] if invoice[18] != "" else None,
+                    "CooperationCode": "Eitak-" + VersionApp.version,
+                    "invoiceItems":  listItem,
+                    "invoicePayments": listPayment
+                    
+                    # "buyerPassportNumber": 
+                    # "flightType": invoice[15] if invoice[15] != "" else None,
+                    # "buyerCompanyName": None,
+                    # "buyerFirstName": None ,
+                    # "buyerLastName": None,
+                    # "buyerPhoneNumber": None ,
+                    # "sellerCustomsDeclarationNumber " :None,
+                    # "sellerCustomsLicenseNumber" :None,
+                    # "billId": None,
+                        
+
+                }
+        return factor
+        
+    
+    
+    def generateInvoice23(self,invoice,vDate):
+
+        def InsertItem(data):
+            invoiceItems = {
+                "commodityType": 1,
+                "commodityCode": data[2] if data[2] != "" else None,
+                "unitType":data[3] if data[3] != "" else None,
+                "amount": data[4] if data[4] != "" else None,
+                "moneyType": data[5] if data[5] != "" else None,
+                "equivalentToRial": data[6] if data[6] != "" else None,
+                "unitPrice": data[7] if data[7] != "" else None,
+                "constructionWages": data[8] if data[8] != "" else None,
+                "saleProfit" : data[9] if data[9] != "" else None,
+                "brokerCommission": data[10] if data[10] != "" else None ,
+                "discount":  data[11] if data[11] != "" else None, 
+                "taxPercent": data[12] if data [12] != "" else None,
+                "taxPrice":  data[13] if data[13] != "" else None,
+                "dutyPercent":data[14] if data[14] != "" else None,
+                "dutyPrice": data[15] if data[15] != "" else None,
+                "dutyTitle":  data[16] if data[16] != "" else None ,
+                "otherLegalFundsPercent":data[17] if data[17] != "" else None,
+                "otherLegalFundsPrice": data[18] if data[18] != "" else None,
+                "otherLegalFundsTitle": data[19] if data[19] != "" else None,
+                "brokerContractNumber": data[20] if data[20] != "" else None,
+                "exchangeContractNumber": data[21] if data[21] != "" else None,
+                "exchangeContractDate": data[22] if data[22] != "" else None,
+                "ExtendStuffTitle": data[23] if data[23] != "" else None,
+                "equivalentUnitType": None,
+                "equivalentAmount": 0.0,
+                "currencyAmount": 0.0,
+                "saleProfit": 0.0,
+                "brokerCommission": 0.0,
+                }
+            return invoiceItems
+        
+        getItems = lambda x, xs: [y for y in xs if x[0] == y[0] and x[1] == y[1]]
+        listItem= []
+        indexItem = getItems(invoice,self.ListInvoiceItem)
+        for item in indexItem:
+                invoiceItemM = InsertItem(item)
+                listItem.append(invoiceItemM)
+        
+        if vDate == 1:
+            date = invoice[1]
+        elif vDate == 2 :
+            date = str(invoice[1]).split('/')
+            date = jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian()
+        else:
+            date = ""
+        
+        factor = {
+                    "uniqueId": str(uuid.uuid4()),
+                    "invoiceNumber" : str(invoice[0]),
+                    "invoiceDate" : str(date),
+                    "invoiceType" : invoice[2],
+                    "invoicePattern" : invoice[3],
+                    "invoiceSubject" : invoice[4],
+                    "saleType" : invoice[5] if invoice[5] != "" else None,
+                    "referenceTaxSerialNumber" : invoice[6] if invoice[6] != "" else None,
+                    "buyerType" : invoice[7] if invoice[7] != "" else None,
+                    "buyerEconomicCode" : invoice[8] if invoice[8] != "" else None,
+                    "buyerNationalCode" : invoice[9] if invoice[9] != "" else None,
+                    "buyerPostalCode" : invoice[10] if invoice[10] != "" else None,
+                    "invoiceTime": str(invoice[11]) if invoice[11] != "" else None,
+                    # "paymentType" : invoice[11] if invoice[11] != "" else None,
+                    # "creditPaymentAmount" :invoice[12] if invoice[12] != "" else None,
+                    # "sellerContractRegistrationNumber" :invoice[14] if invoice[14] != "" else None,
+                    "sellerBranch":invoice[12] if invoice[12] != "" else None,
+                    "buyerBranch":invoice[13] if invoice[13] != "" else None,
+                    "tax17" : invoice[14] if invoice[14] != "" else None,
+                    "description": invoice[15] if invoice[15] != "" else None,
+                    "CooperationCode": "Eitak-" + VersionApp.version,
+                    "invoiceItems":  listItem,
+                    # "invoicePayments": listPayment
+                    
+                    # "buyerPassportNumber": 
+                    # "flightType": invoice[15] if invoice[15] != "" else None,
+                    # "buyerCompanyName": None,
+                    # "buyerFirstName": None ,
+                    # "buyerLastName": None,
+                    # "buyerPhoneNumber": None ,
+                    # "sellerCustomsDeclarationNumber " :None,
+                    # "sellerCustomsLicenseNumber" :None,
+                    # "billId": None,
+                        
+
+                }
+        return factor
 
 
 class InvoiceRevoke():

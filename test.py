@@ -87,29 +87,59 @@ import configparser
 # root = tk.Tk()
 # MainWindow(root)
 # root.mainloop()
-import tkinter as tk
-from tkinter import Scrollbar
 
-def create_scrollable_text(root, x, y, text):
-    text_widget = tk.Text(root, wrap="none", state="normal")
-    text_widget.insert("end", text)
-    text_widget.place(x=x, y=y)
-    text_widget.tag_configure("rtl", justify="right")
-    scrollbar = Scrollbar(root, command=text_widget.yview)
-    scrollbar.place(x=x + text_widget.winfo_reqwidth(), y=y, height=text_widget.winfo_reqheight())
+from model.invoiceModel import InvoiceData
+import pandas as pd
+class InvoiceGenerator():
+    def __init__(self, path) -> None:
+        self.path = path
 
-    text_widget['yscrollcommand'] = scrollbar.set
+    def checkExcell(self,type,pattern):
+        excellFile = pd.ExcelFile(self.path)
+        self.data = pd.read_excel(self.path,sheet_name=None)
+        self.sheetName = excellFile.sheet_names
+        result = []
+        for  index,(sheet_name, df) in enumerate(self.data.items()):
+            # df = pd.read_excel(excellFile,sheet_name=sheet_name)
+            df_cols = len(df.columns)
+            cols = InvoiceData(type,pattern,index)
 
-# ساخت پنجره اصلی
-root = tk.Tk()
-root.geometry("400x200")
-root.title("نمونه اسکرولی فارسی در Tkinter")
+            if df_cols == cols.colum:
+                result.append(1)
+            else: result.append(0) 
 
-# متن‌های فارسی
-text1 = "این یک متن فارسی است که در نقطه مشخصی قرار می‌گیرد."
-text2 = "این هم یک متن دیگر فارسی است که در کنار متن اول قرار می‌گیرد."
+    
+    def data_generator(self, batch_size):
+        df = self.data
+        invoice = df[self.sheetName[0]].set_index(self.data[self.sheetName[0]].columns[0])
+        # invoiceItem = df[self.sheetName[1]].set_index(self.data[self.sheetName[1]].columns[0])
+        # payment = df[self.sheetName[2]].set_index(self.data[self.sheetName[2]].columns[0])
 
-# ایجاد ویجت متنی با اسکرول
-create_scrollable_text(root, x=10, y=100, text=f"{text1}\n\n{text2}")
+        # df_merge = pd.merge(invoice,invoiceItem,payment,on = self.data[self.sheetName[0]].columns[0])
 
-root.mainloop()
+        # groupItem = invoiceItem.groupby(self.data[self.sheetName[1]].columns[0])
+        # groupPayment = payment.groupby(self.data[self.sheetName[2]].columns[0])
+
+        keys = set(invoice.index)
+        for i, key in enumerate(keys):
+            if i % batch_size == 0:
+                if i > 1:
+                    yield batch
+                batch = []
+            # a = groupItem.get_group()
+            data = [invoice.loc[key].to_dict()]
+            batch.append(data)
+        yield batch
+
+if __name__ == "__main__":
+    ed = InvoiceGenerator("./dataTest/Invoice_InvoicePatternId.xlsx")
+    a = ed.checkExcell(1,1)
+    q = [1,1,1,1,1]
+    get_indexes = lambda x, xs: [i for (y, i) in zip(xs, range(len(xs))) if x == y]
+    trueIndex = get_indexes(0,q)
+
+    if len(trueIndex) > 0:
+        print("ok")
+
+    for batch_data in ed.data_generator(batch_size=10):
+        print (batch_data)

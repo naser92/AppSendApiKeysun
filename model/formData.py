@@ -25,3 +25,16 @@ class SelectionItems:
         for p in paterns:
             if query in p.string:
                 return p.value
+            
+
+class TypeInvoice_SendInvoice:
+    def __init__(self,typeId:int, PatternId:int, stringValue:str):
+        self.typeId = typeId
+        self.PatternId = PatternId
+        self.stringValue = stringValue
+
+    @classmethod
+    def getIndex(cls, query, allType) -> list[int]:
+        for a in allType:
+            if query in a.stringValue:
+                return [a.typeId,a.PatternId]
