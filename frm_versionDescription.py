@@ -42,11 +42,11 @@ class DescriptinVersion :
         self.scrollbar.place(x=10+self.text.winfo_reqwidth(), y=70,height=self.text.winfo_reqheight())
         self.text['yscrollcommand'] = self.scrollbar.set
 
-        self.text.insert("end", "در فایل اکسل ارسال صورتحساب در شیت اقلام صورتحساب ستون 'شرح اضافی کالا/خدمت' افزوده گردید لطفاً نسبت به دانلود نسخه جدید اکسل در قسمت راهنما اقدام نمایید \n\n", "rtl")
+        self.text.insert("end", "رفع خطا در بارگذاری اکسل صورتحساب نوع 2 الگوی 1 \n\n", "rtl")
        
-        self.text.insert("end", "تمامی مقادیر ریالی بجز 'مبلغ واحد' بدون اعشار می باشد\n\n", "rtl")
+        # self.text.insert("end", "تمامی مقادیر ریالی بجز 'مبلغ واحد' بدون اعشار می باشد\n\n", "rtl")
      
-        self.text.insert("end","  نرخ ارزش افزوده باید مطابق با شناسه کالا عمومی /خصوصی کالا که از طرف مالیات اعلام گردیده باشد ", "rtl")
+        # self.text.insert("end","  نرخ ارزش افزوده باید مطابق با شناسه کالا عمومی /خصوصی کالا که از طرف مالیات اعلام گردیده باشد ", "rtl")
 
         self.text.configure(state="disabled")
 

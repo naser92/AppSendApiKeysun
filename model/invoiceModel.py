@@ -16,7 +16,7 @@ class InvoiceData:
                 self.colum = 19 if self.index == 0 else  24 if self.index == 1 else  11
         
         elif self.Type == 2:
-            if self.pattern == 2:
+            if self.pattern == 1:
                 self.colum = 18 if self.index == 0 else  21 if self.index == 1 else  11
             elif self.pattern == 3:
                 self.colum = 16 if self.index == 0 else 24
