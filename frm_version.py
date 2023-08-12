@@ -2,6 +2,8 @@ import customtkinter as ck
 import webbrowser
 from module.api import ApiKeysun
 from package.CTkMessagebox import CTkMessagebox
+import subprocess
+import os
 class VersionForm():
     def __init__(self,Currentversion,LastVersion,url) -> None:
         self.url = url
@@ -37,11 +39,13 @@ class VersionForm():
 
         
         self.btn_revoke = ck.CTkButton(self.group_download,text="دانلود نسخه جدید",font=self.font,width=50,command=self.download_app)
-        self.btn_revoke.place(x=195,y=110)
+        self.btn_revoke.place(x=220,y=110)
 
-        
+        self.auto_update = ck.CTkButton(self.group_download,text="بروز رسانی خودکار",font=self.font,width=50,command=self.update)
+        self.auto_update.place(x=112,y=110)
+
         self.btn_help = ck.CTkButton(self.group_download,text="دانلود راهنما ایتاک",font=self.font,width=50,command=self.download_help)
-        self.btn_help.place(x=35,y=110)
+        self.btn_help.place(x=5,y=110)
 
     def download_app(self):
         url = self.url  
@@ -50,14 +54,30 @@ class VersionForm():
     def download_help(self):
         url = self.api.GetURL_Help()
         if url == "0":
-            CTkMessagebox(title="خطای شبکه", message="لطفاً ارتباط خود با اینترنت را بررسی کنید")
+            CTkMessagebox(title="خطای شبکه", message="لطفاً ارتباط خود با اینترنت را بررسی کنید",icon="cancel")
         elif url == "O":
-            CTkMessagebox(title="خطای سرور", message="ممکن است در سرور خطایی رخ داده شده باشد لطفاً دوباره امتحان کنید")
+            CTkMessagebox(title="خطای سرور", message="ممکن است در سرور خطایی رخ داده شده باشد لطفاً دوباره امتحان کنید",icon="cancel")
         else:
             webbrowser.open(url)
 
     def generateForm(self) -> None:
         self.base.mainloop()  
+
+    def update(self):
+        try: 
+            curent_path = os.getcwd()
+            app_name = "update.exe"
+            path_file = os.path.join(curent_path,app_name)
+            subprocess.run(path_file, check=True)
+            self.base.destroy()
+        except subprocess.CalledProcessError as e:
+            CTkMessagebox(title="خطا", message=f"Error running update : {e}",icon="cancel")
+        except FileNotFoundError:
+            CTkMessagebox(title="خطا", message="برنامه بروز رسانی پیدا نشد",icon="cancel")
+
+
+
+
 
 
 if __name__ == "__main__":
