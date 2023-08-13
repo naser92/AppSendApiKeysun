@@ -81,5 +81,5 @@ class VersionForm():
 
 
 if __name__ == "__main__":
-    form = VersionForm("3.6.0","3.6.1","ldsa")
+    form = VersionForm("3.6.2","3.6.3","ldsa")
     basef = form.generateForm()

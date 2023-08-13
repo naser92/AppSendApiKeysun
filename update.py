@@ -2,13 +2,14 @@ import requests as r
 import os
 import zipfile
 from tqdm import tqdm
+import shutil
 
 class Updater:
     def __init__(self) -> None:
         pass
 
     def GetVersion (self):
-        response = r.get("https://files.mizeonline.ir/tps/assets/Eitak/eitak.json")
+        response = r.get("https://files.mizeonline.ir/tps/assets/Eitak/test.json")
         if response.status_code == 200:
             data = response.json()
             try:
@@ -40,16 +41,17 @@ class Updater:
             return file_path
         return None
     
-    def delete_file(self):
+    def delete_file(self,file):
         curen_dir = os.getcwd()
         items = os.listdir(curen_dir)
         try:
             for item in items :
                 item_path = os.path.join(curen_dir,item)
-                if os.path.isfile(item_path):
-                    os.remove(item_path)
-                elif os.path.isdir(item_path):
-                    os.rmdir(item_path)
+                if item != 'update.exe' and item_path != file:
+                    if os.path.isfile(item_path):
+                        os.remove(item_path)
+                    elif os.path.isdir(item_path):
+                        shutil.rmtree(item_path)
             return True
         except Exception as e:
             print(f"An error removeFile: {e}")
@@ -60,29 +62,32 @@ class Updater:
         file = self.download_update()
         if file != None:
             try:
-                with zipfile.ZipFile(file, 'r') as zip_ref:
-                    for file_info in zip_ref.infolist():
-                        file_name = file_info.filename
-                        target_path = os.path.join(os.getcwd(),file_name)
-                        print(target_path)
+                delete = self.delete_file(file)
+                if delete   == True:
+                    with zipfile.ZipFile(file, 'r') as zip_ref:
+                        for file_info in zip_ref.infolist():
+                            file_name = file_info.filename
+                            target_path = os.path.join(os.getcwd(),file_name)
+                            print(target_path)
 
-                        if file_name.endswith('/'):
-                            os.makedirs(target_path, exist_ok=True)
-                            continue
+                            if file_name.endswith('/'):
+                                os.makedirs(target_path, exist_ok=True)
+                                continue
 
+                            if os.path.exists(target_path):
+                                os.remove(target_path)
+                            
+                            target_dir = os.path.dirname(target_path)
 
-                        if os.path.exists(target_path):
-                            os.remove(target_path)
-                        
-                        target_dir = os.path.dirname(target_path)
+                            if not os.path.exists(target_dir):
+                                os.makedirs(target_dir)
 
-                        if not os.path.exists(target_dir):
-                            os.makedirs(target_dir)
+                            with open(target_path, 'wb') as f:
+                                f.write(zip_ref.read(file_info))
 
-                        with open(target_path, 'wb') as f:
-                            f.write(zip_ref.read(file_info))
-
-                os.remove(file)
+                    os.remove(file)
+                else:
+                    print("Error Deleting file")
                 print ("The update was completed successfully")
             except:
                 print("The update encountered an error")

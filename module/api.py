@@ -1,6 +1,8 @@
 import requests as r
 import json 
 import time
+import pandas as pd
+import numpy as np
 class ApiKeysun:
     def __init__(self,baseUrl = "https://mizeOnline.ir" ) -> None:
     # def __init__(self,baseUrl = "https://localhost:44353" ) -> None:
@@ -44,20 +46,8 @@ class ApiKeysun:
                 rr = json.loads(result.content)
                 if result.status_code == 200:
                     return [result.status_code,rr]
-                # returnResult = []
-                # if result.status_code == 200:
-                #     for invoice in listIndex:
-                #         for data in rr['data']:
-                #             if invoice[2] == data['uniqueId']:
-                #                 if data['status'] == 3:
-                                    
-                #                 else:
-                #                     pass
-
-
                 else :
                     return [result.status_code,"serverError"]
-            
             except:
                 return [result.status_code,"Erorrserver"]
                 
@@ -107,7 +97,6 @@ class ApiKeysun:
                 return [result.status_code,"serverError"]
         except:
             return[-1,"ErrorSystem"]
-
 
     def inquiryInvoiceByUniqeId(self,listUniqeId,token):
         try:
@@ -176,6 +165,22 @@ class ApiKeysun:
     def getUrl(self) -> str:
         return self.urlVersion
 
+    def checkResult(self,statusCode,response,listIndex):
+        if statusCode == 200 and response['error'] == False:
+            data = response['data']
+            result = pd.DataFrame(data)
+            listInvoice = pd.DataFrame(listIndex)
+            merge =  listInvoice.join(result.set_index('uniqueId'), on='uniqueId',validate='1:m')
+            successR = merge[merge['status'] == 3]
+            errorR = merge[merge['status'] != 3]
+            
+            print (successR)
+            print (f"count Success =  {len(successR)}  count Error = {len(errorR['uniqueId'].drop_duplicates())}")
+            print (errorR)
+
+            
+
+
 
 class APIEconomicCode():
     def __init__(self) -> None:
@@ -211,5 +216,61 @@ class APIEconomicCode():
 
 if __name__ == "__main__":
     api = ApiKeysun()
-    a = api.getToken("0780637356031","sUmM11kN")
+    # a = api.getToken("0780637356031","sUmM11kN")
+    responce = {
+        "data": [
+            {
+            "status": 3,
+            "uniqueId": "ac26c798-6d13-4d34-82ee-5ee96aee7671",
+            "trakingId": "0a65423e-8565-4286-bb3d-fe215ccae5bf",
+            "taxSerialNumber": "A1112D04C7B000000D87C7",
+            "description": "",
+            "title": ""
+            },
+            {
+            "status": 1,
+            "uniqueId": "ac26c798-6d13-4d34-82ee-fe215ccaeaaa",
+            "trakingId": "0a65423e-8565-4286-bb3d-2",
+            "taxSerialNumber": "A1112D04C7B000000D87C6",
+            "description": "",
+            "title": "فاکتور دو خطا"
+            },
+            {
+            "status": 1,
+            "uniqueId": "ac26c798-6d13-4d34-82ee-fe215ccaeaaa",
+            "trakingId": "0a65423e-8565-4286-bb3d-2",
+            "taxSerialNumber": "A1112D04C7B000000D87C6",
+            "description": "",
+            "title": "فاکتور دو خطا 2"
+            },
+            {
+            "status": 3,
+            "uniqueId": "ac26c798-6d13-4d34-82ee-fe215ccaebbb",
+            "trakingId": "0a65423e-8565-4286-bb3d-1",
+            "taxSerialNumber": "A1112D04C7B000000D87C5",
+            "description": "",
+            "title": "فاکتور تک خطا"
+            },
+            {
+                      "status": 1,
+                        "uniqueId": "8c98085d-10d7-4c84-b4b6-e55acf246721",
+                        "description": "نوع خریدار نا معتبر است",
+                        "title": "BuyerType"
+            }
+        ],
+        "error": False,
+        "succeeded": True
+    }
+    # indexlist = [
+    #     ["1","11","ac26c798-6d13-4d34-82ee-5ee96aee7671"],
+    #     ["2","22","0a65423e-8565-4286-bb3d-fe215ccaeaaa"],
+    #     ["3","33","0a65423e-8565-4286-bb3d-fe215ccaebbb"]
+    # ]
+    indexlist = [
+        {"indexRow":"1","invocieNumber":"11","uniqueId":"ac26c798-6d13-4d34-82ee-5ee96aee7671"},
+        {"indexRow":"2","invocieNumber":"22","uniqueId":"ac26c798-6d13-4d34-82ee-fe215ccaeaaa"},
+        {"indexRow":"3","invocieNumber":"33","uniqueId":"ac26c798-6d13-4d34-82ee-fe215ccaebbb"},
+        {"indexRow":"4","invocieNumber":"44","uniqueId":"8c98085d-10d7-4c84-b4b6-e55acf246721"},
+    ]
+    a = api.checkResult(200,responce,indexlist)
     print (a)

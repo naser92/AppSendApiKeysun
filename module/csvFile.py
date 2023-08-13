@@ -85,7 +85,7 @@ class CSVFile():
             writer_object.writerow(data)
             f_object.close()
         
-    def saveError(self,data):
+    def saveError(self,data:list) -> None:
         file = self.path + self.fileName + "_error_" + str(self.today) +"_" + self.curentTime + ".csv" 
         self.FileErrorSendInvoice = file
         p = Path(file)
@@ -131,7 +131,41 @@ class CSVFile():
         return self.fileSuccessSendInvoice
     
     def getFileErrorSendInvoiceName(self):
-        return self.FileErrorSendInvoice 
+        return self.FileErrorSendInvoice
+
+    def SaveSuccessSendInvoice(self,data):
+        data = np.array(data)
+        file = self.path + self.fileName + "_success_" + str(self.today) + "_" + self.curentTime + ".csv" 
+        self.fileSuccessSendInvoice = file
+        p = Path(file)
+        check = p.is_file()
+        if check == False:
+            d = (["ExcelRowNumber","InvoiceNumber","uniqueId","status","trakingId","taxSerialNumber"])
+            with open(file, 'a',encoding="utf-8",newline='') as f_object:
+                writer_object = writer(f_object)
+                writer_object.writerow(d)
+                f_object.close()
+        with open(file, 'a',encoding="utf-8",newline='') as f_object:
+            writer_object = writer(f_object)
+            writer_object.writerows(data)
+            f_object.close()
+
+    def SaveErrorSendInvoice(self,data):
+        data = np.array(data)
+        file = self.path + self.fileName + "_error_" + str(self.today) +"_" + self.curentTime + ".csv" 
+        self.FileErrorSendInvoice = file
+        p = Path(file)
+        check = p.is_file()
+        if check == False:
+            d = (["ExcelRowNumber","InvoiceNumber","uniqueId","status","description","title"])
+            with open(file, 'a',encoding="utf-8",newline='') as f_object:
+                writer_object = writer(f_object)
+                writer_object.writerow(d)
+                f_object.close()
+        with open(file, 'a',encoding="utf-8",newline='') as f_object:
+            writer_object = writer(f_object)
+            writer_object.writerows(data)
+            f_object.close()
 
 if __name__ == "__main__":
     import time
