@@ -35,8 +35,7 @@ class LoginForm():
         self.txt_username = ck.CTkEntry(self.base,width=200,placeholder_text="username", corner_radius=10)
         self.txt_username.place(x=10,y=70)
 
-        # config.read('config.ini')
-        # user = config['DEFAULT'].get('username')
+    
         user = self.reg.getUsername()
         if user is not None:
             self.txt_username.insert(0,user)
@@ -51,6 +50,7 @@ class LoginForm():
 
     def generateForm(self) -> None:
         self.base.mainloop()  
+
 
     def checkFirst_login(self):
         regVersion = self.reg.getVersion()
@@ -69,45 +69,31 @@ class LoginForm():
                 if c:
                     token = self.api.getToken(str_usename,str_password)
                     if token != "":
-                        # config = configparser.ConfigParser()
-                        # config.read('config.ini')
                         v = self.api.GetVersion()
                         if v == self.version:
                             self.checkFirst_login()
                             self.base.destroy()
-                            # isLogin = config['DEFAULT'].getboolean('LoggedIn')
                             isLogin = self.reg.getFirstLogin()
                             if not isLogin or isLogin == 0:
-                                # config['DEFAULT'] = {'LoggedIn': 'True','username':str_usename}
-                                # with open('config.ini', 'w') as f:
-                                #     config.write(f)
                                 self.reg.writeUsername(str_usename)
                                 self.reg.writeFirstLogin(1)
                                 from frm_versionDescription import DescriptinVersion
                                 DescriptinVersion(str_usename,str_password,1)
                             else:
-                                # config['DEFAULT'] = {'LoggedIn': 'True','username':str_usename}
-                                # with open('config.ini', 'w') as f:
-                                #     config.write(f)
                                 self.reg.writeUsername(str_usename)
                                 self.reg.writeFirstLogin(1)
                                 from frm_main import MainPanel
                                 MainPanel(str_usename,str_password)
                         else:
-                            # config['DEFAULT'] = {'LoggedIn': 'False'}
-                            # with open('config.ini', 'w') as f:
-                            #     config.write(f)
                             self.reg.writeFirstLogin(0)
-
                             url = self.api.getUrl()
                             self.base.destroy()
                             from frm_version import VersionForm
                             frm = VersionForm(self.version,v,url)
                             frm.generateForm()
-
-                      
                     else:
                         CTkMessagebox(title="خطا",message="خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید",icon="warning")
+
 
     def checkToken(self,username):
         try:

@@ -183,6 +183,7 @@ class FormSendInvoice():
         else:
             CTkMessagebox(title='انتخاب الگو',message="نوع الگوی فاکتور را انتخاب کنید",icon="warning")
 
+
     def reset_form(self):
         self.lbl_status.configure(text="فایل در دسترس نیست",bg_color="#ffffff")
         self.lbl_path.configure(text="" )
@@ -195,6 +196,7 @@ class FormSendInvoice():
         self.btn_selectFile.configure(state="normal")
         self.btn_reset.configure(state="normal")
     
+
     def checkToken(self,username):
         try:
             with open("string.txt", "rb") as f1, open("key.txt", "rb") as f2:
@@ -213,6 +215,7 @@ class FormSendInvoice():
             CTkMessagebox(title="دسترسی",message="نام کاربری مجاز نمیباشد",icon="cancel")
             return False
     
+
     def LockElement(self):
         for child in self.group_date.winfo_children():
             child.configure(state='disable')
@@ -222,6 +225,7 @@ class FormSendInvoice():
 
         self.btn_selectFile.configure(state="disabled")
         self.btn_reset.configure(state="disabled")
+
 
     def check_connection(self):
         internet = CheckInternet()
@@ -282,10 +286,6 @@ class FormSendInvoice():
                         listIndex = []
                         counter = 0
                         patern = TypeInvoice_SendInvoice.getIndex(self.numberPatern.get(),self.patern)
-                        # if patern == 1:
-                        #     self.Excell.preparationExcellN11()
-                        # elif patern == 2:
-                        #     self.Excell.preparationExcellN21()
                         typeId = patern[0]
                         patternId = patern[1]
                         self.lbl_number_allFactor.configure(text=str(len(invoices)))

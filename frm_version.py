@@ -41,8 +41,8 @@ class VersionForm():
         self.btn_revoke = ck.CTkButton(self.group_download,text="دانلود نسخه جدید",font=self.font,width=50,command=self.download_app)
         self.btn_revoke.place(x=220,y=110)
 
-        self.auto_update = ck.CTkButton(self.group_download,text="بروز رسانی خودکار",font=self.font,width=50,command=self.update)
-        self.auto_update.place(x=112,y=110)
+        # self.auto_update = ck.CTkButton(self.group_download,text="بروز رسانی خودکار",font=self.font,width=50,command=self.update)
+        # self.auto_update.place(x=112,y=110)
 
         self.btn_help = ck.CTkButton(self.group_download,text="دانلود راهنما ایتاک",font=self.font,width=50,command=self.download_help)
         self.btn_help.place(x=5,y=110)
