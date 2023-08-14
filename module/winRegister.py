@@ -14,6 +14,13 @@ class WindowsRegistry:
         winreg.SetValueEx(self.key, 'username',0, winreg.REG_SZ, username)
         winreg.CloseKey(self.key)
 
+    
+    def writeVersion(self, version):
+        self.key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Eitak',0,winreg.KEY_WRITE)
+        winreg.SetValueEx(self.key, 'version',0, winreg.REG_SZ, version)
+        winreg.CloseKey(self.key)
+
+    
     def writeFirstLogin(self, value):
         self.key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Eitak',0,winreg.KEY_WRITE)
         winreg.SetValueEx(self.key, 'first_login', 0, winreg.REG_DWORD, value)
@@ -32,6 +39,13 @@ class WindowsRegistry:
             return winreg.QueryValueEx(self.key, 'first_login')[0]
         except:
             return 0
+        
+    def getVersion(self):
+        try:
+            self.key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Eitak',0,winreg.KEY_READ)
+            return winreg.QueryValueEx(self.key, 'version')[0]
+        except:
+            return "0"
 
 
 

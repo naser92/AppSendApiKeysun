@@ -319,9 +319,11 @@ class FormSendInvoice():
                                     repeat = True
                                     
                                     while repeat:
-                                        token = api.getToken(str_usename,str_password)
-                                        
                                         repeat = not self.check_connection()
+                                        token = ""
+                                        
+                                        if repeat == False :
+                                            token = api.getToken(str_usename,str_password)
 
                                         if token != "" and repeat == False:    
                                             result = api.sendInvoice(listInvoice,token)

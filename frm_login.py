@@ -52,7 +52,12 @@ class LoginForm():
     def generateForm(self) -> None:
         self.base.mainloop()  
 
-    
+    def checkFirst_login(self):
+        regVersion = self.reg.getVersion()
+        if regVersion != self.version:
+            self.reg.writeVersion(self.version)
+            self.reg.writeFirstLogin(0)
+
 
     def loginTest(self):
             str_usename = self.txt_username.get()
@@ -68,6 +73,7 @@ class LoginForm():
                         # config.read('config.ini')
                         v = self.api.GetVersion()
                         if v == self.version:
+                            self.checkFirst_login()
                             self.base.destroy()
                             # isLogin = config['DEFAULT'].getboolean('LoggedIn')
                             isLogin = self.reg.getFirstLogin()
