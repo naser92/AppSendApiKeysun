@@ -350,50 +350,7 @@ class FormSendInvoice():
                                                         continue
                                         else:
                                             repeat = True
-
-                                    # if token != "":
-                                    #     # import json
-                                    #     # json_object = json.dumps(listInvoice)
-                                    #     # with open("sample1.json", "w") as outfile:
-                                    #     #      outfile.write(json_object)
-                                    #     result = api.sendInvoice(listInvoice,token)
-                                    #     # curentTime = time.strftime("%H:%M:%S")
-                                    #     if result[0] == 200 and result[1]['error'] == False:
-                                    #         check = CheckResult(result[1]['data'],listIndex)
-                                    #         if check.countSuceeded() > 0 : 
-                                    #             r = check.getSuccessResult()
-                                    #             self.CSV.SaveSuccessSendInvoice(r)
-                                    #         if check.countFailed() > 0 : 
-                                    #             r = check.getErrorResult()
-                                    #             self.CSV.SaveErrorSendInvoice(r)
-                                            
-                                    #         errorCount += check.countFailed()
-                                    #         sucessCount += check.countSuceeded()
-                                  
-                                    #     else:
-                                    #         for invoiceItem in listIndex: 
-                                    #             try:
-                                    #                 self.CSV.saveError([invoiceItem['indexRow'],invoiceItem['invocieNumber'],invoiceItem['uniqueId'],result[0],result[1]])
-                                    #                 errorCount += 1
-                                    #             except:
-                                    #                 time.sleep(50)
-                                    #                 continue
-                                    #         #فعال کردن لاگ خطا
-                                    #         # state_btn_error = self.btn_ErrorLog.cget("state") 
-                                    #         # if state_btn_error == "disabled":
-                                    #         #     self.btn_ErrorLog.configure(state = "normal")
-                                    
-                                    
-                                    # else:                    
-                                    #     for invoiceItem in listIndex: 
-                                    #         try:
-                                    #             self.CSV.saveError([invoiceItem['indexRow'],invoiceItem['invocieNumber'],invoiceItem['uniqueId'],"login_Error","سرویس در حال حاضر در دسترس نمیباشد"])
-                                    #             errorCount += 1
-                                    #         except:
-                                    #             time.sleep(50)
-                                    #             continue
-                                        
-                                     
+                                          
                                     counter = 0
                                     listInvoice = []
                                     listIndex = []
