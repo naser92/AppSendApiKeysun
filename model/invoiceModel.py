@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class InvoiceData:
     Type : int
@@ -22,6 +23,31 @@ class InvoiceData:
                 self.colum = 16 if self.index == 0 else 24
 
 
+@dataclass
+class InvoiceInvalid:
+    invoce: object
+    error : bool
+    message : str
+
+
+
+@dataclass
+class InvoiceEleman:
+    key: str
+    Value : str
+    Type : str
+
+    def __init__(self,key,type):
+        self.key = key
+        self.Type = type
+    
+    def setValue(self,value):
+        self.Value = value
+       
+
+@dataclass
+class InvoiceModel:
+    InvoiceNumber : InvoiceEleman
 
 
 

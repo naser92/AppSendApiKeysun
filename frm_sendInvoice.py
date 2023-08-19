@@ -371,7 +371,7 @@ class FormSendInvoice():
                                 self.frame.after(500)
                                 self.frame.update()
                             except Exception as e:
-                                self.CSV.saveError["save_error","system_error",e] 
+                                self.CSV.saveError(["save_error","system_error",str(e)]) 
                                 continue
                         #end For invocie    
                         if self.fileSuccess != None and self.fileSuccess != "":
