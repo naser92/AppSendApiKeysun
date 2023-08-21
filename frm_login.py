@@ -6,6 +6,7 @@ import hashlib
 from model.setting import VersionApp
 import configparser
 from module.winRegister import WindowsRegistry
+from module.connection import CheckInternet
 
 
 config = configparser.ConfigParser()
@@ -65,10 +66,10 @@ class LoginForm():
             if str_usename == '' or str_password == '':
                 CTkMessagebox(title="ورود",message="نام کاربری ویا کلمه عبور را به درستی وارد کنید",icon="cancel")
             else:
-                c = self.checkToken(str_usename)
-                if c:
-                    token = self.api.getToken(str_usename,str_password)
-                    if token != "":
+                # c = self.checkToken(str_usename)
+                token = self.api.getToken(str_usename,str_password)
+                if token != "":
+                    if self.checkPermissions(token):
                         v = self.api.GetVersion()
                         if v == self.version:
                             self.checkFirst_login()
@@ -91,8 +92,31 @@ class LoginForm():
                             from frm_version import VersionForm
                             frm = VersionForm(self.version,v,url)
                             frm.generateForm()
-                    else:
+                else:
+                    inter = CheckInternet()
+                    connection = inter.checkServerConnection()
+                    if connection:
                         CTkMessagebox(title="خطا",message="خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید",icon="warning")
+                    else:
+                        CTkMessagebox(title="ارتباط",message="ارتباط با سرور قطع میباشد لطفاً ارتباط به اینترنت را بررسی نمایید",icon="warning")
+
+
+    def checkPermissions(self,token) -> bool:
+        info = self.api.checkPakage(token)
+        try:
+            if info['basePackageTypeId'] == 1:
+                return True
+            elif info['basePackageTypeId'] != 0:
+                CTkMessagebox(title="دسترسی",message="فقط کاربران طرح طلایی می توانند از این برنامه استفاده کنند",icon="warning")
+                return False
+            else:
+                CTkMessagebox(title="ارتباط",message="ارتباط با سرور قطع میباشد لطفاً ارتباط به اینترنت را بررسی نمایید",icon="warning")
+                return False
+        except:
+                CTkMessagebox(title="دسترسی",message="درحال حاضر هیچ طرحی برای کاربری شما ایجاد نشده است",icon="warning")
+
+
+
 
 
     def checkToken(self,username):

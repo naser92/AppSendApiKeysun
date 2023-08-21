@@ -5,9 +5,11 @@ import openpyxl
 from openpyxl.utils import get_column_letter
 import shutil
 import os
+import sys
+sys.path.append(os.getcwd())
 from model.invoiceModel import InvoiceData
-
-
+from model.columns import NameColumnsInvoic
+col = NameColumnsInvoic()
 class ExcellData ():
     def __init__(self, path) -> None:
         self.path = path
@@ -257,12 +259,18 @@ class ExcellData ():
             return result
         except:
             return None
+        
+    def readDataExcell(self):
+        df = pd.read_excel(self.path, sheet_name=self.sheetNames[0])
+        df.columns = df.apply(col.invoiceType11)
+        print(df)
+
 
 
 if __name__ == "__main__":
     ed = ExcellData("./dataTest/Invoice_InvoicePatternId.xlsx")
-    # a = ed.checkExcel(2)
-    a = ed.checkExcel(1)
+    ed.checkExcellNew(1,1)
+    a = ed.readDataExcell()
 
     for batch_data in ed.data_generator(batch_size=10):
         print (batch_data)
