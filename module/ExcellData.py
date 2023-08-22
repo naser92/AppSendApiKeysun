@@ -10,6 +10,8 @@ sys.path.append(os.getcwd())
 from model.invoiceModel import InvoiceData
 from model.columns import NameColumnsInvoic
 col = NameColumnsInvoic()
+import uuid
+
 class ExcellData ():
     def __init__(self, path) -> None:
         self.path = path
@@ -247,33 +249,56 @@ class ExcellData ():
     def checkExcellNew(self,type,pattern):
         try:
             excellFile = pd.ExcelFile(self.path)
-            self.data = pd.read_excel(self.path,sheet_name=None)
+            self.data = pd.read_excel(self.path,sheet_name=None,dtype=str)
             self.sheetNames = excellFile.sheet_names
             result = []
             for  index,(sheet_name, df) in enumerate(self.data.items()):
                 df_cols = len(df.columns)
-                cols = InvoiceData(type,pattern,index)
-                if df_cols == cols.colum:
+                self.cols = InvoiceData(type,pattern,index)
+                if df_cols == self.cols.colum:
                     result.append(1)
                 else: result.append(0) 
             return result
         except:
             return None
+    
+    def generate_uuid(self):
+        return str(uuid.uuid4())
         
-    def readDataExcell(self):
-        df = pd.read_excel(self.path, sheet_name=self.sheetNames[0])
-        df.columns = df.apply(col.invoiceType11)
-        print(df)
+    def readDataExcel(self,sheet_index,number) -> pd.DataFrame:
+        df = self.data[self.sheetNames[sheet_index]]
+        df = pd.DataFrame(df)
+        df = df.set_axis(col.invoiceType11(),axis='columns')
+        df = df.replace(np.nan,None)
+        df['uniqueId'] = df.apply(lambda x :  self.generate_uuid(),axis=1)
+        from model.setting import VersionApp
+        df = df.assign(CooperationCode = "Eitak-" + VersionApp.version)
+        
+        df_item = self.data[self.sheetNames[number]]
+        df_item = pd.DataFrame(df_item)
+        df_item = df_item.replace(np.nan,None)
+        
+        df_item = df_item.set_axis(col.invoiceItemsGeneral(),axis='columns')
+
+        mearge_data = pd.merge(df, df_item,on=['invoiceNumber','invoiceDate'])
+
+        gp_data = mearge_data.groupby(['invoiceNumber','invoiceDate']).apply(lambda x :{
+            **{column : x[column].iloc[0] for column in df.columns},
+            'Items' : x[df_item.columns[2:]].to_dict(orient='records') 
+        })
+        dfJson = gp_data.to_json(orient='records')
+        # result = dfJson.t(orient="records")
+        print(dfJson)
 
 
 
 if __name__ == "__main__":
-    ed = ExcellData("./dataTest/Invoice_InvoicePatternId.xlsx")
+    ed = ExcellData("./dataTest/Invoice_InvoicePatternIdll.xlsx")
     ed.checkExcellNew(1,1)
-    a = ed.readDataExcell()
+    a = ed.readDataExcel(0,1)
 
-    for batch_data in ed.data_generator(batch_size=10):
-        print (batch_data)
+    # for batch_data in ed.data_generator(batch_size=10):
+    #     print (batch_data)
     # p = "./data/sampel11.xlsx"
     # p = p[:-5] + "_result.xlsx"  
     # print (p)
