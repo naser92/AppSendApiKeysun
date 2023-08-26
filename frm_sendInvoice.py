@@ -16,7 +16,9 @@ import time
 from model.formData import TypeInvoice_SendInvoice
 from module.resultProcess import CheckResult
 from module.connection import CheckInternet
+import math
 api = ApiKeysun() 
+import pandas as pd
 setting = SettingData()
 
 class FormSendInvoice():
@@ -147,8 +149,6 @@ class FormSendInvoice():
         self.sendInvoice_tread.daemon = True
         self.sendInvoice_tread.start()
 
-        
-
     
     def select_file(self):
         filetypes = (
@@ -236,6 +236,22 @@ class FormSendInvoice():
             self.lbl_status.configure(text="ارتباط با سرور قطع میباشد",bg_color="#a3001b")
             return False
 
+    def checkPermissions(self,token) -> bool:
+        info = api.checkPakage(token)
+        try:
+            if info['basePackageTypeId'] == 1:
+                return True
+            elif info['basePackageTypeId'] != 0:
+                CTkMessagebox(title="دسترسی",message="فقط کاربران طرح طلایی می توانند از این برنامه استفاده کنند",icon="warning")
+                return False
+            else:
+                CTkMessagebox(title="ارتباط",message="ارتباط با سرور قطع میباشد لطفاً ارتباط به اینترنت را بررسی نمایید",icon="warning")
+                return False
+        except:
+                CTkMessagebox(title="دسترسی",message="درحال حاضر هیچ طرحی برای کاربری شما ایجاد نشده است",icon="warning")
+   
+    def getIndexRow(self,invoices: pd.DataFrame ,uniqueId) -> int:
+        row = invoices.loc[invoices['uniqueId'] == uniqueId ]
 
     def send_invoice(self):
         self.lbl_number_allFactor.configure(text="0")
@@ -260,7 +276,71 @@ class FormSendInvoice():
         elif vdate == 0 :
             CTkMessagebox(title="نوع تاریخ",message="نوع ورودی تاریخ را مشخص نمایید",icon="cancel")
         else:
-            c = self.checkToken(str_usename)
+            # c = self.checkToken(str_usename)
+            token = api.getToken(str_usename,str_password)
+            if token != "":
+                if self.checkPermissions(token):
+                    self.LockElement()
+                    self.lbl_status.configure(text="در حال ارسال لطفا منتظر بمانید ...",bg_color="#009FBD")
+
+                    if self.status:
+                        patern = TypeInvoice_SendInvoice.getIndex(self.numberPatern.get(),self.patern)
+                        typeId = patern[0]
+                        patternId = patern[1]
+                        invoices = self.Excell.readExcelSheet(typeId,patternId,0,vdate)
+                        invoiceItems = self.Excell.readExcelSheet(typeId,patternId,1,vdate)
+                        invoicePayments = self.Excell.readExcelSheet(typeId,patternId,2,vdate)
+
+                        self.progressbar.configure(maximum=len(invoices))
+                        sucessCount = 0
+                        errorCount = 0
+                        
+                        if len(invoices) <= 0:
+                            CTkMessagebox(title="دیتا",message="تعداد صورتحساب ها صفر می باشد",icon="warning")
+                        elif len(invoiceItems) <= 0:
+                            CTkMessagebox(title="دیتا",message="تعداد آیتم صورتحساب ها صفر می باشد",icon="warning")
+                        else:
+                            if len(invoicePayments) == 0 :
+                                invoicePayments = None
+                            Alldata = self.Excell.PreparationData(invoice,invoiceItem,invoicePayments)
+                            batch_size = 10
+                            total_batches = math.ceil(len(Alldata) / batch_size)
+                            data_baches = [Alldata[i * batch_size:(i + 1) * batch_size] for i in range(total_batches)]
+                            for data in data_baches:
+                                repeat = True
+                                while repeat:
+                                    repeat = not self.check_connection()
+                                    token = ""
+
+                                    if repeat == False :
+                                        token = api.getToken(str_usename,str_password)
+
+                                    if token != "" and repeat == False:
+                                        result = api.SendInvoiceNew(data,token)
+                                        if result[0] == 200 and result[1]['error'] == False:
+                                            check = CheckResult(result[1]['data'],data)
+                                            if check.countSuceeded() > 0 : 
+                                                r = check.getSuccessResult()
+                                                self.CSV.SaveSuccessSendInvoice(r)
+                                            if check.countFailed() > 0 : 
+                                                r = check.getErrorResult()
+                                                self.CSV.SaveErrorSendInvoice(r)
+                                            errorCount += check.countFailed()
+                                            sucessCount += check.countSuceeded()
+                                            repeat = False
+
+                                        elif result[0] == 500:
+                                            repeat = True
+                                        
+                                        else:
+                                            for invoiceItem in data: 
+                                                try:
+                                                    self.CSV.saveError([invoiceItem['indexRow'],invoiceItem['invocieNumber'],invoiceItem['uniqueId'],result[0],result[1]])
+                                                    errorCount += 1
+                                                except:
+                                                    time.sleep(50)
+                                                    continue
+
             if c:
                 self.LockElement()
                 self.lbl_status.configure(text="در حال ارسال لطفا منتظر بمانید ...",bg_color="#009FBD")

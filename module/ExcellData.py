@@ -8,9 +8,11 @@ import os
 import sys
 sys.path.append(os.getcwd())
 from model.invoiceModel import InvoiceData
-from model.columns import NameColumnsInvoic
+from model.columns import NameColumnsInvoic,Columns
 col = NameColumnsInvoic()
 import uuid
+from model.setting import VersionApp
+import jdatetime
 
 class ExcellData ():
     def __init__(self, path) -> None:
@@ -264,15 +266,28 @@ class ExcellData ():
     
     def generate_uuid(self):
         return str(uuid.uuid4())
+    
+    def convert_date(self,x):
+        try:
+            date = str(x).split('/')
+            return str(jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian())
+        except: 
+            return None
         
     def readDataExcel(self,sheet_index,number) -> pd.DataFrame:
         df = self.data[self.sheetNames[sheet_index]]
         df = pd.DataFrame(df)
-        df = df.set_axis(col.invoiceType11(),axis='columns')
+        df = df.set_axis(col.invoiceItemsGeneral(),axis='columns')
         df = df.replace(np.nan,None)
         df['uniqueId'] = df.apply(lambda x :  self.generate_uuid(),axis=1)
-        from model.setting import VersionApp
+        
         df = df.assign(CooperationCode = "Eitak-" + VersionApp.version)
+        b =[]
+        for s in df.columns:
+            if 'Date' in s or 'date' in s :
+                b.append(s)
+
+        df[[s for s in df.columns if 'Date' in s or 'date' in s]] = df[[s for s in df.columns if 'Date' in s or 'date' in s]].applymap(self.convert_date)
         
         df_item = self.data[self.sheetNames[number]]
         df_item = pd.DataFrame(df_item)
@@ -290,12 +305,56 @@ class ExcellData ():
         # result = dfJson.t(orient="records")
         print(dfJson)
 
+    def readExcelSheet(self,typeInvoice:int,patternInvoic:int,indexSheet:int,TypeDate:int) -> pd.DataFrame:
+        try:
+            df = self.data[self.sheetNames[indexSheet]]
+            df  =pd.DataFrame(df)
+            col = Columns(typeInvoice,patternInvoic,indexSheet)
+            df = df.set_axis(col.columnsNames,axis='columns')
+            df = df.replace(np.nan,None)
+            
+            if indexSheet == 0:
+                df['uniqueId'] = df.apply(lambda x :  self.generate_uuid(),axis=1)
+                df = df.assign(CooperationCode = "Eitak-" + VersionApp.version)
+            
+            if TypeDate == 2:
+                df[[s for s in df.columns if 'Date' in s or 'date' in s]] = df[[s for s in df.columns if 'Date' in s or 'date' in s]].applymap(self.convert_date)
+            
+            return df
+        except:
+            return None
+
+    def PreparationData(self,invoice:pd.DataFrame,item:pd.DataFrame,pay:pd.DataFrame = None) -> pd.DataFrame:
+        mearge_data =  pd.merge(invoice,item,on=['invoiceNumber','invoiceDate'])
+        if pay is None: 
+            gp_data = mearge_data.groupby(['invoiceNumber','invoiceDate']).apply(lambda x :{
+            **{column : x[column].iloc[0] for column in invoice.columns},
+            'invoiceItems' : x[item.columns[2:]].to_dict(orient='records') 
+                })
+            return gp_data
+        else:
+            group_invoice = pd.merge(mearge_data,pay,on=['invoiceNumber','invoiceDate'])
+            gp_data = group_invoice.groupby(['invoiceNumber','invoiceDate']).apply(lambda x :{
+            **{column : x[column].iloc[0] for column in invoice.columns},
+            'invoiceItems' : x[item.columns[2:]].to_dict(orient='records'),
+            'invoicePayments' : x[pay.columns[2:]].to_dict(orient='records') 
+                }).reset_index(drop=True)
+            return gp_data
 
 
 if __name__ == "__main__":
     ed = ExcellData("./dataTest/Invoice_InvoicePatternIdll.xlsx")
     ed.checkExcellNew(1,1)
-    a = ed.readDataExcel(0,1)
+    # pay = ed.readDataExcel(1,1)
+    invoice = ed.readExcelSheet(1,1,0,2)
+    item = ed.readExcelSheet(1,1,1,2)
+    pay = ed.readExcelSheet(1,1,2,2)
+    if len(pay) == 0:
+        pay = None
+    data  = ed.PreparationData(invoice,item,pay)
+    dfJson = data.to_json(orient='records')
+    print (len(dfJson))
+
 
     # for batch_data in ed.data_generator(batch_size=10):
     #     print (batch_data)

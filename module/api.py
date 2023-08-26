@@ -192,6 +192,31 @@ class ApiKeysun:
         except:
             return 0
 
+    def SendPostRequest(self,url,body,token):
+        try:
+            header = {
+                    'Content-Type': 'application/json ; charset=utf-8',
+                    'Authorization' : "Bearer " + token
+                }
+            try:
+                result = r.post(url, body, headers=header,timeout=700,verify=False)
+                rr = json.loads(result.content)
+                if result.status_code == 200:
+                    return [result.status_code,rr]
+                else :
+                    return [result.status_code,"serverError"]
+            except:
+                return [result.status_code,"Erorrserver"]
+                
+        except:
+            return[-1,"ErrorSystem"]
+    
+    def SendInvoiceNew(self, invoiecs:pd.DataFrame, token:str):
+        url = self.baseUrl + "/taxpayer/api/InvoiceExternalService_v6"
+        data = invoiecs.to_json(orient='records')
+        result = self.SendPostRequest(url,data,token)
+        return result
+
 class APIEconomicCode():
     def __init__(self) -> None:
         pass
