@@ -78,7 +78,7 @@ class Columns:
                 if self.pattern == 1:
                     self.columnsNames = c.invoiceType21()
                 elif self.pattern == 3:
-                    self.columnsNames = c.invoiceItemstype23
+                    self.columnsNames = c.invoiceItemstype23()
         elif self.indexSheet == 1:
             if self.pattern == 1:
                 self.columnsNames = c.invoiceItemsGeneral()

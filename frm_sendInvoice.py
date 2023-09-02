@@ -14,9 +14,11 @@ from frm_log import FormLog
 import threading
 import time
 from model.formData import TypeInvoice_SendInvoice
-from module.resultProcess import CheckResult
+from module.resultProcess import CheckResult,FackeRecord
 from module.connection import CheckInternet
 import math
+import concurrent.futures
+from functools import partial   
 api = ApiKeysun() 
 import pandas as pd
 setting = SettingData()
@@ -157,6 +159,7 @@ class FormSendInvoice():
         patern = TypeInvoice_SendInvoice.getIndex(self.numberPatern.get(),self.patern)
         
         if patern[0] != 0:
+            self.lbl_status.configure(text="درحال پردازش اطلاعات لطفاً صبرکنید",bg_color="#34495e")
             self.path_file = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
             self.lbl_path.configure(text=self.path_file)
             self.Excell = ExcellData(self.path_file)
@@ -279,7 +282,7 @@ class FormSendInvoice():
             # c = self.checkToken(str_usename)
             token = api.getToken(str_usename,str_password)
             if token != "":
-                if self.checkPermissions(token):
+                if True:#self.checkPermissions(token):
                     self.LockElement()
                     self.lbl_status.configure(text="در حال ارسال لطفا منتظر بمانید ...",bg_color="#009FBD")
 
@@ -290,6 +293,7 @@ class FormSendInvoice():
                         invoices = self.Excell.readExcelSheet(typeId,patternId,0,vdate)
                         invoiceItems = self.Excell.readExcelSheet(typeId,patternId,1,vdate)
                         invoicePayments = self.Excell.readExcelSheet(typeId,patternId,2,vdate)
+                        invoiceByIndex = self.Excell.invoiceByRowExcell(invoices)
 
                         self.progressbar.configure(maximum=len(invoices))
                         sucessCount = 0
@@ -300,115 +304,52 @@ class FormSendInvoice():
                         elif len(invoiceItems) <= 0:
                             CTkMessagebox(title="دیتا",message="تعداد آیتم صورتحساب ها صفر می باشد",icon="warning")
                         else:
+                            self.lbl_number_allFactor.configure(text=str(len(invoices)))
+                            self.frame.after(500)
+                            self.frame.update()
+
                             if len(invoicePayments) == 0 :
                                 invoicePayments = None
-                            Alldata = self.Excell.PreparationData(invoice,invoiceItem,invoicePayments)
+
+                            # num_threads = concurrent.futures.cpu_count() 
                             batch_size = 10
-                            total_batches = math.ceil(len(Alldata) / batch_size)
-                            data_baches = [Alldata[i * batch_size:(i + 1) * batch_size] for i in range(total_batches)]
-                            for data in data_baches:
-                                repeat = True
-                                while repeat:
-                                    repeat = not self.check_connection()
-                                    token = ""
-
-                                    if repeat == False :
-                                        token = api.getToken(str_usename,str_password)
-
-                                    if token != "" and repeat == False:
-                                        result = api.SendInvoiceNew(data,token)
-                                        if result[0] == 200 and result[1]['error'] == False:
-                                            check = CheckResult(result[1]['data'],data)
-                                            if check.countSuceeded() > 0 : 
-                                                r = check.getSuccessResult()
-                                                self.CSV.SaveSuccessSendInvoice(r)
-                                            if check.countFailed() > 0 : 
-                                                r = check.getErrorResult()
-                                                self.CSV.SaveErrorSendInvoice(r)
-                                            errorCount += check.countFailed()
-                                            sucessCount += check.countSuceeded()
-                                            repeat = False
-
-                                        elif result[0] == 500:
-                                            repeat = True
-                                        
-                                        else:
-                                            for invoiceItem in data: 
-                                                try:
-                                                    self.CSV.saveError([invoiceItem['indexRow'],invoiceItem['invocieNumber'],invoiceItem['uniqueId'],result[0],result[1]])
-                                                    errorCount += 1
-                                                except:
-                                                    time.sleep(50)
-                                                    continue
-
-            if c:
-                self.LockElement()
-                self.lbl_status.configure(text="در حال ارسال لطفا منتظر بمانید ...",bg_color="#009FBD")
-
-                if self.status :
-                    invoices = self.Excell.getInvoice()
-                    items = self.Excell.getInvoiceItem()
-                    payments = self.Excell.getPayment()
-                    
-                    
-                    self.progressbar.configure(maximum=len(invoices))
-                    sucessCount = 0
-                    errorCount = 0
-                    
-                    
-                    if len(invoices) <= 0:
-                        CTkMessagebox(title="دیتا",message="تعداد صورتحساب ها صفر می باشد",icon="warning")
-                    elif len(items) <= 0:
-                        CTkMessagebox(title="دیتا",message="تعداد آیتم صورتحساب ها صفر می باشد",icon="warning")
-                    else:
-                        inD = InvoiceData(items,payments)
-                        listInvoice = []
-                        listIndex = []
-                        counter = 0
-                        patern = TypeInvoice_SendInvoice.getIndex(self.numberPatern.get(),self.patern)
-                        typeId = patern[0]
-                        patternId = patern[1]
-                        self.lbl_number_allFactor.configure(text=str(len(invoices)))
-                        self.frame.after(500)
-                        self.frame.update()
-                        
-                        for index, invoice in enumerate(invoices):
-                        
-                            try:
-                                i = None
-                                if typeId == 1:
-                                    if patternId == 1:
-                                        i = inD.generateInvoice11(invoice,vdate)
-                                    elif patternId == 3:
-                                        i = inD.generateInvoice13(invoice,vdate)
-                                    
-                                elif typeId == 2:
-                                    if patternId == 1:
-                                        i = inD.generateInvoice21(invoice,vdate)
-                                    elif patternId == 3:
-                                        i = inD.generateInvoice23(invoice,vdate)
-
+                            # with concurrent.futures.ThreadPoolExecutor() as executor:
                                 
-                                listInvoice.append(i)
-                                listIndex.append({"indexRow":index + 1 ,"invocieNumber":invoice[0],"uniqueId":i['uniqueId']})
-                                counter += 1
-                                
-                                if counter == setting.BatchSizeOfInvoices or  index ==  (len(invoices) - 1) :
-                                    # print (listIndex)
+                            #     prepared_data = list(executor.map(self.Excell.PreparationData,[invoices,invoiceItems]))
+
+                            #     for data in zip(*[iter(prepared_data)] * batch_size):
+
+
+
+                            # Alldata = self.Excell.PreparationData(invoices,invoiceItems,invoicePayments)
+                            total_batches = math.ceil(len(invoices) / batch_size)
+                            # data_baches = [Alldata[i * batch_size:(i + 1) * batch_size] for i in range(total_batches)]
+                            data_baches = [invoices[i * batch_size:(i + 1) * batch_size] for i in range(total_batches)]
+                            # invoice_baches = [invoiceByIndex[i * batch_size:(i + 1) * batch_size] for i in range(total_batches)]
+                            
+                            for  data_b in data_baches:
+                                # try:
+
+                                    df_item = invoiceItems[(invoiceItems['invoiceNumber'].isin(data_b['invoiceNumber'])) & (invoiceItems['invoiceDate'].isin(data_b['invoiceDate']))]  
+                                    if invoicePayments == None:
+                                        df_pay = None
+                                    else:
+                                        df_pay = invoicePayments[(invoicePayments['invoiceNumber'].isin(data_b['invoiceNumber'])) & (invoicePayments['invoiceDate'].isin(data_b['invoiceDate']))]
                                     
+                                    data = self.Excell.PreparationData(data_b,df_item,df_pay)
+                                    # print (df_item)                                  
                                     repeat = True
-                                    
                                     while repeat:
                                         repeat = not self.check_connection()
                                         token = ""
-                                        
+
                                         if repeat == False :
                                             token = api.getToken(str_usename,str_password)
 
-                                        if token != "" and repeat == False:    
-                                            result = api.sendInvoice(listInvoice,token)
+                                        if token != "" and repeat == False:
+                                            result = api.SendInvoiceNew(data,token)
                                             if result[0] == 200 and result[1]['error'] == False:
-                                                check = CheckResult(result[1]['data'],listIndex)
+                                                check = CheckResult(result[1]['data'],data_b)
                                                 if check.countSuceeded() > 0 : 
                                                     r = check.getSuccessResult()
                                                     self.CSV.SaveSuccessSendInvoice(r)
@@ -418,41 +359,53 @@ class FormSendInvoice():
                                                 errorCount += check.countFailed()
                                                 sucessCount += check.countSuceeded()
                                                 repeat = False
+                                            elif   result[0] == 200:
+                                                fakeRecord = FackeRecord(data_b,result[1]['traceId'],result[1]['message'])
+                                                recordData = fakeRecord.get_data()
+                                                self.CSV.SaveErrorSendInvoice(recordData)
+                                                errorCount += len(data) 
+                                                repeat = False
+                                               
                                             elif result[0] == 500:
                                                 repeat = True
+                                            
                                             else:
-                                                for invoiceItem in listIndex: 
-                                                    try:
-                                                        self.CSV.saveError([invoiceItem['indexRow'],invoiceItem['invocieNumber'],invoiceItem['uniqueId'],result[0],result[1]])
-                                                        errorCount += 1
-                                                    except:
-                                                        time.sleep(50)
-                                                        continue
+                                                try:
+                                                    fakeRecord = FackeRecord(data_b,result[0],result[1])
+                                                    recordData = fakeRecord.get_data()
+                                                    self.CSV.SaveErrorSendInvoice(recordData)
+                                                    errorCount += len(data) 
+                                                    repeat = False
+                                                except:
+                                                    time.sleep(50)
+                                                    errorCount += len(data) 
+                                                    repeat = False
+                                                    continue
                                         else:
                                             repeat = True
-                                          
-                                    counter = 0
-                                    listInvoice = []
-                                    listIndex = []
-                                    self.lbl_number_sendFactor.configure(text=str(index+1))
+                            
+                                    self.lbl_number_sendFactor.configure(text=str(errorCount+sucessCount))
                                     self.frame.update_idletasks()
                                     self.frame.after(500)
                                     self.frame.update()
 
-                                # set address error file log
-                                if self.fileError == None or self.fileError == "":
-                                    self.fileError = self.CSV.getFileErrorSendInvoiceName()    
-                                
-                                self.lbl_number_ErrorFactor.configure(text=str(errorCount))
-                                self.lbl_number_successFactor.configure(text=str(sucessCount))
-                                self.progressbar['value'] = index+1
-                                self.progressbar.update()
-                                self.frame.update_idletasks()
-                                self.frame.after(500)
-                                self.frame.update()
-                            except Exception as e:
-                                self.CSV.saveError(["save_error","system_error",str(e)]) 
-                                continue
+                                    # set address error file log
+                                    if self.fileError == None or self.fileError == "":
+                                        self.fileError = self.CSV.getFileErrorSendInvoiceName()    
+                                    
+                                    self.lbl_number_ErrorFactor.configure(text=str(errorCount))
+                                    self.lbl_number_successFactor.configure(text=str(sucessCount))
+                                    value = errorCount + sucessCount
+                                    self.progressbar['value'] = value
+                                    self.progressbar.update()
+                                    self.frame.update_idletasks()
+                                    self.frame.after(500)
+                                    self.frame.update()
+                                # except Exception as e:
+                                #     fakeRecord = FackeRecord(invoices,data,"system_error",str(e))
+                                #     recordData = fakeRecord.get_data()
+                                #     self.CSV.SaveErrorSendInvoice(recordData)
+                                #     continue
                         #end For invocie    
                         if self.fileSuccess != None and self.fileSuccess != "":
                             self.btn_successLog.configure(state = "normal")   
@@ -461,6 +414,9 @@ class FormSendInvoice():
                             self.btn_ErrorLog.configure(state = "normal")
 
                         CTkMessagebox(title="اتمام",message="تعداد %d فاکتور با موفقیت ارسال گردید میتوانید نتیجه را در دو فایل خطا و ثبت موفقیت در مکان فایل اصلی مشاهده نمایید"%len(invoices),icon="info")
-                else:
-                    CTkMessagebox(title="بارگزاری اکسل",message="لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.",icon="cancel")
+                # else:
+                    # CTkMessagebox(title="بارگزاری اکسل",message="لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.",icon="cancel")
                 self.reset_form()
+            else:
+                CTkMessagebox(title="ارتباط با سرور",message="ممکن است ارتباط اینترنت و یا مشکلی در سرور رخ داده باشد لطفاً دوباره امتحان نمایید",icon="cancel")
+

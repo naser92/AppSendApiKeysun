@@ -13,6 +13,7 @@ col = NameColumnsInvoic()
 import uuid
 from model.setting import VersionApp
 import jdatetime
+import concurrent.futures
 
 class ExcellData ():
     def __init__(self, path) -> None:
@@ -247,12 +248,27 @@ class ExcellData ():
             batch.append(data)
         yield batch
 
+    def readSheet(self,sheet_name):
+        try:
+            df = pd.read_excel(self.path,sheet_name=sheet_name,dtype=str)
+            return df
+        except:
+            return None
+
     
     def checkExcellNew(self,type,pattern):
         try:
+            import time
+            start_time = time.time()
             excellFile = pd.ExcelFile(self.path)
-            self.data = pd.read_excel(self.path,sheet_name=None,dtype=str)
             self.sheetNames = excellFile.sheet_names
+            num_threads = len(self.sheetNames)
+            self.data = pd.read_excel(self.path,sheet_name=None)
+            # with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
+            #     self.data = executor.map(self.readSheet,self.sheetNames)
+           
+            print("--- %s seconds ---" % (time.time() - start_time))
+        
             result = []
             for  index,(sheet_name, df) in enumerate(self.data.items()):
                 df_cols = len(df.columns)
@@ -314,6 +330,7 @@ class ExcellData ():
             df = df.replace(np.nan,None)
             
             if indexSheet == 0:
+                df.index = df.index + 2
                 df['uniqueId'] = df.apply(lambda x :  self.generate_uuid(),axis=1)
                 df = df.assign(CooperationCode = "Eitak-" + VersionApp.version)
             
@@ -324,11 +341,11 @@ class ExcellData ():
         except:
             return None
 
-    def PreparationData(self,invoice:pd.DataFrame,item:pd.DataFrame,pay:pd.DataFrame = None) -> pd.DataFrame:
+    def PreparationData(self,invoice:pd.DataFrame,item:pd.DataFrame,pay:pd.DataFrame=None) -> pd.DataFrame:
         mearge_data =  pd.merge(invoice,item,on=['invoiceNumber','invoiceDate'])
         if pay is None: 
             gp_data = mearge_data.groupby(['invoiceNumber','invoiceDate']).apply(lambda x :{
-            **{column : x[column].iloc[0] for column in invoice.columns},
+            **{column : x[column].iloc[0] for column in invoice.columns[1:]},
             'invoiceItems' : x[item.columns[2:]].to_dict(orient='records') 
                 })
             return gp_data
@@ -341,9 +358,17 @@ class ExcellData ():
                 }).reset_index(drop=True)
             return gp_data
 
+    def invoiceByRowExcell(self, invoice:pd.DataFrame) -> pd.DataFrame:
+        invoice.insert(loc=0, column='ExcelRowNumber', value=invoice.index.to_list())
+        listSelectName = ['ExcelRowNumber','invoiceNumber','uniqueId']
+        for i in invoice.columns.values:
+            if not i in listSelectName :
+                invoice = invoice.drop(columns=i) 
+        return invoice
+
 
 if __name__ == "__main__":
-    ed = ExcellData("./dataTest/Invoice_InvoicePatternIdll.xlsx")
+    ed = ExcellData("./dataTest/Invoice_InvoicePatternId.xlsx")
     ed.checkExcellNew(1,1)
     # pay = ed.readDataExcel(1,1)
     invoice = ed.readExcelSheet(1,1,0,2)
