@@ -352,7 +352,7 @@ class ExcellData ():
         else:
             group_invoice = pd.merge(mearge_data,pay,on=['invoiceNumber','invoiceDate'])
             gp_data = group_invoice.groupby(['invoiceNumber','invoiceDate']).apply(lambda x :{
-            **{column : x[column].iloc[0] for column in invoice.columns},
+            **{column : x[column].iloc[0] for column in invoice.columns[1:]},
             'invoiceItems' : x[item.columns[2:]].to_dict(orient='records'),
             'invoicePayments' : x[pay.columns[2:]].to_dict(orient='records') 
                 }).reset_index(drop=True)

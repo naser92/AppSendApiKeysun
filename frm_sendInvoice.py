@@ -311,33 +311,19 @@ class FormSendInvoice():
                             if len(invoicePayments) == 0 :
                                 invoicePayments = None
 
-                            # num_threads = concurrent.futures.cpu_count() 
                             batch_size = 10
-                            # with concurrent.futures.ThreadPoolExecutor() as executor:
-                                
-                            #     prepared_data = list(executor.map(self.Excell.PreparationData,[invoices,invoiceItems]))
-
-                            #     for data in zip(*[iter(prepared_data)] * batch_size):
-
-
-
-                            # Alldata = self.Excell.PreparationData(invoices,invoiceItems,invoicePayments)
                             total_batches = math.ceil(len(invoices) / batch_size)
-                            # data_baches = [Alldata[i * batch_size:(i + 1) * batch_size] for i in range(total_batches)]
                             data_baches = [invoices[i * batch_size:(i + 1) * batch_size] for i in range(total_batches)]
-                            # invoice_baches = [invoiceByIndex[i * batch_size:(i + 1) * batch_size] for i in range(total_batches)]
                             
                             for  data_b in data_baches:
-                                # try:
-
+                                try:
                                     df_item = invoiceItems[(invoiceItems['invoiceNumber'].isin(data_b['invoiceNumber'])) & (invoiceItems['invoiceDate'].isin(data_b['invoiceDate']))]  
                                     if invoicePayments == None:
                                         df_pay = None
                                     else:
                                         df_pay = invoicePayments[(invoicePayments['invoiceNumber'].isin(data_b['invoiceNumber'])) & (invoicePayments['invoiceDate'].isin(data_b['invoiceDate']))]
                                     
-                                    data = self.Excell.PreparationData(data_b,df_item,df_pay)
-                                    # print (df_item)                                  
+                                    data = self.Excell.PreparationData(data_b,df_item,df_pay)                               
                                     repeat = True
                                     while repeat:
                                         repeat = not self.check_connection()
@@ -401,11 +387,11 @@ class FormSendInvoice():
                                     self.frame.update_idletasks()
                                     self.frame.after(500)
                                     self.frame.update()
-                                # except Exception as e:
-                                #     fakeRecord = FackeRecord(invoices,data,"system_error",str(e))
-                                #     recordData = fakeRecord.get_data()
-                                #     self.CSV.SaveErrorSendInvoice(recordData)
-                                #     continue
+                                except Exception as e:
+                                    fakeRecord = FackeRecord(data_b,"system_error",str(e))
+                                    recordData = fakeRecord.get_data()
+                                    self.CSV.SaveErrorSendInvoice(recordData)
+                                    continue
                         #end For invocie    
                         if self.fileSuccess != None and self.fileSuccess != "":
                             self.btn_successLog.configure(state = "normal")   
