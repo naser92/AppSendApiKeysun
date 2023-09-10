@@ -159,7 +159,7 @@ class FormSendInvoice():
         patern = TypeInvoice_SendInvoice.getIndex(self.numberPatern.get(),self.patern)
         
         if patern[0] != 0:
-            self.lbl_status.configure(text="درحال پردازش اطلاعات لطفاً صبرکنید",bg_color="#34495e")
+            self.lbl_status.configure(text="داده در حال بارگزاری لطفاً منتظر بمانید ...",bg_color="#34495e")
             self.path_file = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
             self.lbl_path.configure(text=self.path_file)
             self.Excell = ExcellData(self.path_file)
@@ -256,14 +256,11 @@ class FormSendInvoice():
     def getIndexRow(self,invoices: pd.DataFrame ,uniqueId) -> int:
         row = invoices.loc[invoices['uniqueId'] == uniqueId ]
 
-    def send_invoice(self):
+    def startSendAction(self):
         self.lbl_number_allFactor.configure(text="0")
         self.lbl_number_ErrorFactor.configure(text="0")
         self.lbl_number_sendFactor.configure(text="0")
         self.lbl_number_successFactor.configure(text="0")
-        str_usename = self.username
-        str_password = self.password
-        vdate = self.valDate.get()
         self.fileError = ""
         self.fileError = ""
         self.btn_successLog.configure(state="disabled")
@@ -272,7 +269,11 @@ class FormSendInvoice():
         self.frame.after(500)
         self.frame.update()
 
-        # today = date.today()
+    def send_invoice(self):
+        self.startSendAction()
+        str_usename = self.username
+        str_password = self.password
+        vdate = self.valDate.get()
         
         if str_usename == '' or str_password == '':
             CTkMessagebox(title="ورود",message="نام کاربری ویا کلمه عبور را به درستی وارد کنید",icon="cancel")
@@ -284,9 +285,8 @@ class FormSendInvoice():
             if token != "":
                 if True:#self.checkPermissions(token):
                     self.LockElement()
-                    self.lbl_status.configure(text="در حال ارسال لطفا منتظر بمانید ...",bg_color="#009FBD")
-
                     if self.status:
+                        self.lbl_status.configure(text="اطلاعات در حال پردازش است لطفاً منتظر بمانید ...",bg_color="#e67e22")
                         patern = TypeInvoice_SendInvoice.getIndex(self.numberPatern.get(),self.patern)
                         typeId = patern[0]
                         patternId = patern[1]
@@ -310,6 +310,8 @@ class FormSendInvoice():
 
                             if len(invoicePayments) == 0 :
                                 invoicePayments = None
+                            
+                            self.lbl_status.configure(text="در حال ارسال لطفا منتظر بمانید ...",bg_color="#009FBD")
 
                             batch_size = 10
                             total_batches = math.ceil(len(invoices) / batch_size)

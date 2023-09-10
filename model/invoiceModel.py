@@ -25,7 +25,7 @@ class InvoiceData:
 
 @dataclass
 class InvoiceInvalid:
-    invoce: object
+    invoceRow: int
     error : bool
     message : str
 
@@ -49,5 +49,8 @@ class InvoiceEleman:
 class InvoiceModel:
     InvoiceNumber : InvoiceEleman
 
-
+@dataclass
+class ColumnType:
+    columns : list[str]
+    typeCol : str
 
