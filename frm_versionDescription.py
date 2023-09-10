@@ -42,11 +42,11 @@ class DescriptinVersion :
         self.scrollbar.place(x=10+self.text.winfo_reqwidth(), y=70,height=self.text.winfo_reqheight())
         self.text['yscrollcommand'] = self.scrollbar.set
 
-        self.text.insert("end", "رفع خطا در بارگذاری اکسل صورتحساب نوع 2 الگوی *\n\n", "rtl")
+        # self.text.insert("end", "رفع خطا در بارگذاری اکسل صورتحساب نوع 2 الگوی *\n\n", "rtl")
        
         self.text.insert("end", "بهینه سازی در عملکرد نرم افزار *\n\n", "rtl")
      
-        self.text.insert("end"," ارسال مجدد به صورت خودکار در هنگام قطعی اینترنت و تغییر آی‌پی *", "rtl")
+        # self.text.insert("end"," ارسال مجدد به صورت خودکار در هنگام قطعی اینترنت و تغییر آی‌پی *", "rtl")
 
         self.text.configure(state="disabled")
 

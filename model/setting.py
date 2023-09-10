@@ -15,7 +15,7 @@ class SettingData:
 
 @dataclass
 class VersionApp:
-    version : str = "6.4.3"
+    version : str = "6.4.4"
 
 
 @dataclass
