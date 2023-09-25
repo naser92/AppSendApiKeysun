@@ -192,6 +192,21 @@ class ApiKeysun:
         except:
             return 0
 
+
+    def getCompanyInfo(self,token):
+        url = "https://mizeonline.ir/identity/api/Authentication/UserExtraInfo"
+        header = {
+                    'Content-Type': 'application/json ; charset=utf-8',
+                    'Authorization' : "Bearer " + token
+                }
+        try:
+            result = r.get(url,headers=header, verify=False)
+            rr = json.loads(result.content)
+            return rr['data']['companyInfo']
+        except:
+            return 0
+        
+        
     def SendPostRequest(self,url,body,token):
         try:
             header = {
