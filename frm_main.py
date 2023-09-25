@@ -11,7 +11,9 @@ from frm_help import FormHelp
 from frm_bill import FormBill
 import os
 from model.setting import VersionApp
+from module.api import ApiKeysun
 
+api = ApiKeysun()
 class MainPanel():
     def __init__(self,username,password) -> None:
         self.username = username 
@@ -39,6 +41,7 @@ class MainPanel():
         self.inquiryPerson_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "person.png")),size=(20,20))
         self.help_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "help.png")),size=(20,20))
         self.bill_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "truck.png")),size=(30,30))
+
 
         #create menu frame
         self.menu_frame = ck.CTkFrame(self.base,corner_radius=0,height=600,width=200)
@@ -110,6 +113,28 @@ class MainPanel():
         load2 = ck.CTkImage(Image.open('media/image/keysunlogo.png'),size=(60,60))
         img2 = ck.CTkLabel(self.header_frame, image=load2,text="")
         img2.place(x=520, y=10)
+
+
+        #header User Info
+        token = api.getToken(self.username,self.password)
+        if token != '':
+            try:
+                info = api.getCompanyInfo(token)
+                name_Value = info['firstName'] + info['lastName']
+                company_value = info['companyName']
+                user = ck.CTkImage(Image.open('media/image/user.png'),size=(48,48))
+                img3 = ck.CTkLabel(self.header_frame, image=user,text="")
+                img3.place(x=5, y=15)
+            except:
+                pass
+
+        
+            name = ck.CTkLabel(self.header_frame,text=name_Value ,font=("Tahoma",10))
+            name.place(x=70,y=10)
+
+    
+            company = ck.CTkLabel(self.header_frame,text=company_value ,font=("Tahoma",12))
+            company.place(x=70,y=40)
 
         #invoice Frame
         self.invoice_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
@@ -221,4 +246,4 @@ class MainPanel():
         
 
 if __name__ == "__main__":
-    MainPanel("","")
+    MainPanel("0780637356031","sUmM11kN")

@@ -5,8 +5,15 @@ import openpyxl
 from openpyxl.utils import get_column_letter
 import shutil
 import os
+import sys
+sys.path.append(os.getcwd())
 from model.invoiceModel import InvoiceData
-
+from model.columns import NameColumnsInvoic,Columns
+col = NameColumnsInvoic()
+import uuid
+from model.setting import VersionApp
+import jdatetime
+import concurrent.futures
 
 class ExcellData ():
     def __init__(self, path) -> None:
@@ -241,31 +248,143 @@ class ExcellData ():
             batch.append(data)
         yield batch
 
+    def readSheet(self,sheet_name):
+        try:
+            df = pd.read_excel(self.path,sheet_name=sheet_name,dtype=str)
+            return df
+        except:
+            return None
+
     
     def checkExcellNew(self,type,pattern):
         try:
+            # import time
+            # start_time = time.time()
             excellFile = pd.ExcelFile(self.path)
-            self.data = pd.read_excel(self.path,sheet_name=None)
             self.sheetNames = excellFile.sheet_names
+            # num_threads = len(self.sheetNames)
+            self.data = pd.read_excel(self.path,sheet_name=None)
+            # with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
+            #     self.data = executor.map(self.readSheet,self.sheetNames)
+           
+            # print("--- %s seconds ---" % (time.time() - start_time))
+        
             result = []
             for  index,(sheet_name, df) in enumerate(self.data.items()):
                 df_cols = len(df.columns)
-                cols = InvoiceData(type,pattern,index)
-                if df_cols == cols.colum:
+                self.cols = InvoiceData(type,pattern,index)
+                if df_cols == self.cols.colum:
                     result.append(1)
                 else: result.append(0) 
             return result
         except:
             return None
+    
+    def generate_uuid(self):
+        return str(uuid.uuid4())
+    
+    def convert_date(self,x):
+        try:
+            date = str(x).split('/')
+            return str(jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian())
+        except: 
+            return None
+        
+    def readDataExcel(self,sheet_index,number) -> pd.DataFrame:
+        df = self.data[self.sheetNames[sheet_index]]
+        df = pd.DataFrame(df)
+        df = df.set_axis(col.invoiceItemsGeneral(),axis='columns')
+        df = df.replace(np.nan,None)
+        df['uniqueId'] = df.apply(lambda x :  self.generate_uuid(),axis=1)
+        
+        df = df.assign(CooperationCode = "Eitak-" + VersionApp.version)
+        b =[]
+        for s in df.columns:
+            if 'Date' in s or 'date' in s :
+                b.append(s)
+
+        df[[s for s in df.columns if 'Date' in s or 'date' in s]] = df[[s for s in df.columns if 'Date' in s or 'date' in s]].applymap(self.convert_date)
+        
+        df_item = self.data[self.sheetNames[number]]
+        df_item = pd.DataFrame(df_item)
+        df_item = df_item.replace(np.nan,None)
+        
+        df_item = df_item.set_axis(col.invoiceItemsGeneral(),axis='columns')
+
+        mearge_data = pd.merge(df, df_item,on=['invoiceNumber','invoiceDate'])
+
+        gp_data = mearge_data.groupby(['invoiceNumber','invoiceDate']).apply(lambda x :{
+            **{column : x[column].iloc[0] for column in df.columns},
+            'Items' : x[df_item.columns[2:]].to_dict(orient='records') 
+        })
+        dfJson = gp_data.to_json(orient='records')
+        # result = dfJson.t(orient="records")
+        print(dfJson)
+
+    def readExcelSheet(self,typeInvoice:int,patternInvoic:int,indexSheet:int,TypeDate:int) -> pd.DataFrame:
+        try:
+            df = self.data[self.sheetNames[indexSheet]]
+            df  =pd.DataFrame(df)
+            col = Columns(typeInvoice,patternInvoic,indexSheet)
+            df = df.set_axis(col.columnsNames,axis='columns')
+            df = df.replace(np.nan,None)
+            
+            if indexSheet == 0:
+                df.index = df.index + 2
+                df['uniqueId'] = df.apply(lambda x :  self.generate_uuid(),axis=1)
+                df = df.assign(CooperationCode = "Eitak-" + VersionApp.version)
+                df.insert(loc=0,column='ExcelRowNumber',value=df.index.to_list())
+
+            
+            if TypeDate == 2:
+                df[[s for s in df.columns if 'Date' in s or 'date' in s]] = df[[s for s in df.columns if 'Date' in s or 'date' in s]].applymap(self.convert_date)
+            
+            return df
+        except:
+            return None
+
+    def PreparationData(self,invoice:pd.DataFrame,item:pd.DataFrame,pay:pd.DataFrame=None) -> pd.DataFrame:
+        mearge_data =  pd.merge(invoice,item,on=['invoiceNumber','invoiceDate'])
+        if pay is None: 
+            gp_data = mearge_data.groupby(['invoiceNumber','invoiceDate']).apply(lambda x :{
+            **{column : x[column].iloc[0] for column in invoice.columns[1:]},
+            'invoiceItems' : x[item.columns[2:]].to_dict(orient='records') 
+                })
+            return gp_data
+        else:
+            group_invoice = pd.merge(mearge_data,pay,on=['invoiceNumber','invoiceDate'])
+            gp_data = group_invoice.groupby(['invoiceNumber','invoiceDate']).apply(lambda x :{
+            **{column : x[column].iloc[0] for column in invoice.columns[1:]},
+            'invoiceItems' : x[item.columns[2:]].to_dict(orient='records'),
+            'invoicePayments' : x[pay.columns[2:]].to_dict(orient='records') 
+                }).reset_index(drop=True)
+            return gp_data
+
+    def invoiceByRowExcell(self, invoice:pd.DataFrame) -> pd.DataFrame:
+        invoice.insert(loc=0, column='ExcelRowNumber', value=invoice.index.to_list())
+        listSelectName = ['ExcelRowNumber','invoiceNumber','uniqueId']
+        for i in invoice.columns.values:
+            if not i in listSelectName :
+                invoice = invoice.drop(columns=i) 
+        return invoice
 
 
 if __name__ == "__main__":
     ed = ExcellData("./dataTest/Invoice_InvoicePatternId.xlsx")
-    # a = ed.checkExcel(2)
-    a = ed.checkExcel(1)
+    ed.checkExcellNew(1,1)
+    # pay = ed.readDataExcel(1,1)
+    invoice = ed.readExcelSheet(1,1,0,2)
+    item = ed.readExcelSheet(1,1,1,2)
+    pay = ed.readExcelSheet(1,1,2,2)
+    if len(pay) == 0:
+        pay = None
+    data  = ed.PreparationData(invoice,item,pay)
+    dfJson = data.to_json(orient='records')
+    print (len(dfJson))
 
-    for batch_data in ed.data_generator(batch_size=10):
-        print (batch_data)
+
+    # for batch_data in ed.data_generator(batch_size=10):
+    #     print (batch_data)
     # p = "./data/sampel11.xlsx"
     # p = p[:-5] + "_result.xlsx"  
     # print (p)

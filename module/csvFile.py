@@ -157,7 +157,7 @@ class CSVFile():
         p = Path(file)
         check = p.is_file()
         if check == False:
-            d = (["ExcelRowNumber","InvoiceNumber","uniqueId","status","description","title"])
+            d = (["ExcelRowNumber","InvoiceNumber","uniqueId","status","description","title","CommodityCode"])
             with open(file, 'a',encoding="utf-8",newline='') as f_object:
                 writer_object = writer(f_object)
                 writer_object.writerow(d)

@@ -100,7 +100,7 @@ class InvoiceData():
                     "creditPaymentAmount" : invoice[12] if invoice[12] != "" else None,
                     "invoiceTime": invoice[13] if invoice[13] != "" else None,
                     "sellerCustomsLicenseNumber" :invoice[14] if invoice[14] != "" else None,
-                    "sellerCustomsDeclarationNumber " :invoice[15] if invoice[15] != "" else None,
+                    "sellerCustomsDeclarationNumber" :invoice[15] if invoice[15] != "" else None,
                     "sellerContractRegistrationNumber" :invoice[16] if invoice[16] != "" else None,
                     "sellerBranch":invoice[17] if invoice[17] != "" else None,
                     "buyerBranch":invoice[18] if invoice[18] != "" else None,
