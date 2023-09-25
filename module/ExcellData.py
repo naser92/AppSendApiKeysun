@@ -258,16 +258,16 @@ class ExcellData ():
     
     def checkExcellNew(self,type,pattern):
         try:
-            import time
-            start_time = time.time()
+            # import time
+            # start_time = time.time()
             excellFile = pd.ExcelFile(self.path)
             self.sheetNames = excellFile.sheet_names
-            num_threads = len(self.sheetNames)
+            # num_threads = len(self.sheetNames)
             self.data = pd.read_excel(self.path,sheet_name=None)
             # with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
             #     self.data = executor.map(self.readSheet,self.sheetNames)
            
-            print("--- %s seconds ---" % (time.time() - start_time))
+            # print("--- %s seconds ---" % (time.time() - start_time))
         
             result = []
             for  index,(sheet_name, df) in enumerate(self.data.items()):
@@ -333,6 +333,8 @@ class ExcellData ():
                 df.index = df.index + 2
                 df['uniqueId'] = df.apply(lambda x :  self.generate_uuid(),axis=1)
                 df = df.assign(CooperationCode = "Eitak-" + VersionApp.version)
+                df.insert(loc=0,column='ExcelRowNumber',value=df.index.to_list())
+
             
             if TypeDate == 2:
                 df[[s for s in df.columns if 'Date' in s or 'date' in s]] = df[[s for s in df.columns if 'Date' in s or 'date' in s]].applymap(self.convert_date)

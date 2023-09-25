@@ -39,6 +39,7 @@ class FormSendInvoice():
             TypeInvoice_SendInvoice(1,3,"نوع 1 الگو 3 صورتحساب فروش با اطلاعات خریدار طلا و جواهرات"),
             TypeInvoice_SendInvoice(2,3,"نوع 2 الگو 3 صورتحساب فروش بدون اطلاعات خریدار طلا و جواهرات")
         ]
+        self.status = False
 
 
        
@@ -265,6 +266,7 @@ class FormSendInvoice():
         self.fileError = ""
         self.btn_successLog.configure(state="disabled")
         self.btn_ErrorLog.configure(state="disabled")
+        self.btn_sendInvoice.configure(state="disabled")
         self.frame.update_idletasks()
         self.frame.after(500)
         self.frame.update()
@@ -277,10 +279,16 @@ class FormSendInvoice():
         
         if str_usename == '' or str_password == '':
             CTkMessagebox(title="ورود",message="نام کاربری ویا کلمه عبور را به درستی وارد کنید",icon="cancel")
+            self.btn_sendInvoice.configure(state="normal")
+
         elif vdate == 0 :
             CTkMessagebox(title="نوع تاریخ",message="نوع ورودی تاریخ را مشخص نمایید",icon="cancel")
+            self.btn_sendInvoice.configure(state="normal")
+
+
         else:
             # c = self.checkToken(str_usename)
+            self.lbl_status.configure(text="لطفاً منتظر بمانید ...",bg_color="#9b59b6")
             token = api.getToken(str_usename,str_password)
             if token != "":
                 if True:#self.checkPermissions(token):
@@ -293,7 +301,7 @@ class FormSendInvoice():
                         invoices = self.Excell.readExcelSheet(typeId,patternId,0,vdate)
                         invoiceItems = self.Excell.readExcelSheet(typeId,patternId,1,vdate)
                         invoicePayments = self.Excell.readExcelSheet(typeId,patternId,2,vdate)
-                        invoiceByIndex = self.Excell.invoiceByRowExcell(invoices)
+                        # invoiceByIndex = self.Excell.invoiceByRowExcell(invoices)
 
                         self.progressbar.configure(maximum=len(invoices))
                         sucessCount = 0
@@ -402,9 +410,17 @@ class FormSendInvoice():
                             self.btn_ErrorLog.configure(state = "normal")
 
                         CTkMessagebox(title="اتمام",message="تعداد %d فاکتور با موفقیت ارسال گردید میتوانید نتیجه را در دو فایل خطا و ثبت موفقیت در مکان فایل اصلی مشاهده نمایید"%len(invoices),icon="info")
+                    else:
+                        CTkMessagebox(title="بارگزاری اکسل",message="فایل در دسترس نیست.",icon="cancel")
+                        self.btn_sendInvoice.configure(state="normal")
                 # else:
                     # CTkMessagebox(title="بارگزاری اکسل",message="لطفاً فایل را به درستی در قالب مناسب بارگزاری نمایید.",icon="cancel")
                 self.reset_form()
             else:
                 CTkMessagebox(title="ارتباط با سرور",message="ممکن است ارتباط اینترنت و یا مشکلی در سرور رخ داده باشد لطفاً دوباره امتحان نمایید",icon="cancel")
+                self.lbl_status.configure(text="ممکن است ارتباط اینترنت و یا مشکلی در سرور رخ داده باشد",bg_color="#c0392b")
+                self.btn_sendInvoice.configure(state="normal")
+                
 
+
+        self.status = False

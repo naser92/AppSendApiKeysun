@@ -66,10 +66,11 @@ class LoginForm():
             if str_usename == '' or str_password == '':
                 CTkMessagebox(title="ورود",message="نام کاربری ویا کلمه عبور را به درستی وارد کنید",icon="cancel")
             else:
-                # c = self.checkToken(str_usename)
-                token = self.api.getToken(str_usename,str_password)
-                if token != "":
-                    if self.checkPermissions(token):
+                c = self.checkToken(str_usename)
+                # token = self.api.getToken(str_usename,str_password)
+                # if token != "":
+                if c:
+                    # if self.checkPermissions(token):
                         v = self.api.GetVersion()
                         if v == self.version:
                             self.checkFirst_login()
