@@ -68,9 +68,9 @@ class LoginForm():
             else:
                 c = self.checkToken(str_usename)
                 
-                token = self.api.getToken(str_usename,str_password)
-                if token != "":
-                    if c:
+                if c:
+                    token = self.api.getToken(str_usename,str_password)
+                    if token != "":
                         # if self.checkPermissions(token):
                             v = self.api.GetVersion()
                             if v == self.version:
@@ -94,13 +94,13 @@ class LoginForm():
                                 from frm_version import VersionForm
                                 frm = VersionForm(self.version,v,url)
                                 frm.generateForm()
-                else:
-                    inter = CheckInternet()
-                    connection = inter.checkServerConnection()
-                    if connection:
-                        CTkMessagebox(title="خطا",message="خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید",icon="warning")
                     else:
-                        CTkMessagebox(title="ارتباط",message="ارتباط با سرور قطع میباشد لطفاً ارتباط به اینترنت را بررسی نمایید",icon="warning")
+                        inter = CheckInternet()
+                        connection = inter.checkServerConnection()
+                        if connection:
+                            CTkMessagebox(title="خطا",message="خطا در ورود لطفاً نام کاربری و کلمه عبور را بررسی ، و دوباره سعی کنید",icon="warning")
+                        else:
+                            CTkMessagebox(title="ارتباط",message="ارتباط با سرور قطع میباشد لطفاً ارتباط به اینترنت را بررسی نمایید",icon="warning")
 
 
     def checkPermissions(self,token) -> bool:
