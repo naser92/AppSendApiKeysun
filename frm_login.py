@@ -67,32 +67,33 @@ class LoginForm():
                 CTkMessagebox(title="ورود",message="نام کاربری ویا کلمه عبور را به درستی وارد کنید",icon="cancel")
             else:
                 c = self.checkToken(str_usename)
-                # token = self.api.getToken(str_usename,str_password)
-                # if token != "":
-                if c:
-                    # if self.checkPermissions(token):
-                        v = self.api.GetVersion()
-                        if v == self.version:
-                            self.checkFirst_login()
-                            self.base.destroy()
-                            isLogin = self.reg.getFirstLogin()
-                            if not isLogin or isLogin == 0:
-                                self.reg.writeUsername(str_usename)
-                                self.reg.writeFirstLogin(1)
-                                from frm_versionDescription import DescriptinVersion
-                                DescriptinVersion(str_usename,str_password,1)
+                
+                token = self.api.getToken(str_usename,str_password)
+                if token != "":
+                    if c:
+                        # if self.checkPermissions(token):
+                            v = self.api.GetVersion()
+                            if v == self.version:
+                                self.checkFirst_login()
+                                self.base.destroy()
+                                isLogin = self.reg.getFirstLogin()
+                                if not isLogin or isLogin == 0:
+                                    self.reg.writeUsername(str_usename)
+                                    self.reg.writeFirstLogin(1)
+                                    from frm_versionDescription import DescriptinVersion
+                                    DescriptinVersion(str_usename,str_password,1)
+                                else:
+                                    self.reg.writeUsername(str_usename)
+                                    self.reg.writeFirstLogin(1)
+                                    from frm_main import MainPanel
+                                    MainPanel(str_usename,str_password)
                             else:
-                                self.reg.writeUsername(str_usename)
-                                self.reg.writeFirstLogin(1)
-                                from frm_main import MainPanel
-                                MainPanel(str_usename,str_password)
-                        else:
-                            self.reg.writeFirstLogin(0)
-                            url = self.api.getUrl()
-                            self.base.destroy()
-                            from frm_version import VersionForm
-                            frm = VersionForm(self.version,v,url)
-                            frm.generateForm()
+                                self.reg.writeFirstLogin(0)
+                                url = self.api.getUrl()
+                                self.base.destroy()
+                                from frm_version import VersionForm
+                                frm = VersionForm(self.version,v,url)
+                                frm.generateForm()
                 else:
                     inter = CheckInternet()
                     connection = inter.checkServerConnection()
