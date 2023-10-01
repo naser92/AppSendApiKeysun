@@ -202,7 +202,7 @@ class ApiKeysun:
         try:
             result = r.get(url,headers=header, verify=False)
             rr = json.loads(result.content)
-            return rr['data']['companyInfo']
+            return rr['data']
         except:
             return 0
         

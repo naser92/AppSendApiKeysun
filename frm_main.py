@@ -35,12 +35,16 @@ class MainPanel():
         # self.base.config(bg="#0003a1")
         # load Image 
         image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "media/image")
-        self.sendInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "sendInvice.jpg")),size=(20,20))
-        self.inquiryInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "inquiryInvoice.png")),size=(15,20))
-        self.revokInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "revokInvoice.png")),size=(20,20))
-        self.inquiryPerson_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "person.png")),size=(20,20))
-        self.help_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "help.png")),size=(20,20))
-        self.bill_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "truck.png")),size=(30,30))
+        self.sendInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "sendInvice.png")),dark_image=Image.open(os.path.join(image_path, "DsendInvice.png")),size=(20,20))
+        self.inquiryInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "inquiryInvoice.png")),dark_image=Image.open(os.path.join(image_path, "DinquiryInvoice.png")),size=(15,20))
+        self.revokInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "revokInvoice.png")),dark_image=Image.open(os.path.join(image_path, "DrevokInvoice.png")),size=(20,20))
+        self.inquiryPerson_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "person.png")),dark_image=Image.open(os.path.join(image_path,"Dperson.png")),size=(20,20))
+        self.help_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "help.png")),dark_image=Image.open(os.path.join(image_path, "Dhelp.png")),size=(20,20))
+        self.bill_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "truck.png")),dark_image=Image.open(os.path.join(image_path, "Dtruk2.png")),size=(30,30))
+        self.gold_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "gold.png")),size=(40,50))
+        self.silver_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "silver.png")),size=(40,50))
+        self.boronz_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "boronz.png")),size=(40,50))
+   
 
 
         #create menu frame
@@ -50,29 +54,29 @@ class MainPanel():
         self.btn_send_invoice = ck.CTkButton(self.menu_frame, text="      ارسال صورتحساب", compound="right", font=self.font,
                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",width=150,
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.sendInvoice_image,command=self.send_button_event)
-        self.btn_send_invoice.place(x=20,y=100)
+        self.btn_send_invoice.place(x=20,y=200)
 
         self.btn_inqiure_invoice = ck.CTkButton(self.menu_frame, text="    استعلام صورتحساب", compound="right", font=self.font,
                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",width=150,
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.inquiryInvoice_image,command=self.inquiry_button_event)
-        self.btn_inqiure_invoice.place(x=20,y=150)
+        self.btn_inqiure_invoice.place(x=20,y=250)
 
         self.btn_revok_invoice = ck.CTkButton(self.menu_frame, text="       ابطال صورتحساب", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.revok_button_event)
-        self.btn_revok_invoice.place(x=20,y=200)
+        self.btn_revok_invoice.place(x=20,y=300)
 
         
         self.btn_delete_invoice = ck.CTkButton(self.menu_frame, text="  پاک کردن صورتحساب", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.revokInvoice_image,command=self.delete_button_event)
-        self.btn_delete_invoice.place(x=20,y=250)
+        self.btn_delete_invoice.place(x=20,y=350)
 
         
         self.btn_bill_invoice = ck.CTkButton(self.menu_frame, text="          ارسال بارنامه", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.bill_image,command=self.bill_button_event)
-        self.btn_bill_invoice.place(x=20,y=300)
+        self.btn_bill_invoice.place(x=20,y=400)
         self.btn_bill_invoice.configure(state="disabled")
 
         self.btn_inqiurePerson_invoice = ck.CTkButton(self.menu_frame, text="استعلام مودیان مالیاتی", compound="right", font=self.font,width=150,
@@ -92,7 +96,7 @@ class MainPanel():
 
         self.appearance_mode_menu = ck.CTkOptionMenu(self.menu_frame, values=["System","Light", "Dark"],width=160,
                                                                 command=self.change_appearance_mode_event)
-        self.appearance_mode_menu.place(x=20,y=30)
+        self.appearance_mode_menu.place(x=20,y=135)
 
         load = ck.CTkImage(Image.open('media/image/logo.png'),size=(60,50))
         img = ck.CTkLabel(self.menu_frame, image=load,text="")
@@ -103,16 +107,32 @@ class MainPanel():
 
 
         #create header
+        # self.header_frame = ck.CTkFrame(self.base,corner_radius=0,height=80,width=590)
+        # self.header_frame.place(x=5,y=5)
+        # label = ck.CTkLabel(self.header_frame,text="(نرم افزار ارسال صورتحساب کیسان (ایتاک" ,width=300,height=50,font=("Tahoma",14))
+        # label.place(x=240,y=15)
+        
         self.header_frame = ck.CTkFrame(self.base,corner_radius=0,height=80,width=590)
         self.header_frame.place(x=5,y=5)
-        label = ck.CTkLabel(self.header_frame,text="(نرم افزار ارسال صورتحساب کیسان (ایتاک" ,width=300,height=50,font=("Tahoma",14))
-        label.place(x=240,y=15)
+
+        label = ck.CTkLabel(self.menu_frame,text="نرم افزار ارسال صورتحساب" ,font=("Tahoma",14))
+        label.place(x=25,y=70)
+        label1 = ck.CTkLabel(self.menu_frame,text="ایتاک" ,font=("Tahoma",14))
+        label1.place(x=85,y=100)
+
 
         
 
+        # load2 = ck.CTkImage(Image.open('media/image/keysunlogo.png'),size=(60,60))
+        # img2 = ck.CTkLabel(self.header_frame, image=load2,text="")
+        # img2.place(x=520, y=10)
+
+        # pload2 = ck.CTkImage(Image.open('media/image/keysunlogo.png'),size=(60,60))
+       
+
         load2 = ck.CTkImage(Image.open('media/image/keysunlogo.png'),size=(60,60))
-        img2 = ck.CTkLabel(self.header_frame, image=load2,text="")
-        img2.place(x=520, y=10)
+        img2 = ck.CTkLabel(self.menu_frame, image=load2,text="")
+        img2.place(x=75, y=10)
 
 
         #header User Info
@@ -120,11 +140,27 @@ class MainPanel():
         if token != '':
             try:
                 info = api.getCompanyInfo(token)
-                name_Value = info['firstName'] + info['lastName']
-                company_value = info['companyName']
+                name_Value = info['companyInfo']['firstName'] + info['companyInfo']['lastName']
+                company_value = info['companyInfo']['companyName']
+                # user= ck.CTkImage(light_image=Image.open('media/image/user.png'),dark_image=Image.open('media/image/Duser.png'),size=(48,48))
                 user = ck.CTkImage(Image.open('media/image/user.png'),size=(48,48))
                 img3 = ck.CTkLabel(self.header_frame, image=user,text="")
                 img3.place(x=5, y=15)
+                try:
+                    packegeId = info['activeContract']['basePackageTypeId']
+                    if packegeId == 1 :
+                        pimg2 = ck.CTkLabel(self.header_frame, image=self.gold_image,text="")
+                        
+                    elif packegeId == 2 :
+                        pimg2 = ck.CTkLabel(self.header_frame, image=self.silver_image,text="")
+
+                    else:
+                        pimg2 = ck.CTkLabel(self.header_frame, image=self.boronz_image,text="")
+                
+
+                    pimg2.place(x=520, y=13)
+                except:
+                    pass
             except:
                 pass
 

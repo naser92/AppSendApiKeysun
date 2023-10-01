@@ -263,7 +263,7 @@ class ExcellData ():
             excellFile = pd.ExcelFile(self.path)
             self.sheetNames = excellFile.sheet_names
             # num_threads = len(self.sheetNames)
-            self.data = pd.read_excel(self.path,sheet_name=None)
+            self.data = pd.read_excel(self.path,sheet_name=None,dtype=str)
             # with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
             #     self.data = executor.map(self.readSheet,self.sheetNames)
            
