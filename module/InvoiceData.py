@@ -421,11 +421,11 @@ class InvoiceRevoke():
             "uniqueId" : str(uuid.uuid4()),
             "InvoiceNumber": data[0],
             "InvoiceDate": str(date),
-            "invoiceType" : data[2],
-            "invoicePattern" : data[3],
-            "invoiceSubject" : data[4],
-            "ReferenceTaxSerialNumber" : data[5] if data[5] != "" else None,
-            "Description" : data[6] if data[6] != "" else None
+            # "invoiceType" : data[2],
+            # "invoicePattern" : data[3],
+            # "invoiceSubject" : data[4],
+            "ReferenceTaxSerialNumber" : data[2] if data[2] != "" else None,
+            "Description" : data[3] if data[3] != "" else None
         }
 
         return invoce

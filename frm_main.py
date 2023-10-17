@@ -41,9 +41,9 @@ class MainPanel():
         self.inquiryPerson_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "person.png")),dark_image=Image.open(os.path.join(image_path,"Dperson.png")),size=(20,20))
         self.help_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "help.png")),dark_image=Image.open(os.path.join(image_path, "Dhelp.png")),size=(20,20))
         self.bill_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "truck.png")),dark_image=Image.open(os.path.join(image_path, "Dtruk2.png")),size=(30,30))
-        self.gold_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "gold.png")),size=(40,50))
-        self.silver_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "silver.png")),size=(40,50))
-        self.boronz_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "boronz.png")),size=(40,50))
+        self.gold_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "gold.png")),size=(70,70))
+        self.silver_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "silver.png")),size=(70,70))
+        self.boronz_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "boronz.png")),size=(70,70))
    
 
 
@@ -77,7 +77,7 @@ class MainPanel():
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.bill_image,command=self.bill_button_event)
         self.btn_bill_invoice.place(x=20,y=400)
-        self.btn_bill_invoice.configure(state="disabled")
+        # self.btn_bill_invoice.configure(state="disabled")
 
         self.btn_inqiurePerson_invoice = ck.CTkButton(self.menu_frame, text="استعلام مودیان مالیاتی", compound="right", font=self.font,width=150,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
@@ -134,7 +134,7 @@ class MainPanel():
         img2 = ck.CTkLabel(self.menu_frame, image=load2,text="")
         img2.place(x=75, y=10)
 
-
+        packegeId = 3
         #header User Info
         token = api.getToken(self.username,self.password)
         if token != '':
@@ -158,7 +158,7 @@ class MainPanel():
                         pimg2 = ck.CTkLabel(self.header_frame, image=self.boronz_image,text="")
                 
 
-                    pimg2.place(x=520, y=13)
+                    pimg2.place(x=510, y=5)
                 except:
                     pass
             except:
@@ -206,8 +206,13 @@ class MainPanel():
         self.bill_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
         self.bill_frame.place(x=5,y=90)
         FormBill(self.bill_frame,self.username,self.password)
+ 
+        if packegeId == 1:
+            self.select_frame_by_name("send")
+        else:
+            self.select_frame_by_name("bill")
 
-        self.select_frame_by_name("send")
+        self.permisions(packegeId)
         self.base.mainloop()
 
     def change_appearance_mode_event(self, new_appearance_mode):
@@ -257,6 +262,16 @@ class MainPanel():
             self.help_frame.place(x=5,y=90)
         else:
             self.help_frame.place_forget()
+
+    def permisions(self,pakageId):
+        if pakageId == 2 or pakageId == 3:
+            self.btn_send_invoice.configure(state="disabled")
+            self.btn_inqiure_invoice.configure(state="disabled")
+            self.btn_revok_invoice.configure(state="disabled")
+            self.btn_delete_invoice.configure(state="disabled")
+            self.btn_inqiurePerson_invoice.configure(state="disabled")
+        
+
 
 
     def send_button_event(self):

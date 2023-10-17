@@ -226,6 +226,9 @@ class FormBill():
 
         self.btn_selectFile.configure(state="normal")
         self.btn_sendInvoice.configure(state="normal")
+        self.InvoiceType.configure(state='disable')
+        self.InvoicePatern.configure(state='disable')
+
     
     def checkToken(self,username):
         try:

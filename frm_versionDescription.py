@@ -45,7 +45,10 @@ class DescriptinVersion :
         # self.text.insert("end", "رفع خطا در بارگذاری اکسل صورتحساب نوع 2 الگوی *\n\n", "rtl")
        
         self.text.insert("end", "بهینه سازی در عملکرد نرم افزار *\n\n", "rtl")
-        self.text.insert("end", "نمایش بسته خریداری شده در صورت انتخاب بسته *\n\n", "rtl")
+        self.text.insert("end", "حذف لایسنس و احراز هویت مرکزی *\n\n", "rtl")
+        self.text.insert("end", "بر طرف شدن مشکل در صورت حساب نوع 2 *\n\n", "rtl")
+        self.text.insert("end", "بر طرف شدن مشکل در ابطال صورت حساب *\n\n", "rtl")
+        self.text.insert("end", "اضافه شدن ورود بارنامه به صورت دسته ای *\n\n", "rtl")
         self.text.insert("end", "بهبود در رابط کاربری *\n\n", "rtl")
      
         self.text.insert("end"," رفع باگ گزارش شده از سمت کاربران *", "rtl")

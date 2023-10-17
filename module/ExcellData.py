@@ -128,7 +128,7 @@ class ExcellData ():
                 return flag
             sheet = data.sheetnames[0]
             columns = data.get_sheet_by_name(sheet)
-            if columns.max_column == 7:
+            if columns.max_column == 4:
                 self.name_column_revoke = sheet
                 flag = True
             
