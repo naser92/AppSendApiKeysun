@@ -134,7 +134,7 @@ class MainPanel():
         img2 = ck.CTkLabel(self.menu_frame, image=load2,text="")
         img2.place(x=75, y=10)
 
-        packegeId = 3
+        packegeId = 4
         #header User Info
         token = api.getToken(self.username,self.password)
         if token != '':
@@ -207,7 +207,7 @@ class MainPanel():
         self.bill_frame.place(x=5,y=90)
         FormBill(self.bill_frame,self.username,self.password)
  
-        if packegeId == 1:
+        if packegeId == 1 or packegeId == 4:
             self.select_frame_by_name("send")
         else:
             self.select_frame_by_name("bill")

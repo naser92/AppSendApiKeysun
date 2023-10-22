@@ -316,7 +316,10 @@ class FormSendInvoice():
                             self.frame.after(500)
                             self.frame.update()
 
-                            if invoicePayments==None or len(invoicePayments) == 0 :
+                            try:
+                                if  len(invoicePayments) == 0 :
+                                    invoicePayments = None
+                            except :
                                 invoicePayments = None
                             
                             self.lbl_status.configure(text="در حال ارسال لطفا منتظر بمانید ...",bg_color="#009FBD")
