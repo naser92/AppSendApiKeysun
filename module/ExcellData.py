@@ -289,7 +289,8 @@ class ExcellData ():
             return str(jdatetime.date(int(date[0]),int(date[1]),int(date[2])).togregorian())
         except: 
             return None
-        
+
+
     def readDataExcel(self,sheet_index,number) -> pd.DataFrame:
         df = self.data[self.sheetNames[sheet_index]]
         df = pd.DataFrame(df)
@@ -328,14 +329,14 @@ class ExcellData ():
             col = Columns(typeInvoice,patternInvoic,indexSheet)
             df = df.set_axis(col.columnsNames,axis='columns')
             df = df.replace(np.nan,None)
-            
+            df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+
             if indexSheet == 0:
                 df.index = df.index + 2
                 df['uniqueId'] = df.apply(lambda x :  self.generate_uuid(),axis=1)
                 df = df.assign(CooperationCode = "Eitak-" + VersionApp.version)
                 df.insert(loc=0,column='ExcelRowNumber',value=df.index.to_list())
 
-            
             if TypeDate == 2:
                 df[[s for s in df.columns if 'Date' in s or 'date' in s]] = df[[s for s in df.columns if 'Date' in s or 'date' in s]].applymap(self.convert_date)
             

@@ -4,7 +4,7 @@ import time
 import pandas as pd
 import numpy as np
 class ApiKeysun:
-    def __init__(self,baseUrl = "https://mizeOnline.ir" ) -> None:
+    def __init__(self,baseUrl = "https://mizeonline.ir" ) -> None:
     # def __init__(self,baseUrl = "https://localhost:44353" ) -> None:
         self.baseUrl = baseUrl
 
@@ -180,7 +180,7 @@ class ApiKeysun:
 
             
     def checkPakage(self,token):
-        url = "https://mizeonline.ir/identity/api/Authentication/UserExtraInfo"
+        url = self.baseUrl + "/identity/api/Authentication/UserExtraInfo"
         header = {
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
@@ -194,7 +194,7 @@ class ApiKeysun:
 
 
     def getCompanyInfo(self,token):
-        url = "https://mizeonline.ir/identity/api/Authentication/UserExtraInfo"
+        url = self.baseUrl + "/identity/api/Authentication/UserExtraInfo"
         header = {
                     'Content-Type': 'application/json ; charset=utf-8',
                     'Authorization' : "Bearer " + token
