@@ -316,11 +316,7 @@ class FormSendInvoice():
                             self.frame.after(500)
                             self.frame.update()
 
-                            try:
-                                if  len(invoicePayments) == 0 :
-                                    invoicePayments = None
-                            except :
-                                invoicePayments = None
+                            
                             
                             self.lbl_status.configure(text="در حال ارسال لطفا منتظر بمانید ...",bg_color="#009FBD")
 
@@ -328,10 +324,11 @@ class FormSendInvoice():
                             total_batches = math.ceil(len(invoices) / batch_size)
                             data_baches = [invoices[i * batch_size:(i + 1) * batch_size] for i in range(total_batches)]
                             
+                           
                             for  data_b in data_baches:
                                 try:
                                     df_item = invoiceItems[(invoiceItems['invoiceNumber'].isin(data_b['invoiceNumber'])) & (invoiceItems['invoiceDate'].isin(data_b['invoiceDate']))]  
-                                    if invoicePayments == None:
+                                    if invoicePayments.empty:
                                         df_pay = None
                                     else:
                                         df_pay = invoicePayments[(invoicePayments['invoiceNumber'].isin(data_b['invoiceNumber'])) & (invoicePayments['invoiceDate'].isin(data_b['invoiceDate']))]

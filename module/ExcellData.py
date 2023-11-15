@@ -342,7 +342,7 @@ class ExcellData ():
             
             return df
         except:
-            return None
+            return pd.DataFrame()
 
     def PreparationData(self,invoice:pd.DataFrame,item:pd.DataFrame,pay:pd.DataFrame=None) -> pd.DataFrame:
         mearge_data =  pd.merge(invoice,item,on=['invoiceNumber','invoiceDate'])
