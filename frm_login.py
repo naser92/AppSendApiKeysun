@@ -83,18 +83,18 @@ class LoginForm():
                                 if not isLogin or isLogin == 0:
                                     self.reg.writeUsername(str_usename)
                                     self.reg.writeFirstLogin(1)
-                                    from frm_versionDescription import DescriptinVersion
+                                    from forms.frm_versionDescription import DescriptinVersion
                                     DescriptinVersion(str_usename,str_password,1)
                                 else:
                                     self.reg.writeUsername(str_usename)
                                     self.reg.writeFirstLogin(1)
-                                    from frm_main import MainPanel
+                                    from forms.frm_main import MainPanel
                                     MainPanel(str_usename,str_password)
                             else:
                                 self.reg.writeFirstLogin(0)
                                 url = self.api.getUrl()
                                 self.base.destroy()
-                                from frm_version import VersionForm
+                                from forms.frm_version import VersionForm
                                 frm = VersionForm(self.version,v,url)
                                 frm.generateForm()
                     else:
