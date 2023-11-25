@@ -47,6 +47,9 @@ class LoginForm():
 
         self.btn_testLogin = ck.CTkButton(self.base,text="ورود",command=self.loginTest,font=("Tahoma",12),corner_radius=100)
         self.btn_testLogin.place(x=70,y=130)
+
+        label_version = ck.CTkLabel(self.base,text="Version " + VersionApp.version)
+        label_version.place(x=10,y=170)
         
 
     def generateForm(self) -> None:
