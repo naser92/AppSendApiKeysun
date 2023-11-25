@@ -12,6 +12,7 @@ from forms.frm_InquiryPerson import FormInquiryPerson
 from forms.frm_deleteInvoice import FormDeleteInvoice
 from forms.frm_help import FormHelp
 from forms.frm_bill import FormBill
+from forms.frm_commodity import FormCommodity
 from model.setting import VersionApp
 from module.api import ApiKeysun
 
@@ -45,7 +46,6 @@ class MainPanel():
         self.bill_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "truck.png")),dark_image=Image.open(os.path.join(image_path, "Dtruk.png")),size=(40,30))
         self.buyer_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "buyer.png")),dark_image=Image.open(os.path.join(image_path, "Dbuyer.png")),size=(30,30))
         self.commodity_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "commodity.png")),dark_image=Image.open(os.path.join(image_path, "Dcommodity.png")),size=(30,40))
-
         self.gold_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "gold.png")),size=(70,70))
         self.silver_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "silver.png")),size=(70,70))
         self.boronz_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "boronz.png")),size=(70,70))
@@ -103,7 +103,7 @@ class MainPanel():
          
         self.btn_add_commodity = ck.CTkButton(self.menu_frame, text="          اضافه کردن محصول", compound="right", font=self.font,width=200,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
-                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.commodity_image,command=self.bill_button_event)
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.commodity_image,command=self.commdity_button_event)
         self.btn_add_commodity.place(x=25,y=400)
 
          
@@ -228,6 +228,11 @@ class MainPanel():
         self.bill_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
         self.bill_frame.place(x=5,y=90)
         FormBill(self.bill_frame,self.username,self.password)
+
+        #commdity of lading Frame 
+        self.commodity_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.commodity_frame.place(x=5,y=90)
+        FormCommodity(self.commodity_frame,self.username,self.password)
  
         if packegeId == 1 or packegeId == 4:
             self.select_frame_by_name("send")
@@ -287,6 +292,11 @@ class MainPanel():
         else:
             self.help_frame.place_forget()
 
+        if name == "commodity":
+            self.commodity_frame.place(x=5,y=90)
+        else:
+            self.commodity_frame.place_forget()
+
     def permisions(self,pakageId):
         if pakageId == 2 or pakageId == 3:
             self.btn_send_invoice.configure(state="disabled")
@@ -318,6 +328,9 @@ class MainPanel():
 
     def bill_button_event(self):
         self.select_frame_by_name("bill")
+
+    def commdity_button_event(self):
+        self.select_frame_by_name("commodity")
         
 
 if __name__ == "__main__":
