@@ -56,6 +56,11 @@ class NameColumnsInvoic:
         return ["invoiceNumber", "invoiceDate", "paymentMethod", "paymentAmount", "paymentDate"
         , "switchNumber", "acceptanceNumber", "terminalNumber", "traceNumber", "payerCardNumber"
         , "payerNationalCode"]
+    
+ 
+class NameColumnsCommodity:
+    def AddCommodity(self) -> list[str]:
+        return ["stuffCode","commodityCode","title","defaultTaxPercent","defaultBaseUnitTypeCode"]
 
 
 @dataclass

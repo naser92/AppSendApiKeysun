@@ -8,8 +8,9 @@ import os
 import sys
 sys.path.append(os.getcwd())
 from model.invoiceModel import InvoiceData
-from model.columns import NameColumnsInvoic,Columns
+from model.columns import NameColumnsInvoic,Columns,NameColumnsCommodity
 col = NameColumnsInvoic()
+colCommodity = NameColumnsCommodity()
 import uuid
 from model.setting import VersionApp
 import jdatetime
@@ -255,7 +256,20 @@ class ExcellData ():
         except:
             return None
 
-    
+    def checkExcelCommodity(self):
+        try:
+            excelFile = pd.ExcelFile(self.path)
+            self.sheetNames = excelFile.sheet_names
+            self.data = pd.read_excel(self.path,sheet_name=None,dtype=str)
+
+            for  index,(sheet_name, df) in enumerate(self.data.items()):
+                if index == 0 and  len(df.columns) == 5:
+                    return True
+            
+            return False
+        except:
+            return False
+
     def checkExcellNew(self,type,pattern):
         try:
             # import time
@@ -321,6 +335,28 @@ class ExcellData ():
         dfJson = gp_data.to_json(orient='records')
         # result = dfJson.t(orient="records")
         print(dfJson)
+
+    def readExcelSheetCommodity(self):
+        index = 0
+        try:
+            df = self.data[self.sheetNames[index]]
+            df = pd.DataFrame(df)
+            col = colCommodity.AddCommodity()
+            df = df.set_axis(col,axis='columns')
+            df = df.replace(np.nan,None)
+            df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+            df.index = df.index + 2
+            df.insert(loc=0,column='ExcelRowNumber',value=df.index.to_list())
+            df['error'] = df['stuffCode'].apply(lambda x : len(x) != 13)
+            df['errorMessage'] = df['error'].apply(lambda x : 'شناسه stuff نامعتبر می باشد' if x == True else None)
+            df['status'] = df['error'].apply(lambda x : 0 if x == True else None)
+            return df
+        
+        except:
+            return pd.DataFrame()
+            
+
+            
 
     def readExcelSheet(self,typeInvoice:int,patternInvoic:int,indexSheet:int,TypeDate:int) -> pd.DataFrame:
         try:

@@ -13,6 +13,7 @@ from forms.frm_deleteInvoice import FormDeleteInvoice
 from forms.frm_help import FormHelp
 from forms.frm_bill import FormBill
 from forms.frm_commodity import FormCommodity
+from forms.frm_buyer import FormBuyer
 from model.setting import VersionApp
 from module.api import ApiKeysun
 
@@ -101,7 +102,7 @@ class MainPanel():
         # self.btn_bill_invoice.configure(state="disabled")
 
          
-        self.btn_add_commodity = ck.CTkButton(self.menu_frame, text="          اضافه کردن محصول", compound="right", font=self.font,width=200,
+        self.btn_add_commodity = ck.CTkButton(self.menu_frame, text="    اضافه کردن کالا/خدمت", compound="right", font=self.font,width=200,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.commodity_image,command=self.commdity_button_event)
         self.btn_add_commodity.place(x=25,y=400)
@@ -195,42 +196,42 @@ class MainPanel():
             company.place(x=70,y=40)
 
         #invoice Frame
-        self.invoice_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.invoice_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
         self.invoice_frame.place(x=5,y=90)
         FormSendInvoice(self.invoice_frame,self.username,self.password)
 
         #invoice Frame 
-        self.inquiry_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.inquiry_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
         self.inquiry_frame.place(x=5,y=90)
         FormInquiryInvoice(self.inquiry_frame,self.username,self.password)
 
         #Revok Frame 
-        self.revok_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.revok_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
         self.revok_frame.place(x=5,y=90)
         FormRevokInvoice(self.revok_frame,self.username,self.password)
        
         #inqiuryPerson Frame 
-        self.inqiuryPerson_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.inqiuryPerson_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
         self.inqiuryPerson_frame.place(x=5,y=90)
         FormInquiryPerson(self.inqiuryPerson_frame)
 
         #delete Frame 
-        self.delete_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.delete_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
         self.delete_frame.place(x=5,y=90)
         FormDeleteInvoice(self.delete_frame,self.username,self.password)
 
         #help Frame 
-        self.help_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.help_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
         self.help_frame.place(x=5,y=90)
         FormHelp(self.help_frame)
 
         #bill of lading Frame 
-        self.bill_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.bill_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
         self.bill_frame.place(x=5,y=90)
         FormBill(self.bill_frame,self.username,self.password)
 
         #commdity of lading Frame 
-        self.commodity_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=505)#fg_color="transparent"
+        self.commodity_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
         self.commodity_frame.place(x=5,y=90)
         FormCommodity(self.commodity_frame,self.username,self.password)
  

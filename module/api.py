@@ -231,6 +231,12 @@ class ApiKeysun:
         data = invoiecs.to_json(orient='records')
         result = self.SendPostRequest(url,data,token)
         return result
+    
+    def AddCommodity(self,commodity:pd.DataFrame, token:str):
+        url = self.baseUrl + "/taxpayer/api/CommodityServiceExternalService"
+        data = commodity.to_json(orient='records')
+        result = self.SendPostRequest(url,data,token)
+        return result
 
 class APIEconomicCode():
     def __init__(self) -> None:
