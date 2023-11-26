@@ -44,7 +44,7 @@ class MainPanel():
         self.revokInvoice_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "revokInvoice.png")),dark_image=Image.open(os.path.join(image_path, "DrevokInvoice.png")),size=(20,20))
         self.inquiryPerson_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "person.png")),dark_image=Image.open(os.path.join(image_path,"Dperson.png")),size=(20,20))
         self.help_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "help.png")),dark_image=Image.open(os.path.join(image_path, "Dhelp.png")),size=(20,20))
-        self.bill_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "truck.png")),dark_image=Image.open(os.path.join(image_path, "Dtruk.png")),size=(40,30))
+        self.bill_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "truck.png")),dark_image=Image.open(os.path.join(image_path, "Dtruk.png")),size=(45,30))
         self.buyer_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "buyer.png")),dark_image=Image.open(os.path.join(image_path, "Dbuyer.png")),size=(30,30))
         self.commodity_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "commodity.png")),dark_image=Image.open(os.path.join(image_path, "Dcommodity.png")),size=(30,40))
         self.gold_image = ck.CTkImage(light_image=Image.open(os.path.join(image_path, "gold.png")),size=(70,70))
@@ -102,13 +102,13 @@ class MainPanel():
         # self.btn_bill_invoice.configure(state="disabled")
 
          
-        self.btn_add_commodity = ck.CTkButton(self.menu_frame, text="    اضافه کردن کالا/خدمت", compound="right", font=self.font,width=200,
+        self.btn_add_commodity = ck.CTkButton(self.menu_frame, text="    افزودن کالا/خدمت", compound="right", font=self.font,width=200,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.commodity_image,command=self.commdity_button_event)
         self.btn_add_commodity.place(x=25,y=400)
 
          
-        self.btn_add_buyer = ck.CTkButton(self.menu_frame, text="          اضافه کردن خریدار", compound="right", font=self.font,width=200,
+        self.btn_add_buyer = ck.CTkButton(self.menu_frame, text="          افزودن خریدار", compound="right", font=self.font,width=200,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.buyer_image,command=self.bill_button_event)
         self.btn_add_buyer.place(x=25,y=450)
