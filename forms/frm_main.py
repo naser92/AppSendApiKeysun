@@ -110,7 +110,7 @@ class MainPanel():
          
         self.btn_add_buyer = ck.CTkButton(self.menu_frame, text="          افزودن خریدار", compound="right", font=self.font,width=200,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
-                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.buyer_image,command=self.bill_button_event)
+                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.buyer_image,command=self.buyer_button_event)
         self.btn_add_buyer.place(x=25,y=450)
 
         self.btn_inqiurePerson_invoice = ck.CTkButton(self.menu_frame, text="استعلام مودیان مالیاتی", compound="right", font=self.font,width=200,
@@ -234,6 +234,11 @@ class MainPanel():
         self.commodity_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
         self.commodity_frame.place(x=5,y=90)
         FormCommodity(self.commodity_frame,self.username,self.password)
+
+        #buyer of lading Frame 
+        self.buyer_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
+        self.buyer_frame.place(x=5,y=90)
+        FormBuyer(self.buyer_frame,self.username,self.password)
  
         if packegeId == 1 or packegeId == 4:
             self.select_frame_by_name("send")
@@ -298,6 +303,11 @@ class MainPanel():
         else:
             self.commodity_frame.place_forget()
 
+        if name == "buyer":
+            self.buyer_frame.place(x=5,y=90)
+        else:
+            self.buyer_frame.place_forget()
+
     def permisions(self,pakageId):
         if pakageId == 2 or pakageId == 3:
             self.btn_send_invoice.configure(state="disabled")
@@ -332,6 +342,9 @@ class MainPanel():
 
     def commdity_button_event(self):
         self.select_frame_by_name("commodity")
+
+    def buyer_button_event(self):
+        self.select_frame_by_name("buyer")
         
 
 if __name__ == "__main__":

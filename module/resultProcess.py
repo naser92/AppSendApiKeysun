@@ -72,7 +72,7 @@ class FackeRecord:
 class CheckResultCommodityRequest:
     def __init__(self,responseData,listCommodity:pd.DataFrame):
         dfData = pd.DataFrame(responseData)
-        self.result =  listCommodity.join(dfData.set_index('commodityCode'), on='commodityCode',validate='1:m',how='left', lsuffix='_left', rsuffix='_right')
+        self.result =  listCommodity.join(dfData.set_index('commodityCode'), on='commodityCode',validate='1:m',how='left', lsuffix='_left')
         self.result = self.result.replace(np.nan,None)
 
     def countSuceeded(self):

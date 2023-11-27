@@ -15,7 +15,7 @@ class FormBuyer():
         self.passwoerd = password
 
         #input data
-        self.frame_data = ck.CTkFrame(self.frame,border_width=2, width=670, height=80)
+        self.frame_data = ck.CTkFrame(self.frame,border_width=2, width=570, height=80)
         self.frame_data.place(x=10,y=10)
 
         lbl_input = ck.CTkLabel(self.frame_data,text=" :ورود فایل",font=self.font)

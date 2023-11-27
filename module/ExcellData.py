@@ -405,6 +405,12 @@ class ExcellData ():
                 invoice = invoice.drop(columns=i) 
         return invoice
 
+    def PreparationDataCommodity(self,data:pd.DataFrame) -> pd.DataFrame:
+        for i in data.columns.values:
+            if not i in colCommodity.AddCommodity() :
+                data = data.drop(columns=i) 
+        return data
+    
 
 if __name__ == "__main__":
     ed = ExcellData("./dataTest/Invoice_InvoicePatternId.xlsx")

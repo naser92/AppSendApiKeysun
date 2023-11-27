@@ -170,7 +170,11 @@ class FormCommodity():
                             self.CSV.SaveErrorSendInvoice(commodity.loc[:,columns])
                             CTkMessagebox(title="دیتا",message="لطفا خطاهای فایل را بررسی نمایید فایل csv خطا ها در کنار فایل اصلی میباشد",icon="warning")
                         else:
-                            errorCount =  len(commodity[commodity['error'] == True])
+                            listCommodityError = commodity[commodity['error'] == True]
+                            errorCount =  len(listCommodityError)
+                            columns = ['ExcelRowNumber','commodityCode','status','errorMessage']
+                            self.CSV.SaveErrorSendInvoice(listCommodityError.loc[:,columns])
+
                             sucessCount = 0
                             self.progressbar.configure(maximum=len(commodity))
                             self.progressbar['value'] = errorCount
@@ -193,7 +197,8 @@ class FormCommodity():
                                             token = api.getToken(str_username,str_password)
                                         
                                         if token != "" and repeat == False:
-                                            result = api.AddCommodity(data,token)
+                                            datap = self.Excell.PreparationDataCommodity(data) 
+                                            result = api.AddCommodity(datap,token)
                                             if result[0] == 200 and result[1]['error'] == False:
                                                 check = CheckResultCommodityRequest(result[1]['data'],data)
                                                 if check.countSuceeded() > 0 : 
@@ -235,8 +240,8 @@ class FormCommodity():
                                     self.lbl_number_sendCommodity.configure(text=str(errorCount+sucessCount))
                                     self.updateFrame()
 
-                                    if self.fileError == None or self.fileError == "":
-                                        self.fileError = self.CSV.getFileErrorSendInvoiceName()    
+                                    # if self.fileError == None or self.fileError == "":
+                                    #     self.fileError = self.CSV.getFileErrorSendInvoiceName()    
                                     
                                     self.lbl_number_ErrorCommodity.configure(text=str(errorCount))
                                     self.lbl_number_successCommodity.configure(text=str(sucessCount))
