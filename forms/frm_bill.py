@@ -166,7 +166,7 @@ class FormBill():
 
         
         self.lbl_status = ck.CTkLabel(self.frame,text="فایل در دسترس نیست" ,bg_color="#ffffff",width=600, height=30,font=self.font,text_color="#000000")
-        self.lbl_status.place(x=0,y=480)
+        self.lbl_status.place(x=0,y=580)
 
     # def openFormLogError(self):
     #     self.sendInvoice_tread.join()

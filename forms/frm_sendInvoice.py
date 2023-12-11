@@ -92,7 +92,7 @@ class FormSendInvoice():
         self.btn_sendInvoice = ck.CTkButton(self.group_send,text="ارسال صورتحساب",font=self.font,command=self.thread_send_invoice)
         self.btn_sendInvoice.place(x=400,y=10)
         
-        self.btn_reset = ck.CTkButton(self.group_send,text="کنسل",font=self.font,command=self.reset_form)
+        self.btn_reset = ck.CTkButton(self.group_send,text="  دوباره فایل ارسال",font=self.font,command=self.reset_form)
         self.btn_reset.place(x=20,y=10)
 
         self.progressbar =  ttk.Progressbar(self.group_send)
@@ -132,7 +132,7 @@ class FormSendInvoice():
 
         
         self.lbl_status = ck.CTkLabel(self.frame,text="فایل در دسترس نیست" ,bg_color="#ffffff",width=600, height=30,font=self.font,text_color="#000000")
-        self.lbl_status.place(x=0,y=480)
+        self.lbl_status.place(x=0,y=580)
 
     def openFormLogError(self):
         self.sendInvoice_tread.join()
@@ -163,9 +163,10 @@ class FormSendInvoice():
         patern = TypeInvoice_SendInvoice.getIndex(self.numberPatern.get(),self.patern)
         
         if patern[0] != 0:
-            self.lbl_status.configure(text="داده در حال بارگزاری لطفاً منتظر بمانید ...",bg_color="#34495e")
+            self.lbl_status.configure(text="داده در حال بارگزاری  ...",bg_color="#34495e")
             self.path_file = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
             self.lbl_path.configure(text=self.path_file)
+            self.lbl_status.configure(text="داده در حال بارگزاری لطفاً منتظر بمانید ...",bg_color="#34495e")
             self.Excell = ExcellData(self.path_file)
             self.CSV = CSVFile(self.path_file)
             result = self.Excell.checkExcellNew(patern[0],patern[1])
@@ -202,6 +203,15 @@ class FormSendInvoice():
 
         self.btn_selectFile.configure(state="normal")
         self.btn_reset.configure(state="normal")
+        self.btn_sendInvoice.configure(state="normal")
+        self.status = False
+
+        self.progressbar['value'] = 0
+        self.progressbar.update()
+        self.frame.update_idletasks()
+        self.frame.after(500)
+        self.frame.update()
+
     
 
     def checkToken(self,username):

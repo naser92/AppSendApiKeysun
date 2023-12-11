@@ -269,6 +269,20 @@ class ExcellData ():
             return False
         except:
             return False
+        
+    def checkExcelBuyer(self):
+        try:
+            excelFile = pd.ExcelFile(self.path)
+            self.sheetNames = excelFile.sheet_names
+            self.data = pd.read_excel(self.path,sheet_name=None,dtype=str)
+
+            for  index,(sheet_name, df) in enumerate(self.data.items()):
+                if index == 0 and  len(df.columns) == 9:
+                    return True
+            
+            return False
+        except:
+            return False
 
     def checkExcellNew(self,type,pattern):
         try:

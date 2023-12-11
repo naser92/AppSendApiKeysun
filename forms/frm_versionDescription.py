@@ -44,7 +44,7 @@ class DescriptinVersion :
         self.scrollbar.place(x=10+self.text.winfo_reqwidth(), y=70,height=self.text.winfo_reqheight())
         self.text['yscrollcommand'] = self.scrollbar.set
 
-        # self.text.insert("end", "رفع خطا در بارگذاری اکسل صورتحساب نوع 2 الگوی *\n\n", "rtl")
+        self.text.insert("end", "امکان اضافه کردن کالا/خدمت از طریق نرم افزار  *\n\n", "rtl")
        
         self.text.insert("end", "بهینه سازی در عملکرد نرم افزار *\n\n", "rtl")
         # self.text.insert("end", "حذف لایسنس و احراز هویت مرکزی *\n\n", "rtl")

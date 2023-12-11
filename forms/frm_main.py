@@ -13,7 +13,7 @@ from forms.frm_deleteInvoice import FormDeleteInvoice
 from forms.frm_help import FormHelp
 from forms.frm_bill import FormBill
 from forms.frm_commodity import FormCommodity
-from forms.frm_buyer import FormBuyer
+# from forms.frm_buyer import FormBuyer
 from model.setting import VersionApp
 from module.api import ApiKeysun
 
@@ -95,34 +95,34 @@ class MainPanel():
         self.btn_delete_invoice.place(x=25,y=300)
 
         
-        self.btn_bill_invoice = ck.CTkButton(self.menu_frame, text="          ارسال بارنامه", compound="right", font=self.font,width=200,
+        self.btn_bill_invoice = ck.CTkButton(self.menu_frame, text="       ارسال بارنامه", compound="right", font=self.font,width=200,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.bill_image,command=self.bill_button_event)
         self.btn_bill_invoice.place(x=25,y=350)
         # self.btn_bill_invoice.configure(state="disabled")
 
          
-        self.btn_add_commodity = ck.CTkButton(self.menu_frame, text="    افزودن کالا/خدمت", compound="right", font=self.font,width=200,
+        self.btn_add_commodity = ck.CTkButton(self.menu_frame, text="     افزودن کالا/خدمت", compound="right", font=self.font,width=200,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.commodity_image,command=self.commdity_button_event)
         self.btn_add_commodity.place(x=25,y=400)
 
          
-        self.btn_add_buyer = ck.CTkButton(self.menu_frame, text="          افزودن خریدار", compound="right", font=self.font,width=200,
-                                              corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
-                                            text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.buyer_image,command=self.buyer_button_event)
-        self.btn_add_buyer.place(x=25,y=450)
+        # self.btn_add_buyer = ck.CTkButton(self.menu_frame, text="          افزودن خریدار", compound="right", font=self.font,width=200,
+        #                                       corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
+        #                                     text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.buyer_image,command=self.buyer_button_event)
+        # self.btn_add_buyer.place(x=25,y=450)
 
         self.btn_inqiurePerson_invoice = ck.CTkButton(self.menu_frame, text="استعلام مودیان مالیاتی", compound="right", font=self.font,width=200,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.inquiryPerson_image,command=self.inquiryPerson_button_event)
-        self.btn_inqiurePerson_invoice.place(x=25,y=500)
+        self.btn_inqiurePerson_invoice.place(x=25,y=460)
 
         
-        self.btn_help = ck.CTkButton(self.menu_frame, text="                     راهنما", compound="right", font=self.font,width=200,
+        self.btn_help = ck.CTkButton(self.menu_frame, text="راهنما", compound="right", font=self.font,width=50,
                                               corner_radius=0, height=40, border_spacing=10,fg_color="transparent",
                                             text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w",image=self.help_image,command=self.help_button_event)
-        self.btn_help.place(x=25,y=550)
+        self.btn_help.place(x=70,y=550)
 
 
         # label_theme = ck.CTkLabel(self.menu_frame,text="تم",font=self.font)
@@ -236,9 +236,9 @@ class MainPanel():
         FormCommodity(self.commodity_frame,self.username,self.password)
 
         #buyer of lading Frame 
-        self.buyer_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
-        self.buyer_frame.place(x=5,y=90)
-        FormBuyer(self.buyer_frame,self.username,self.password)
+        # self.buyer_frame = ck.CTkFrame(self.base, corner_radius=0,width=590,height=605)#fg_color="transparent"
+        # self.buyer_frame.place(x=5,y=90)
+        # FormBuyer(self.buyer_frame,self.username,self.password)
  
         if packegeId == 1 or packegeId == 4:
             self.select_frame_by_name("send")
@@ -260,7 +260,7 @@ class MainPanel():
         self.btn_help.configure(fg_color=("gray75", "gray25") if name == "help" else "transparent")
         self.btn_bill_invoice.configure(fg_color=("gray75", "gray25") if name == "bill" else "transparent")
         self.btn_add_commodity.configure(fg_color=("gray75", "gray25") if name == "commodity" else "transparent")
-        self.btn_add_buyer.configure(fg_color=("gray75", "gray25") if name == "buyer" else "transparent")
+        # self.btn_add_buyer.configure(fg_color=("gray75", "gray25") if name == "buyer" else "transparent")
 
         # show selected frame
         if name == "send":
@@ -303,10 +303,10 @@ class MainPanel():
         else:
             self.commodity_frame.place_forget()
 
-        if name == "buyer":
-            self.buyer_frame.place(x=5,y=90)
-        else:
-            self.buyer_frame.place_forget()
+        # if name == "buyer":
+        #     self.buyer_frame.place(x=5,y=90)
+        # else:
+        #     self.buyer_frame.place_forget()
 
     def permisions(self,pakageId):
         if pakageId == 2 or pakageId == 3:
@@ -315,6 +315,8 @@ class MainPanel():
             self.btn_revok_invoice.configure(state="disabled")
             self.btn_delete_invoice.configure(state="disabled")
             self.btn_inqiurePerson_invoice.configure(state="disabled")
+            self.btn_add_commodity.configure(state="disabled")
+            # self.btn_add_buyer.configure(state="disabled")
         
 
 
