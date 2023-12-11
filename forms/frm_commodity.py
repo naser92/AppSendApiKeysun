@@ -123,10 +123,21 @@ class FormCommodity():
         self.sendInvoice_tread.start()
 
     def lockElement(self):
-        pass
+        self.btn_sendInvoice.configure(state="disable")
+
+        for child in self.group_date.winfo_children():
+            child.configure(state='disable')
     
     def ResetElements(self):
-        pass
+        self.btn_sendInvoice.configure(state="normal")
+        self.btn_selectFile.configure(state="normal")
+    
+        self.status = False
+        self.progressbar['value'] = 0
+        self.progressbar.update()
+        self.frame.update_idletasks()
+        self.frame.after(500)
+        self.frame.update()
 
     def updateFrame(self):
         self.frame.update_idletasks()
@@ -150,7 +161,7 @@ class FormCommodity():
         if str_username == '' or str_password == '':
             CTkMessagebox(title="ورود",message="نام کاربری ویا کلمه عبور را به درستی وارد کنید",icon="cancel")
             self.btn_sendInvoice.configure(state="normal")
-        else:
+        elif self.status :
             self.lbl_status.configure(text="لطفاً منتظر بمانید ...",bg_color="#9b59b6")
             token = api.getToken(str_username,str_password)
 
@@ -264,4 +275,4 @@ class FormCommodity():
                 self.lbl_status.configure(text="ممکن است ارتباط اینترنت و یا مشکلی در سرور رخ داده باشد",bg_color="#c0392b")
                 self.btn_sendInvoice.configure(state="normal")
 
-
+        self.ResetElements()
