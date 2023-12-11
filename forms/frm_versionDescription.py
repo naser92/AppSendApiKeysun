@@ -71,7 +71,7 @@ class DescriptinVersion :
     
     def closeForm (self):
         self.base.destroy()
-        from frm_main import MainPanel
+        from forms.frm_main import MainPanel
         MainPanel(self.username,self.password)
 
     def closeFormOnly(self):
@@ -79,4 +79,4 @@ class DescriptinVersion :
 
 
 if __name__ == "__main__":
-    DescriptinVersion("","",2)
+    DescriptinVersion("2741371547083","5kI8mmwd",1)
