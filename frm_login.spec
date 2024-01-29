@@ -44,6 +44,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    version='versioninfo.txt',
     icon=['media\\image\\logo.ico'],
 )
 coll = COLLECT(

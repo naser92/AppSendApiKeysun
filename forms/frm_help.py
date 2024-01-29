@@ -20,7 +20,7 @@ class FormHelp():
         lbl_war2 = ck.CTkLabel(self.group_date,text="برای دریافت هر یک از قالب های مورد نیاز بر روی فایل مورد نظر کلیک کنید",font=self.font,text_color="#000")
         lbl_war2.place(x=70,y=20)
         #radioButom:
-        self.group_btn = ck.CTkFrame(self.frame,border_width=2, width=570, height=400)
+        self.group_btn = ck.CTkFrame(self.frame,border_width=2, width=570, height=420)
         self.group_btn.place(x=10,y=100)
         
         ylocation = Location(0,10,0,40)
@@ -56,43 +56,52 @@ class FormHelp():
 
         ######################################
 
+        
+        lbl_patern23 = ck.CTkLabel(self.group_btn,text="دانلود راهنمای ثبت صورتحساب نوع 1 الگوی 5 قبض",font=self.font)
+        lbl_patern23.place(x=260,y=ylocation.setRowLocation(4) )
+
+        self.btn_patern23 = ck.CTkButton(self.group_btn,text="دانلود",font=self.font,command=self.download_patern15,width=50)
+        self.btn_patern23.place(x=10,y=ylocation.setRowLocation(4))
+
+        ######################################
+
         lbl_revoke = ck.CTkLabel(self.group_btn,text="دانلود راهنمای ابطال دسته‌ای صورتحساب‌ها",font=self.font)
-        lbl_revoke.place(x=303,y=ylocation.setRowLocation(4))
+        lbl_revoke.place(x=303,y=ylocation.setRowLocation(5))
 
         self.btn_revoke = ck.CTkButton(self.group_btn,text="دانلود",font=self.font,command=self.download_revoke,width=50)
-        self.btn_revoke.place(x=10,y=ylocation.setRowLocation(4))
+        self.btn_revoke.place(x=10,y=ylocation.setRowLocation(5))
 
         #########################################
 
         lbl_delete = ck.CTkLabel(self.group_btn,text="دانلود فایل راهنمای حذف دسته‌ای صورتحساب‌ها",font=self.font)
-        lbl_delete.place(x=275,y=ylocation.setRowLocation(5))
+        lbl_delete.place(x=275,y=ylocation.setRowLocation(6))
 
         self.lbl_delete = ck.CTkButton(self.group_btn,text="دانلود",font=self.font,command=self.download_delete,width=50)
-        self.lbl_delete.place(x=10,y=ylocation.setRowLocation(5))
+        self.lbl_delete.place(x=10,y=ylocation.setRowLocation(6))
 
         ##########################################
          
         lbl_bill = ck.CTkLabel(self.group_btn,text=" دانلود فایل ارسال صورتحساب های بارنامه" + VersionApp.version,font=self.font)
-        lbl_bill.place(x=280,y=ylocation.setRowLocation(6))
+        lbl_bill.place(x=280,y=ylocation.setRowLocation(7))
 
         self.btn_bill = ck.CTkButton(self.group_btn,text="دانلود",font=self.font,command=self.OpenDescriptinVersion,width=50)
-        self.btn_bill.place(x=10,y=ylocation.setRowLocation(6))
+        self.btn_bill.place(x=10,y=ylocation.setRowLocation(7))
 
         ###########################################
            
         lbl_help = ck.CTkLabel(self.group_btn,text="دانلود فایل راهنمای ایتاک نسخه  " + VersionApp.version,font=self.font)
-        lbl_help.place(x=328,y=ylocation.setRowLocation(7))
+        lbl_help.place(x=328,y=ylocation.setRowLocation(8))
 
         self.btn_help = ck.CTkButton(self.group_btn,text="دانلود",font=self.font,command=self.download_help,width=50)
-        self.btn_help.place(x=10,y=ylocation.setRowLocation(7))
+        self.btn_help.place(x=10,y=ylocation.setRowLocation(8))
 
         ############################################
           
         lbl_view = ck.CTkLabel(self.group_btn,text="   مشاهده آخرین تغییرات نسخه " + VersionApp.version,font=self.font)
-        lbl_view.place(x=328,y=ylocation.setRowLocation(8))
+        lbl_view.place(x=328,y=ylocation.setRowLocation(9))
 
         self.btn_view = ck.CTkButton(self.group_btn,text="نمایش",font=self.font,command=self.OpenDescriptinVersion,width=50)
-        self.btn_view.place(x=10,y=ylocation.setRowLocation(8))
+        self.btn_view.place(x=10,y=ylocation.setRowLocation(9))
 
         #############################################
         
@@ -118,6 +127,10 @@ class FormHelp():
         url = "https://files.mizeonline.ir/tps/assets/sample/Invoice_InvoicePatternId_23.xlsx"  # Replace with your file URL
         # file_name = "Invoice_InvoicePatternId_21.xlsx"  # Replace with your desired file name
         # urllib.request.urlretrieve(url, file_name)
+        webbrowser.open(url)
+
+    def download_patern15(self):
+        url = "https://files.mizeonline.ir/tps/assets/sample/Invoice_InvoicePatternId_5.xlsx"  # Replace with your file UR
         webbrowser.open(url)
 
     def download_revoke(self):

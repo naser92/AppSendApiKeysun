@@ -40,7 +40,7 @@ class NameColumnsInvoic:
         return ["invoiceNumber", "invoiceDate", "commodityCode", "unitType", "amount", "moneyType"
         ,"equivalentToRial", "unitPrice", "constructionWages", "saleProfit","brokerCommission", "discount"
         , "taxPercent", "taxPrice", "dutyPercent", "dutyPrice", "dutyTitle","otherLegalFundsPercent"
-        , "otherLegalFundsPrice","otherLegalFundsTitle","brokerContractNumber", "exchangeContractNumber"
+        , "otherLegalFundsPrice","otherLegalFundsTitle","cutie","brokerContractNumber", "exchangeContractNumber"
        ,"exchangeContractDate", "ExtendStuffTitle"]
 
 
@@ -48,7 +48,7 @@ class NameColumnsInvoic:
         return ["invoiceNumber", "invoiceDate", "commodityCode", "unitType", "amount","moneyType"
         , "equivalentToRial", "unitPrice", "constructionWages", "saleProfit", "brokerCommission"
         ,"discount",  "taxPercent", "taxPrice", "dutyPercent", "dutyPrice", "dutyTitle", "otherLegalFundsPercent"
-        , "otherLegalFundsPrice", "otherLegalFundsTitle", "brokerContractNumber","exchangeContractNumber"
+        , "otherLegalFundsPrice", "otherLegalFundsTitle", "cutie", "brokerContractNumber","exchangeContractNumber"
         , "exchangeContractDate", "ExtendStuffTitle"]
         
 
@@ -56,7 +56,14 @@ class NameColumnsInvoic:
         return ["invoiceNumber", "invoiceDate", "paymentMethod", "paymentAmount", "paymentDate"
         , "switchNumber", "acceptanceNumber", "terminalNumber", "traceNumber", "payerCardNumber"
         , "payerNationalCode"]
+
+    def InvoiceType15General(self) -> list[str]:
+        return ["invoiceNumber","invoiceDate","invoiceType","invoicePattern","invoiceSubject","referenceTaxSerialNumber","buyerType",
+                "buyerNationalCode","buyerEconomicCode","buyerPostalCode","billId","invoiceTime","sellerBranch","buyerBranch","tax17","description"]
     
+    def InvoiceItemType15General(self) -> list[str]:
+        return ["invoiceNumber","invoiceDate","commodityCode","unitType", "amount","unitPrice","discount",  "taxPercent","taxPrice", "dutyPercent", "dutyPrice", "dutyTitle", 
+                "otherLegalFundsPercent","otherLegalFundsPrice", "otherLegalFundsTitle","brokerContractNumber","ExtendStuffTitle"]
  
 class NameColumnsCommodity:
     def AddCommodity(self) -> list[str]:
@@ -69,6 +76,7 @@ class Columns:
     pattern: int
     indexSheet : int
     columnsNames : list[str] = None
+    Extend : str = None
 
     def __post_init__(self):
         c = NameColumnsInvoic()
@@ -78,12 +86,20 @@ class Columns:
                     self.columnsNames = c.invoiceType11()           
                 elif self.pattern == 3:
                     self.columnsNames = c.invoiceType13()
+                elif self.pattern == 5:
+                    if self.Extend == None:
+                        self.columnsNames = c.InvoiceType15General()
+
             
             elif self.Type == 2:
                 if self.pattern == 1:
                     self.columnsNames = c.invoiceType21()
                 elif self.pattern == 3:
                     self.columnsNames = c.invoiceItemstype23()
+
+               
+
+
         elif self.indexSheet == 1:
             if self.pattern == 1:
                 self.columnsNames = c.invoiceItemsGeneral()
@@ -92,6 +108,14 @@ class Columns:
                     self.columnsNames = c.invoiceItemstype13()
                 elif self.Type == 2:
                     self.columnsNames = c.invoiceItemstype23()
+
+            if self.pattern == 5:
+                if self.Type == 1:
+                    if self.Extend == None:
+                        self.columnsNames = c.InvoiceItemType15General()
+
+
+
         elif self.indexSheet == 2:
             self.columnsNames = c.paymentGeneral()
        

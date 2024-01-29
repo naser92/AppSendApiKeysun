@@ -38,3 +38,16 @@ class TypeInvoice_SendInvoice:
         for a in allType:
             if query in a.stringValue:
                 return [a.typeId,a.PatternId]
+            
+class BillType_combo:
+    def __init__(self, typeId:int, patternId:int, stringValue:str, stringViwe:str):
+        self.typeId = typeId
+        self.PatternId = patternId
+        self.stringValue = stringValue
+        self.stringViwe = stringViwe
+
+    @classmethod
+    def getIndex(cls, query, allType):
+        for a in allType:
+            if query in a.stringViwe:
+                return [a.typeId,a.PatternId,a.stringValue]
