@@ -1,0 +1,13 @@
+Version: 6.7.2
+CompanyName: Keysun Data Processing
+FileDescription: eitak
+InternalName: eitak
+OriginalFilename: eitak.exe
+ProductName: eitak
+LegalCopyright : Copyright (c) 2023 Keysun Data Processing. All rights reserved.
+Author : Keysun Data Processing.Co
+Translation:
+  - langID: 0
+    charsetID: 1200
+  - langID: 1065
+    charsetID: 1256

@@ -311,9 +311,9 @@ class FormSendInvoice():
                         patern = TypeInvoice_SendInvoice.getIndex(self.numberPatern.get(),self.patern)
                         typeId = patern[0]
                         patternId = patern[1]
-                        invoices = self.Excell.readExcelSheet(typeId,patternId,0,vdate)
-                        invoiceItems = self.Excell.readExcelSheet(typeId,patternId,1,vdate)
-                        invoicePayments = self.Excell.readExcelSheet(typeId,patternId,2,vdate)
+                        invoices = self.Excell.readExcelSheet(typeId,patternId,0,None,vdate)
+                        invoiceItems = self.Excell.readExcelSheet(typeId,patternId,1,None,vdate)
+                        invoicePayments = self.Excell.readExcelSheet(typeId,patternId,2,None,vdate)
                         # invoiceByIndex = self.Excell.invoiceByRowExcell(invoices)
 
                         self.progressbar.configure(maximum=len(invoices))

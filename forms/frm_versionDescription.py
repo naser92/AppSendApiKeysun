@@ -44,6 +44,7 @@ class DescriptinVersion :
         self.scrollbar.place(x=10+self.text.winfo_reqwidth(), y=70,height=self.text.winfo_reqheight())
         self.text['yscrollcommand'] = self.scrollbar.set
 
+        self.text.insert("end", "بروزرسانی الگوی طلا و جواهرات   *\n\n", "rtl")
         self.text.insert("end", "امکان ثبت صورتحساب نوع 1 الگو 5 قبوض خدماتی از طریق نرم افزار  *\n\n", "rtl")
        
         self.text.insert("end", "بهینه سازی در عملکرد نرم افزار *\n\n", "rtl")

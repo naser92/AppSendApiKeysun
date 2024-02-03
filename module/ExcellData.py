@@ -369,14 +369,28 @@ class ExcellData ():
         except:
             return pd.DataFrame()
             
-
+    def check_count_col_excell(self,type:int, pattern:int, BillType:str):
+        try:
+            excelFile = pd.ExcelFile(self.path)
+            self.sheetNames = excelFile.sheet_names
+            self.data = pd.read_excel(self.path,sheet_name=None)
+            result = []
+            for  index,(sheet_name, df) in enumerate(self.data.items()):
+                df_cols = len(df.columns)
+                self.cols = InvoiceData(type,pattern,index,BillType)
+                if df_cols == self.cols.colum:
+                    result.append(1)
+                else: result.append(0) 
+            return result
+        except:
+            return None
             
 
-    def readExcelSheet(self,typeInvoice:int,patternInvoic:int,indexSheet:int,TypeDate:int) -> pd.DataFrame:
+    def readExcelSheet(self,typeInvoice:int,patternInvoic:int,indexSheet:int,extend:str,TypeDate:int) -> pd.DataFrame:
         try:
             df = self.data[self.sheetNames[indexSheet]]
             df  =pd.DataFrame(df)
-            col = Columns(typeInvoice,patternInvoic,indexSheet)
+            col = Columns(typeInvoice,patternInvoic,indexSheet,extend)
             df = df.set_axis(col.columnsNames,axis='columns')
             df = df.replace(np.nan,None)
             df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)

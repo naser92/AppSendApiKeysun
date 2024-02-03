@@ -50,16 +50,16 @@ class FormGhabz():
         
         self.R2 = ck.CTkRadioButton(self.group_date,text="",variable=self.valDate,value=2)
         self.R2.place(x=200,y=25)
-        ck.CTkLabel(self.group_date,text="تاریخ ورودی شمسی",font=self.font,text_color="#7f8c8d").place(x=70,y=18)
-        ck.CTkLabel(self.group_date,text="yyyy/mm/dd",text_color="#7f8c8d").place(x=105,y=45)
+        ck.CTkLabel(self.group_date,text="تاریخ ورودی شمسی",font=self.font).place(x=70,y=18)
+        ck.CTkLabel(self.group_date,text="yyyy/mm/dd").place(x=105,y=45)
 
         self.R1 = ck.CTkRadioButton(self.group_date,text="",variable=self.valDate,value=1)
         self.R1.place(x=410,y=25)
-        ck.CTkLabel(self.group_date,text="تاریخ ورودی میلادی",font=self.font,text_color="#7f8c8d").place(x=290,y=18)
-        ck.CTkLabel(self.group_date,text="yyyy-mm-dd",text_color="#7f8c8d").place(x=315,y=45)
+        ck.CTkLabel(self.group_date,text="تاریخ ورودی میلادی",font=self.font).place(x=290,y=18)
+        ck.CTkLabel(self.group_date,text="yyyy-mm-dd").place(x=315,y=45)
 
-        for child in self.group_date.winfo_children():
-            child.configure(state='disable')
+        # for child in self.group_date.winfo_children():
+        #     child.configure(state='disable')
 
         
         #inputfile
@@ -153,7 +153,7 @@ class FormGhabz():
         self.lbl_path.configure(text=self.path_file)
         self.dataProcessing  =  ExcellData(self.path_file)
         self.CSV = CSVFile(self.path_file)
-        result = self.dataProcessing.check_count_col_excell(1,5,"water")
+        result = self.dataProcessing.check_count_col_excell(1,5,None)
         if result == None:
                 CTkMessagebox(title="خطا",message="فایل انتخابی مشکل دارد لطفا دوباره انتخاب کنید",icon="cancel")
                 self.lbl_path.configure(text="")
@@ -192,6 +192,8 @@ class FormGhabz():
 
         self.btn_selectFile.configure(state="normal")
         self.btn_reset.configure(state="normal")
+
+        self.path_file = None
 
     def openFormLogError(self):
         pass
@@ -243,7 +245,7 @@ class FormGhabz():
             CTkMessagebox(title="ورود",message="نام کاربری ویا کلمه عبور را به درستی وارد کنید",icon="cancel")
         elif vdate == 0 :
             CTkMessagebox(title="نوع تاریخ",message="نوع ورودی تاریخ را مشخص نمایید",icon="cancel")
-        elif self.path_file == None:
+        elif self.path_file == None or self.path_file == "":
             CTkMessagebox(title="فایل",message="فایلی انتخاب نشده",icon="cancel")
         else:
             token = api.getToken(str_usename,str_password)
@@ -252,18 +254,23 @@ class FormGhabz():
                 if self.status:
                     self.lbl_status.configure(text="اطلاعات در حال پردازش است لطفاً منتظر بمانید ...",bg_color="#e67e22")
                     patern = BillType_combo.getIndex(self.cmb_BillType.get(),self.BillType)
-                    typeId = patern[0]
-                    patternId = patern[1]
-                    bilTypeSTR = patern[2]
-                    invoices = self.dataProcessing.readExcelSheet(typeId,patternId,bilTypeSTR,0,vdate)
-                    invoiceItems = self.dataProcessing.readExcelSheet(typeId,patternId,bilTypeSTR,1,vdate)
+                    typeId = 1
+                    patternId = 5
+                    bilTypeSTR = None
+                    invoices = self.dataProcessing.readExcelSheet(typeId,patternId,0,bilTypeSTR,vdate)
+                    invoiceItems = self.dataProcessing.readExcelSheet(typeId,patternId,1,bilTypeSTR,vdate)
                     invoicePayments = None
                                         
 
                     if len(invoices) <= 0:
                         CTkMessagebox(title="دیتا",message="تعداد صورتحساب ها صفر می باشد",icon="warning")
+                        self.lbl_status.configure(text="فایل خطا دار",bg_color="#a3001b")
+                        
                     elif len(invoiceItems) <= 0:
                         CTkMessagebox(title="دیتا",message="تعداد آیتم صورتحساب ها صفر می باشد",icon="warning")
+                        self.lbl_status.configure(text="فایل خطا دار",bg_color="#a3001b")
+
+
                     else:
                         self.progressbar.configure(maximum=len(invoices))
                         sucessCount = 0
@@ -358,15 +365,16 @@ class FormGhabz():
                                 recordData = fakeRecord.get_data()
                                 self.CSV.SaveErrorSendInvoice(recordData)
                                 continue
-                    #end For invocie    
+                    #end For invocie
+                        CTkMessagebox(title="اتمام",message="تعداد %d فاکتور با موفقیت ارسال گردید میتوانید نتیجه را در دو فایل خطا و ثبت موفقیت در مکان فایل اصلی مشاهده نمایید"%len(invoices),icon="info")
+                                
                     if self.fileSuccess != None and self.fileSuccess != "":
                         self.btn_successLog.configure(state = "normal")   
                         
                     if self.fileError != None and self.fileError != "":
                         self.btn_ErrorLog.configure(state = "normal")
 
-                    CTkMessagebox(title="اتمام",message="تعداد %d فاکتور با موفقیت ارسال گردید میتوانید نتیجه را در دو فایل خطا و ثبت موفقیت در مکان فایل اصلی مشاهده نمایید"%len(invoices),icon="info")
-                
                     self.reset_form()
+                
                 else:
                     CTkMessagebox(title="ارتباط با سرور",message="ممکن است ارتباط اینترنت و یا مشکلی در سرور رخ داده باشد لطفاً دوباره امتحان نمایید",icon="cancel")
